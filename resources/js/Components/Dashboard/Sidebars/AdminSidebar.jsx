@@ -1,23 +1,9 @@
 import { useState, forwardRef } from "react";
-
-import { Link } from "@inertiajs/react";
-
-import { AiOutlineDashboard } from "react-icons/ai";
-// import { MdOutlineAdminPanelSettings } from "react-icons/md";
-
-// import { MdOutlineCategory } from "react-icons/md";
-import { TbUsers } from "react-icons/tb";
-// import { MdOutlineHowToVote } from "react-icons/md";
-
-// import { RiCalendarEventLine } from "react-icons/ri";
-// import { PiCaretDownBold } from "react-icons/pi";
-// import { PiCaretUpBold } from "react-icons/pi";
-
-// import { FaRegMoneyBillAlt } from "react-icons/fa";
-
-// import { FcPlanner } from "react-icons/fc";
-
-// import { IoMdWifi } from "react-icons/io";
+import { FaUtensils } from "react-icons/fa6";
+import { FaShoppingCart } from "react-icons/fa";
+import { IoLocationSharp } from "react-icons/io5";
+import { MdPeopleAlt } from "react-icons/md";
+import Modal from "@/Components/Modal";
 
 const AdminSidebar = forwardRef(
     (
@@ -25,55 +11,87 @@ const AdminSidebar = forwardRef(
         ref
     ) => {
         const [isOpen, setIsOpen] = useState(false);
-        // const [openModal, setOpenmodal] = useState(false);
+        const [modalContent, setModalContent] = useState("");
+
+        // Function to handle button clicks and show the modal with content
+        const handleButtonClick = (content) => {
+            setModalContent(content);
+            setIsOpen(true);
+        };
 
         return (
             <aside
                 className={`-mt-1 md:mt-[1.5px] z-40 transition-transform ${
                     showSidebar ? "translate-x-0" : "-translate-x-full"
-                } !bg-white border-r border-gray-200 md:translate-x-0 dark:bg-blue-800 dark:border-blue-700 ${className}`}
+                }  border-r border-gray-200 md:translate-x-0 dark:bg-blue-800 dark:border-blue-700 ${className}`}
             >
                 <div className=" py-5 px-3 bg-white dark:bg-blue-800">
                     <ul className="space-y-2 mb-5">
-                        <p className="font-extrabold text-base">CORE</p>
-
                         <li>
-                            <Link
-                                preserveScroll
-                                href=""
-                                className={`flex items-center ml-3 p-2 text-base font-medium text-blue-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group ${
-                                    route().current(
-                                        "organiser.dashboard.event.specific"
-                                    )
-                                        ? "bg-blue-100"
-                                        : ""
-                                } `}
+                            <button
+                                onClick={() =>
+                                    handleButtonClick("Orders Content")
+                                }
+                                className="flex items-center w-full p-2 text-base font-medium text-blue-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group"
                             >
-                                <AiOutlineDashboard className="text-xl text-blue-900" />
-                                <span className="ml-3">Dashboard</span>
-                            </Link>
+                                <FaShoppingCart className="text-xl text-white" />
+                                <span className="ml-3">Orders</span>
+                            </button>
                         </li>
 
                         <li>
-                            <Link
-                                preserveScroll
-                                href=""
-                                className={`flex items-center ml-3 p-2 text-base font-medium text-blue-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group ${
-                                    route().current(
-                                        "organiser.dashboard.organisers.index"
-                                    )
-                                        ? "bg-blue-100"
-                                        : ""
-                                }`}
+                            <button
+                                onClick={() =>
+                                    handleButtonClick("Food Content")
+                                }
+                                className="flex items-center w-full p-2 text-base font-medium text-blue-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group"
                             >
-                                <TbUsers className="text-xl text-blue-900" />
-                                <span className="ml-3">Users</span>
-                            </Link>
+                                <FaUtensils className="text-xl text-white" />
+                                <span className="ml-3">Food</span>
+                            </button>
+                        </li>
+
+                        <li>
+                            <button
+                                onClick={() =>
+                                    handleButtonClick("Vendors Content")
+                                }
+                                className="flex items-center w-full p-2 text-base font-medium text-blue-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group"
+                            >
+                                <MdPeopleAlt className="text-xl text-white" />
+                                <span className="ml-3">Vendors</span>
+                            </button>
+                        </li>
+
+                        <li>
+                            <button
+                                onClick={() =>
+                                    handleButtonClick("Location Content")
+                                }
+                                className="flex items-center w-full p-2 text-base font-medium text-blue-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group"
+                            >
+                                <IoLocationSharp className="text-xl text-white" />
+                                <span className="ml-3">Location</span>
+                            </button>
                         </li>
                     </ul>
 
                     <hr />
                 </div>
+
+                {/* Modal */}
+                <Modal show={isOpen} onClose={() => setIsOpen(false)}>
+                    <div className="p-4">
+                        <h2 className="text-lg font-bold">Modal Content</h2>
+                        <p>{modalContent}</p>
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="mt-4 text-red-500 hover:text-red-700"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </Modal>
             </aside>
         );
     }
