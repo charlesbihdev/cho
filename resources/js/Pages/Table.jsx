@@ -93,6 +93,7 @@ const Table = () => {
                                         No nominees found
                                     </td>
                                 </tr>
+                                
                             )} */}
                     </tbody>
                 </table>
