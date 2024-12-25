@@ -1,6 +1,7 @@
 import React from "react";
 import { AiOutlineEye } from "react-icons/ai";
 
+
 const Table = () => {
     return (
         <div className="p-6 rounded-lg shadow-md">
@@ -196,6 +197,7 @@ const Table = () => {
                     <tbody></tbody>
                 </table>
             </div>
+
         </div>
     );
 };
