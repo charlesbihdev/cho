@@ -6,7 +6,7 @@ const AppLogo = ({ className, variant, blue = false, props }) => {
             <img
                 src="cho.png"
                 alt="Cho-App Logo"
-                className={`w-16 h-18
+                className={`md:w-[120px] md:h-[110px] w-[90px] h-[80px]
                     transition-all duration-300 hover:scale-110 ${
                         className ? className : ""
                     }`}
