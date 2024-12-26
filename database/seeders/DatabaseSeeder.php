@@ -5,6 +5,12 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\FoodSeeder;
+use Database\Seeders\OrderSeeder;
+use Database\Seeders\VendorSeeder;
+use Database\Seeders\VariantSeeder;
+use Database\Seeders\LocationSeeder;
+use Database\Seeders\OrderItemSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +19,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            VendorSeeder::class,
+            FoodSeeder::class,
+            LocationSeeder::class,
+            OrderSeeder::class,
+            VariantSeeder::class,
+            OrderItemSeeder::class,
+        ]);
+
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        //     User::factory()->create([
+        //         'name' => 'Test User',
+        //         'email' => 'test@example.com',
+        //     ]);
     }
 }

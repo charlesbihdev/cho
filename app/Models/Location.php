@@ -2,24 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Order;
 use App\Models\Vendor;
-use App\Models\Variant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Food extends Model
+class Location extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'thumbnail', 'vendor_id'];
+    protected $fillable = ['vendor_id', 'note', 'destination', 'amount'];
 
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
     }
 
-    public function variants()
+    public function orders()
     {
-        return $this->hasMany(Variant::class);
+        return $this->hasMany(Order::class);
     }
 }
