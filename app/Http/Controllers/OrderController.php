@@ -1,13 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Inertia\Inertia;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        return "This is the orders page";
+        $order = OrderItem::all();
+        return Inertia::render('Order', [
+            'order' => $order
+        ]);
     }
 }

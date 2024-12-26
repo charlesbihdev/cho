@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vendors;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
     public function index()
     {
-        return "This is the vendors page";
+        $vendor = Vendors::all();
+        return Inertia::render('Vendor', [
+            'vendor' => $vendor
+        ]);
     }
 }
