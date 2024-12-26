@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Variant;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class VariantSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Variant::factory()->count(10)->create();
+        Category::factory()->count(10)->create();
     }
 }

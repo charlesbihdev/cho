@@ -14,11 +14,6 @@ class Vendor extends Model
 
     protected $fillable = ['name'];
 
-    public function foods()
-    {
-        return $this->hasMany(Food::class);
-    }
-
     public function locations()
     {
         return $this->hasMany(Location::class);
@@ -27,5 +22,10 @@ class Vendor extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function foods()
+    {
+        return $this->belongsToMany(Food::class, 'food_vendor_variant', 'vendor_id', 'food_id');
     }
 }

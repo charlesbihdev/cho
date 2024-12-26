@@ -11,15 +11,23 @@ class Food extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'thumbnail', 'vendor_id'];
+    protected $table = 'foods';
 
-    public function vendor()
-    {
-        return $this->belongsTo(Vendor::class);
-    }
+
+    protected $fillable = ['name', 'category', 'thumbnail'];
+
+
 
     public function variants()
     {
         return $this->hasMany(Variant::class);
+    }
+
+    // Define the relationship with vendors via the pivot table
+    public function vendors()
+    {
+        return $this->belongsToMany(Vendor::class, 'food_vendor_variant')
+            ->withPivot('price') // Adding price to the pivot table
+            ->withTimestamps();
     }
 }

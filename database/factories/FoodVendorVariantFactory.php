@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Models\Food;
+use App\Models\Vendor;
+use App\Models\Variant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Variant>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FoodVendorVariant>
  */
-class VariantFactory extends Factory
+class FoodVendorVariantFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,9 +19,8 @@ class VariantFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
-            'price' => $this->faker->randomFloat(2, 5, 50),
-            'food_id' => Food::factory(),
+            'variant_id' => Variant::factory(),
+            'vendor_id' => Vendor::factory(),
         ];
     }
 }

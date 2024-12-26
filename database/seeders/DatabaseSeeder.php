@@ -9,6 +9,7 @@ use Database\Seeders\FoodSeeder;
 use Database\Seeders\OrderSeeder;
 use Database\Seeders\VendorSeeder;
 use Database\Seeders\VariantSeeder;
+use Database\Seeders\CategorySeeder;
 use Database\Seeders\LocationSeeder;
 use Database\Seeders\OrderItemSeeder;
 
@@ -20,12 +21,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // VendorSeeder::class,
+            CategorySeeder::class,
+            // FoodSeeder::class,
+            LocationSeeder::class,
+            // OrderSeeder::class,
+            VariantSeeder::class,
+            // OrderItemSeeder::class,
+            FoodVendorVariantSeeder::class,
+
             VendorSeeder::class,
             FoodSeeder::class,
-            LocationSeeder::class,
-            OrderSeeder::class,
             VariantSeeder::class,
-            OrderItemSeeder::class,
+
         ]);
 
         // User::factory(10)->create();

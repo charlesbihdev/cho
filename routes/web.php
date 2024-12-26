@@ -1,18 +1,16 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\ProfileController;
 
-Route::get('/', function () {
-    return Inertia::render('Landing', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Landing', []);
+// });
+
+Route::get('/', [LandingController::class, 'index']);
 
 Route::get('/cart', function () {
     return Inertia::render('Cart');
@@ -44,6 +42,5 @@ Route::get('/location', function () {
     return Inertia::render('Location');
 });
 
-                
-require __DIR__.'/auth.php';
 
+require __DIR__ . '/auth.php';
