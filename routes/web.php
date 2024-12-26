@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\FoodController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,21 +32,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/orders', function () {
-    return Inertia::render('Orders');
-});
+Route::get('/orders', [OrderController::class, 'index'])->name('orders');
 
-Route::get('/food', function () {
-    return Inertia::render('Food');
-});
+Route::get('/food', [FoodController::class, 'index'])->name('food');
 
-Route::get('/vendors', function () {
-    return Inertia::render('Vendors');
-});
+Route::get('/vendors', [VendorController::class, 'index'])->name('vendors');
 
-Route::get('/location', function () {
-    return Inertia::render('Location');
-});
+Route::get('/location', [LocationController::class, 'index'])->name('location');
 
                 
 require __DIR__.'/auth.php';
