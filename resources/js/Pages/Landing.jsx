@@ -179,7 +179,7 @@ const FoodOrderingPage = () => {
             <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
                 <div className="max-w-6xl mx-auto">
                     <div className="flex justify-between items-center mb-4">
-                        <h1 className="text-2xl font-bold">Campus Eats</h1>
+                        <h1 className="text-2xl font-bold">Cho Eats</h1>
                         <div className="flex items-center">
                             <button className="relative p-2 hover:bg-[#E4BF57] hover:text-[#493711] rounded-full transition-colors">
                                 <ShoppingCart size={24} />
