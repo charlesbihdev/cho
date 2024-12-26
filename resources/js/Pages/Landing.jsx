@@ -252,7 +252,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                     {data.description}
                                 </p>
                                 <p className="text-sm text-[#FBB60E] mt-2">
-                                    From $
+                                    From ₵
                                     {Math.min(
                                         ...data.variants.map((v) => v.basePrice)
                                     )}
@@ -308,7 +308,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                     {variant.name}
                                                 </div>
                                                 <div className="text-sm">
-                                                    ${variant.basePrice}
+                                                    ₵{variant.basePrice}
                                                 </div>
                                             </button>
                                         )
@@ -384,7 +384,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                             }
                                                         </div>
                                                         <div className="text-sm">
-                                                            +${location.amount}{" "}
+                                                            +₵{location.amount}{" "}
                                                             delivery
                                                         </div>
                                                     </button>
@@ -445,7 +445,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                 </button>
                                             </div>
                                             <div className="font-bold text-xl">
-                                                $
+                                                ₵
                                                 {calculateTotalPrice().toFixed(
                                                     2
                                                 )}
