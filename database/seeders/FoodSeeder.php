@@ -18,12 +18,13 @@ class FoodSeeder extends Seeder
     public function run(): void
     { // For each vendor, create 5 foods and associate them with the vendor
         Vendor::all()->each(function ($vendor) {
-            Food::factory()->count(5)->create([
+            Food::factory()->count(2)->create([
                 'category_id' => Category::factory()->create()->id,
             ])->each(function ($food) use ($vendor) {
                 // Create variants with the food_id linked implicitly
                 $variants = Variant::factory()->count(2)->create([
                     'food_id' => $food->id, // This is needed for the Variant model
+                    'vendor_id' => $vendor->id,
                 ]);
                 // Insert only vendor_id and variant_id into food_vendor_variant
                 $variants->each(function ($variant) use ($vendor) {

@@ -23,24 +23,11 @@ class FoodFactory extends Factory
         return [
             'name' => $this->faker->word,
             'thumbnail' => "https://random-image-pepebigotes.vercel.app/api/random-image",
-            'category_id' => Category::factory(),  // Create a category for each food
+            'category_id' => $this->faker->randomElements([1, 2, 3, 4, 5]),  // Create a category for each food
         ];
     }
 
     /**
      * Configure the factory after creating the food.
      */
-    public function configure()
-    {
-        return $this->afterCreating(function (Food $food) {
-            // Create variants for the food item
-            $food->variants()->createMany([
-                ['name' => 'Beef', 'price' => 20],
-                ['name' => 'Chicken', 'price' => 30],
-            ]);
-
-            // Attach the food to a vendor using the pivot table
-            // $food->vendors()->attach(Vendor::inRandomOrder()->first()->id);
-        });
-    }
 }

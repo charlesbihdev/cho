@@ -28,11 +28,12 @@ class DatabaseSeeder extends Seeder
             // OrderSeeder::class,
             VariantSeeder::class,
             // OrderItemSeeder::class,
-            FoodVendorVariantSeeder::class,
 
             VendorSeeder::class,
             FoodSeeder::class,
             VariantSeeder::class,
+            FoodVendorVariantSeeder::class,
+
 
         ]);
 

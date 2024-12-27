@@ -10,10 +10,12 @@ class LocationController extends Controller
 {
     public function index()
     {
-        $location = Location::all();
+        $locations = Location::with(['vendor' => function ($query) {
+            $query->select('id', 'name'); // Only select the 'id' and 'name' fields
+        }])->get();
 
         return Inertia::render('Location', [
-            'location' => $location
+            'locations' => $locations
         ]);
     }
 }

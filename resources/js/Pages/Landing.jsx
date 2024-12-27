@@ -16,14 +16,15 @@ const foodDatas = {
         image: "https://status.pizza/101",
         description: "Flavorful fried rice with fresh vegetables",
         category: "Rice Dishes",
-        variants: [
-            { name: "Assorted", basePrice: 12.99 },
-            { name: "Beef", basePrice: 14.99 },
-            { name: "Sausage", basePrice: 13.99 },
-            { name: "Chicken", basePrice: 13.99 },
-        ],
+
         vendors: [
             {
+                variants: [
+                    { name: "Assorted", basePrice: 12.99 },
+                    { name: "Beef", basePrice: 14.99 },
+                    { name: "Sausage", basePrice: 13.99 },
+                    { name: "Chicken", basePrice: 13.99 },
+                ],
                 name: "Asian Kitchen",
                 rating: 4.5,
                 locationPrices: {
@@ -34,6 +35,12 @@ const foodDatas = {
                 },
             },
             {
+                variants: [
+                    { name: "Assorted", basePrice: 12.99 },
+                    { name: "Beef", basePrice: 14.99 },
+                    { name: "Sausage", basePrice: 13.99 },
+                    { name: "Chicken", basePrice: 13.99 },
+                ],
                 name: "Quick Wok",
                 rating: 4.3,
                 locationPrices: {
@@ -51,8 +58,7 @@ const foodDatas = {
 // const categories = ["All", "Rice Dishes", "Noodles", "Fast Food", "Beverages"];
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
-    // console.log(foodData);
-    // console.log(locations);
+    console.log(foodData);
     // console.log(categories);
     // console.log(selectedVendor);
 
@@ -60,7 +66,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [selectedVendor, setSelectedVendor] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
-    const [roomNumber, setRoomNumber] = useState("");
+    const [foodNote, setFoodNote] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
@@ -73,35 +79,37 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
             storedCart.reduce((total, item) => total + item.quantity, 0)
         );
     }, []);
-    console.log(selectedLocation);
+    // console.log(selectedLocation);
 
-    // Filter foods based on search and category
+    console.log(foodData.slice(0, 5));
+
     const filteredFoods = useMemo(() => {
-        return Object.entries(foodData).filter(([name, data]) => {
-            const matchesSearch = name
+        return foodData.filter((food) => {
+            const matchesSearch = food.name
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase());
             const matchesCategory =
                 selectedCategory === "All" ||
-                data.category === selectedCategory;
+                (food.category && food.category.name === selectedCategory);
             return matchesSearch && matchesCategory;
         });
-    }, [searchQuery, selectedCategory]);
+    }, [searchQuery, selectedCategory, foodData]);
 
     const calculateTotalPrice = () => {
         if (!selectedVariant || !selectedVendor || !selectedLocation) return 0;
-        const basePrice = selectedVariant.basePrice;
-        const deliveryPrice = selectedVendor.locationPrices[selectedLocation];
+        const basePrice = selectedVariant.price;
+        // const deliveryPrice = 0;
+        const deliveryPrice = selectedLocation.price;
         return (basePrice + deliveryPrice) * quantity;
     };
 
-    const handleFoodClick = (food, name) => {
-        setSelectedFood({ ...food, name });
+    const handleFoodClick = (food) => {
+        setSelectedFood(food);
         setShowFoodDetail(true);
         setSelectedVariant(null);
         setSelectedVendor(null);
         setSelectedLocation(null);
-        setRoomNumber("");
+        setFoodNote("");
     };
 
     const addToCart = () => {
@@ -109,7 +117,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
             !selectedVariant ||
             !selectedVendor ||
             !selectedLocation ||
-            !roomNumber
+            !foodNote
         ) {
             alert("Please select all options and enter a room number.");
             return;
@@ -121,7 +129,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
             variant: selectedVariant.name,
             vendor: selectedVendor.name,
             location: selectedLocation,
-            roomNumber,
+            foodNote,
             quantity,
             totalPrice: calculateTotalPrice(),
         };
@@ -158,22 +166,24 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
         setSelectedVariant(null);
         setSelectedVendor(null);
         setSelectedLocation(null);
-        setRoomNumber("");
+        setFoodNote("");
         setQuantity(1);
     };
 
-    console.log(locations);
+    // console.log(locations);
 
     // Get locations for the selected vendor
-    const filteredLocations = useMemo(() => {
-        if (!selectedVendor) return [];
-        return locations.filter(
-            (location) => location.vendor_id === selectedVendor.id
-        );
-    }, [selectedVendor, locations]);
+    // const filteredLocations = useMemo(() => {
+    //     if (!selectedVendor) return [];
+    //     return locations.filter(
+    //         (location) => location.vendor_id === selectedVendor.id
+    //     );
+    // }, [selectedVendor, locations]);
 
-    console.log(selectedVendor);
-    console.log(filteredLocations);
+    // console.log(selectedVendor);
+    // console.log(filteredLocations);
+
+    console.log(categories);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -233,29 +243,29 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
 
                 {/* Food Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {filteredFoods.map(([name, data]) => (
+                    {filteredFoods.map((data) => (
                         <div
                             key={data.id}
                             className="bg-white rounded-xl overflow-hidden shadow-lg cursor-pointer transform transition-all hover:scale-105"
-                            onClick={() => handleFoodClick(data, name)}
+                            onClick={() => handleFoodClick(data)}
                         >
                             <img
-                                src={data.image}
-                                alt={name}
+                                src={data.thumbnail}
+                                alt={data.name}
                                 className="w-full h-40 object-cover"
                             />
                             <div className="p-4">
                                 <h3 className="font-bold text-[#493711]">
-                                    {name}
+                                    {data.name}
                                 </h3>
                                 <p className="text-sm text-gray-600 mt-1">
-                                    {data.description}
+                                    {data?.description || "no desc"}
                                 </p>
                                 <p className="text-sm text-[#FBB60E] mt-2">
-                                    From ₵
-                                    {Math.min(
+                                    From ₵10
+                                    {/* {Math.min(
                                         ...data.variants.map((v) => v.basePrice)
-                                    )}
+                                    )} */}
                                 </p>
                             </div>
                         </div>
@@ -280,45 +290,15 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
 
                             <div className="p-4">
                                 <img
-                                    src={selectedFood.image}
+                                    src={selectedFood.thumbnail}
                                     alt={selectedFood.name}
                                     className="w-full h-48 object-cover rounded-lg mb-4"
                                 />
 
-                                {/* Variants Selection */}
-                                <h3 className="font-bold text-[#493711] mb-2">
-                                    Choose Variant
-                                </h3>
-                                <div className="grid grid-cols-2 gap-2 mb-4">
-                                    {selectedFood.variants.map(
-                                        (variant, index) => (
-                                            <button
-                                                key={index}
-                                                className={`p-3 rounded-lg text-left transition-colors
-                        ${
-                            selectedVariant === variant
-                                ? "bg-[#E4BF57] text-[#493711]"
-                                : "bg-gray-50 hover:bg-gray-100"
-                        }`}
-                                                onClick={() =>
-                                                    setSelectedVariant(variant)
-                                                }
-                                            >
-                                                <div className="font-bold">
-                                                    {variant.name}
-                                                </div>
-                                                <div className="text-sm">
-                                                    ₵{variant.basePrice}
-                                                </div>
-                                            </button>
-                                        )
-                                    )}
-                                </div>
-
-                                {selectedVariant && (
+                                {selectedFood && (
                                     <>
                                         {/* Vendor Selection */}
-                                        <h3 className="font-bold text-[#493711] mb-2">
+                                        <h3 className="font-bold text-[#493711] capitalize mb-2">
                                             Choose Vendor
                                         </h3>
                                         <div className="space-y-2 mb-4">
@@ -338,7 +318,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                             )
                                                         }
                                                     >
-                                                        <div className="flex justify-between">
+                                                        <div className="flex justify-between text-gray-600">
                                                             <span className="font-bold">
                                                                 {vendor.name}
                                                             </span>
@@ -354,27 +334,55 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                         </div>
                                     </>
                                 )}
+                                <div className="grid grid-cols-2 gap-2 mb-4">
+                                    {selectedVendor &&
+                                        selectedVendor?.variants.map(
+                                            (variant, index) => (
+                                                <button
+                                                    key={index}
+                                                    className={`p-3 rounded-lg text-left transition-colors
+                        ${
+                            selectedVariant === variant
+                                ? "bg-[#E4BF57] text-[#493711]"
+                                : "bg-gray-50 hover:bg-gray-100"
+                        }`}
+                                                    onClick={() =>
+                                                        setSelectedVariant(
+                                                            variant
+                                                        )
+                                                    }
+                                                >
+                                                    <div className="font-bold">
+                                                        {variant.name}
+                                                    </div>
+                                                    <div className="text-sm">
+                                                        ₵{variant.price}
+                                                    </div>
+                                                </button>
+                                            )
+                                        )}
+                                </div>
 
-                                {selectedVendor && (
+                                {selectedVariant && (
                                     <>
                                         {/* Location Selection */}
                                         <h3 className="font-bold text-[#493711] mb-2">
                                             Delivery Location
                                         </h3>
                                         <div className="grid grid-cols-2 gap-2 mb-4">
-                                            {filteredLocations.map(
+                                            {selectedVendor.locations.map(
                                                 (location) => (
                                                     <button
                                                         key={location.id}
                                                         className={`p-3 rounded-lg text-left transition-colors ${
-                                                            selectedLocation ===
+                                                            selectedLocation.destination ===
                                                             location.destination
                                                                 ? "bg-[#E4BF57] text-[#493711]"
                                                                 : "bg-gray-50 hover:bg-gray-100"
                                                         }`}
                                                         onClick={() =>
                                                             setSelectedLocation(
-                                                                location.destination
+                                                                location
                                                             )
                                                         }
                                                     >
@@ -384,7 +392,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                             }
                                                         </div>
                                                         <div className="text-sm">
-                                                            +₵{location.amount}{" "}
+                                                            +₵{location.price}{" "}
                                                             delivery
                                                         </div>
                                                     </button>
@@ -399,17 +407,15 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                         {/* Room Number */}
                                         <div className="mb-4">
                                             <label className="block font-bold text-[#493711] mb-2">
-                                                Room Number
+                                                Add Food Note
                                             </label>
                                             <input
                                                 type="text"
-                                                placeholder="Enter your room number"
+                                                placeholder="Enter note. eg. no pepper"
                                                 className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#E4BF57]"
-                                                value={roomNumber}
+                                                value={foodNote}
                                                 onChange={(e) =>
-                                                    setRoomNumber(
-                                                        e.target.value
-                                                    )
+                                                    setFoodNote(e.target.value)
                                                 }
                                             />
                                         </div>

@@ -10,9 +10,11 @@ class FoodController extends Controller
 {
     public function index()
     {
-        $food = Food::all();
-        return Inertia::render('Food', [
-            'food' => $food
+        $foods = Food::with(['category' => function ($query) {
+            $query->select('id', 'name'); // Only select the 'id' and 'name' fields
+        }])->get();
+        return Inertia::render('FoodType', [
+            'foods' => $foods
         ]);
     }
 }

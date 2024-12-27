@@ -3,18 +3,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import DangerButton from "@/Components/DangerButton";
 
-export default function Food() {
+export default function Dish({ dishes }) {
+    console.log(dishes);
     return (
-        //     <AuthenticatedLayout
-        //         header={
-        //             <h2 className="text-xl font-semibold leading-tight text-gray-800">
-        //                 Dashboard
-        //             </h2>
-        //         }
-        //     >
-
         <AdminLayout>
-            <Head title="Dashboard" />
+            <Head title="Food" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -23,7 +16,10 @@ export default function Food() {
                             <thead>
                                 <tr className="text-black">
                                     <th className="border-b border-r-2 py-2 px-4">
-                                        Name
+                                        Food
+                                    </th>
+                                    <th className="border-b border-r-2 py-2 px-4">
+                                        Category
                                     </th>
                                     <th className="border-b border-r-2 py-2 px-4">
                                         Vendor
@@ -46,6 +42,5 @@ export default function Food() {
                 </div>
             </div>
         </AdminLayout>
-        // </AuthenticatedLayout>
     );
 }

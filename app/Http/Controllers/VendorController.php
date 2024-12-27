@@ -10,9 +10,9 @@ class VendorController extends Controller
 {
     public function index()
     {
-        $vendor = Vendor::all();
+        $vendors = Vendor::all();
         return Inertia::render('Vendors', [
-            'vendor' => $vendor
+            'vendors' => $vendors
         ]);
     }
 }
