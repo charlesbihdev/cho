@@ -58,7 +58,7 @@ const foodDatas = {
 // const categories = ["All", "Rice Dishes", "Noodles", "Fast Food", "Beverages"];
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
-    console.log(foodData);
+    // console.log(foodData);
     // console.log(categories);
     // console.log(selectedVendor);
 
@@ -80,8 +80,6 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
         );
     }, []);
     // console.log(selectedLocation);
-
-    console.log(foodData.slice(0, 5));
 
     const filteredFoods = useMemo(() => {
         return foodData.filter((food) => {
@@ -182,8 +180,6 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
 
     // console.log(selectedVendor);
     // console.log(filteredLocations);
-
-    console.log(categories);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -298,7 +294,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                 {selectedFood && (
                                     <>
                                         {/* Vendor Selection */}
-                                        <h3 className="font-bold text-[#493711] capitalize mb-2">
+                                        <h3 className="font-bold text-[#493711] uppercase mb-2">
                                             Choose Vendor
                                         </h3>
                                         <div className="space-y-2 mb-4">
@@ -334,39 +330,47 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                         </div>
                                     </>
                                 )}
-                                <div className="grid grid-cols-2 gap-2 mb-4">
-                                    {selectedVendor &&
-                                        selectedVendor?.variants.map(
-                                            (variant, index) => (
-                                                <button
-                                                    key={index}
-                                                    className={`p-3 rounded-lg text-left transition-colors
-                        ${
-                            selectedVariant === variant
-                                ? "bg-[#E4BF57] text-[#493711]"
-                                : "bg-gray-50 hover:bg-gray-100"
-                        }`}
-                                                    onClick={() =>
-                                                        setSelectedVariant(
-                                                            variant
-                                                        )
-                                                    }
-                                                >
-                                                    <div className="font-bold">
-                                                        {variant.name}
-                                                    </div>
-                                                    <div className="text-sm">
-                                                        ₵{variant.price}
-                                                    </div>
-                                                </button>
-                                            )
-                                        )}
-                                </div>
+                                {selectedVendor && (
+                                    <div>
+                                        <h3 className="font-bold text-[#493711] uppercase mb-2">
+                                            Choose Variant
+                                        </h3>
+                                        <div className="grid grid-cols-2 gap-2 mb-4">
+                                            {selectedVendor.variants.map(
+                                                (variant, index) => (
+                                                    <button
+                                                        key={
+                                                            variant.id || index
+                                                        } // Preferably use variant.id if available
+                                                        className={`p-3 rounded-lg text-left transition-colors
+                    ${
+                        selectedVariant === variant
+                            ? "bg-[#E4BF57] text-[#493711]"
+                            : "bg-gray-50 hover:bg-gray-100"
+                    }`}
+                                                        onClick={() =>
+                                                            setSelectedVariant(
+                                                                variant
+                                                            )
+                                                        }
+                                                    >
+                                                        <div className="font-bold">
+                                                            {variant.name}
+                                                        </div>
+                                                        <div className="text-sm">
+                                                            ₵{variant.price}
+                                                        </div>
+                                                    </button>
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {selectedVariant && (
                                     <>
                                         {/* Location Selection */}
-                                        <h3 className="font-bold text-[#493711] mb-2">
+                                        <h3 className="font-bold uppercase text-[#493711] mb-2">
                                             Delivery Location
                                         </h3>
                                         <div className="grid grid-cols-2 gap-2 mb-4">
@@ -375,8 +379,8 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                     <button
                                                         key={location.id}
                                                         className={`p-3 rounded-lg text-left transition-colors ${
-                                                            selectedLocation.destination ===
-                                                            location.destination
+                                                            selectedLocation?.destination ===
+                                                            location?.destination
                                                                 ? "bg-[#E4BF57] text-[#493711]"
                                                                 : "bg-gray-50 hover:bg-gray-100"
                                                         }`}
@@ -388,7 +392,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                     >
                                                         <div className="font-bold">
                                                             {
-                                                                location.destination
+                                                                location?.destination
                                                             }
                                                         </div>
                                                         <div className="text-sm">
