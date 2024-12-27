@@ -22,8 +22,7 @@ class Vendor extends Model
 
     public function variants()
     {
-        return $this->belongsToMany(Variant::class, 'food_vendor_variant')
-            ->withTimestamps();
+        return $this->hasMany(Variant::class);
     }
 
     public function orders()

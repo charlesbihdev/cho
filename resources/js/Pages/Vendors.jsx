@@ -2,10 +2,11 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
-export default function Vendors() {
+export default function Vendors({ vendors }) {
+    console.log(vendors);
     return (
         <AdminLayout>
-            <Head title="Dashboard" />
+            <Head title="Vendors" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -15,15 +16,37 @@ export default function Vendors() {
                                 <thead>
                                     <tr className="text-black">
                                         <th className="border-b border-r-2 py-2 px-4">
+                                            ID
+                                        </th>
+                                        <th className="border-b border-r-2 py-2 px-4">
                                             Name
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            Location
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
 
-                                <tbody></tbody>
+                                <tbody>
+                                    {vendors.map((vendor, index) => (
+                                        <tr key={index}>
+                                            <td className="border-b border-r-2 py-2 px-4">
+                                                {index + 1}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2 px-4">
+                                                {vendor.name}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2 px-4">
+                                                <button className="bg-blue-500 text-white py-1 px-4 rounded">
+                                                    Edit
+                                                </button>
+                                                <button className="bg-red-600 text-white py-1 px-4 rounded">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
                         </div>
                     </div>

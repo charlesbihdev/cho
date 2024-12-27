@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Food;
+use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,7 @@ class VariantFactory extends Factory
             'name' => $this->faker->word,
             'price' => $this->faker->randomFloat(2, 5, 50),
             'food_id' => Food::factory(),
+            'vendor_id' => Vendor::factory(),
         ];
     }
 }

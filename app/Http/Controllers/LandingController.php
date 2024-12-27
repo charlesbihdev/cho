@@ -13,45 +13,44 @@ class LandingController extends Controller
     public function index()
     {
         // Get all foods with their variants and associated vendors
-        $foods = Food::with(['variants.vendors' => function ($query) {
-            $query->with(['locations']); // Load locations for each vendor
-        }])->get();
+        $foods = Food::with(['category', 'vendors.variants', 'vendors.locations'])->get();
 
-        $categories = Category::all()->map(function ($category) {
-            return [
-                'id' => $category->id,
-                'name' => $category->name,
-            ];
-        });
+        $foodData = [
+            'foods' => $foods->map(function ($food) {
+                return [
+                    'id' => $food->id,
+                    'name' => $food->name,
+                    'thumbnail' => $food->thumbnail,
+                    'category' => [
+                        'id' => $food->category->id,
+                        'name' => $food->category->name,
+                    ],
+                    'vendors' => $food->vendors->map(function ($vendor) {
+                        return [
+                            'id' => $vendor->id,
+                            'name' => $vendor->name,
+                            'variants' => $vendor->variants->map(function ($variant) {
+                                return [
+                                    'id' => $variant->id,
+                                    'name' => $variant->name,
+                                    'price' => $variant->price,
+                                ];
+                            }),
+                            'locations' => $vendor->locations->map(function ($location) {
+                                return [
+                                    'id' => $location->id,
+                                    'destination' => $location->destination,
+                                    'price' => $location->amount,
+                                ];
+                            }),
+                        ];
+                    }),
+                ];
+            }),
+        ];
 
+        // dd($foodData['foods']);
 
-        $foodData = [];
-
-        foreach ($foods as $food) {
-            $foodData[$food->name] = [
-                'name' => $food->name,
-                'id' => $food->id,
-                'image' => $food->thumbnail,
-                'description' => $food->description ?? "some desc",
-                'category' => $food->category->name,
-                'variants' => $food->variants->map(function ($variant) {
-                    return [
-                        'name' => $variant->name,
-                        'basePrice' => $variant->price, // Adjusted to match your column name
-                    ];
-                }),
-                'vendors' => $food->vendors()->map(function ($vendor) {
-                    return [
-                        'id' => $vendor->id,
-                        'name' => $vendor->name,
-                        'rating' => $vendor->rating ?? 5,
-                        'locationPrices' => $vendor->locations->pluck('amount', 'destination')->toArray(),
-                    ];
-                }),
-            ];
-        }
-
-        // dd($foodData);
         $locations = Location::all()->map(function ($location) {
             return [
                 'id' => $location->id,
@@ -63,7 +62,7 @@ class LandingController extends Controller
         });
 
         return Inertia::render('Landing', [
-            'foodData' => $foodData,
+            'foodData' => $foodData['foods'],
             'locations' => $locations,
             'categories' => Category::all()->pluck('name'),
         ]);

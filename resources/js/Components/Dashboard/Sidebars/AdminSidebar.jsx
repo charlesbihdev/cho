@@ -40,11 +40,21 @@ const AdminSidebar = forwardRef(
 
                         <li>
                             <Link
-                                href="/food"
+                                href="/dish"
                                 className="flex items-center w-full p-2 text-base font-medium rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-[#695019]  group"
                             >
                                 <FaUtensils className="text-xl text-white" />
-                                <span className="ml-3">Food</span>
+                                <span className="ml-3">Dish</span>
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link
+                                href="/food-types"
+                                className="flex items-center w-full p-2 text-base font-medium rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-[#695019]  group"
+                            >
+                                <FaUtensils className="text-xl text-white" />
+                                <span className="ml-3">Food Types</span>
                             </Link>
                         </li>
 

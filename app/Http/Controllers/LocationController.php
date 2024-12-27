@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Locations;
+use App\Models\Location;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
     public function index()
     {
-        $location = Locations::all();
+        $locations = Location::with(['vendor' => function ($query) {
+            $query->select('id', 'name'); // Only select the 'id' and 'name' fields
+        }])->get();
+
         return Inertia::render('Location', [
-            'location' => $location
+            'locations' => $locations
         ]);
     }
 }

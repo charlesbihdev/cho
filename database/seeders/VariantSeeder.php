@@ -13,6 +13,6 @@ class VariantSeeder extends Seeder
      */
     public function run(): void
     {
-        Variant::factory()->count(10)->create();
+        // Variant::factory()->count(10)->create();
     }
 }
