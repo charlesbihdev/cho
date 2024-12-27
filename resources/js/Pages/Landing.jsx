@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 // Enhanced sample data
-const foodData = {
+const foodDatas = {
     "Fried Rice": {
         id: 1,
         image: "https://status.pizza/101",
@@ -26,7 +26,6 @@ const foodData = {
             {
                 name: "Asian Kitchen",
                 rating: 4.5,
-                deliveryTime: "20-30",
                 locationPrices: {
                     "Hall A": 2.0,
                     "Hall B": 1.5,
@@ -37,7 +36,6 @@ const foodData = {
             {
                 name: "Quick Wok",
                 rating: 4.3,
-                deliveryTime: "15-25",
                 locationPrices: {
                     "Hall A": 1.5,
                     "Hall B": 2.0,
@@ -47,27 +45,17 @@ const foodData = {
             },
         ],
     },
-    Noodles: {
-        id: 2,
-        image: "https://status.pizza/200",
-        description: "Fresh noodles in savory sauce",
-        category: "Noodles",
-        variants: [
-            { name: "Stir Fried", basePrice: 11.99 },
-            { name: "Soup Based", basePrice: 12.99 },
-            { name: "Spicy", basePrice: 12.99 },
-        ],
-        vendors: [
-            /* Similar structure */
-        ],
-    },
-    // ... more food items
 };
 
-const locations = ["Hall A", "Hall B", "Hall C", "Graduate Housing"];
-const categories = ["All", "Rice Dishes", "Noodles", "Fast Food", "Beverages"];
+// const locations = ["Hall A", "Hall B", "Hall C", "Graduate Housing"];
+// const categories = ["All", "Rice Dishes", "Noodles", "Fast Food", "Beverages"];
 
-const FoodOrderingPage = () => {
+const FoodOrderingPage = ({ foodData, locations, categories }) => {
+    // console.log(foodData);
+    // console.log(locations);
+    // console.log(categories);
+    // console.log(selectedVendor);
+
     const [selectedFood, setSelectedFood] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [selectedVendor, setSelectedVendor] = useState(null);
@@ -85,6 +73,7 @@ const FoodOrderingPage = () => {
             storedCart.reduce((total, item) => total + item.quantity, 0)
         );
     }, []);
+    console.log(selectedLocation);
 
     // Filter foods based on search and category
     const filteredFoods = useMemo(() => {
@@ -173,6 +162,19 @@ const FoodOrderingPage = () => {
         setQuantity(1);
     };
 
+    console.log(locations);
+
+    // Get locations for the selected vendor
+    const filteredLocations = useMemo(() => {
+        if (!selectedVendor) return [];
+        return locations.filter(
+            (location) => location.vendor_id === selectedVendor.id
+        );
+    }, [selectedVendor, locations]);
+
+    console.log(selectedVendor);
+    console.log(filteredLocations);
+
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
@@ -213,9 +215,9 @@ const FoodOrderingPage = () => {
             <div className="max-w-6xl mx-auto p-4">
                 {/* Category Filter */}
                 <div className="flex gap-2 overflow-x-auto pb-4 mb-6">
-                    {categories.map((category) => (
+                    {categories.map((category, id) => (
                         <button
-                            key={category}
+                            key={id}
                             className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors
                 ${
                     selectedCategory === category
@@ -250,7 +252,7 @@ const FoodOrderingPage = () => {
                                     {data.description}
                                 </p>
                                 <p className="text-sm text-[#FBB60E] mt-2">
-                                    From $
+                                    From ₵
                                     {Math.min(
                                         ...data.variants.map((v) => v.basePrice)
                                     )}
@@ -306,7 +308,7 @@ const FoodOrderingPage = () => {
                                                     {variant.name}
                                                 </div>
                                                 <div className="text-sm">
-                                                    ${variant.basePrice}
+                                                    ₵{variant.basePrice}
                                                 </div>
                                             </button>
                                         )
@@ -342,14 +344,9 @@ const FoodOrderingPage = () => {
                                                             </span>
                                                             <span>
                                                                 ⭐{" "}
-                                                                {vendor.rating}
+                                                                {vendor.rating ||
+                                                                    5}
                                                             </span>
-                                                        </div>
-                                                        <div className="text-sm">
-                                                            {
-                                                                vendor.deliveryTime
-                                                            }{" "}
-                                                            mins
                                                         </div>
                                                     </button>
                                                 )
@@ -365,36 +362,34 @@ const FoodOrderingPage = () => {
                                             Delivery Location
                                         </h3>
                                         <div className="grid grid-cols-2 gap-2 mb-4">
-                                            {locations.map((location) => (
-                                                <button
-                                                    key={location}
-                                                    className={`p-3 rounded-lg text-left transition-colors
-                            ${
-                                selectedLocation === location
-                                    ? "bg-[#E4BF57] text-[#493711]"
-                                    : "bg-gray-50 hover:bg-gray-100"
-                            }`}
-                                                    onClick={() =>
-                                                        setSelectedLocation(
-                                                            location
-                                                        )
-                                                    }
-                                                >
-                                                    <div className="font-bold">
-                                                        {location}
-                                                    </div>
-                                                    <div className="text-sm">
-                                                        +$
-                                                        {
-                                                            selectedVendor
-                                                                .locationPrices[
-                                                                location
-                                                            ]
-                                                        }{" "}
-                                                        delivery
-                                                    </div>
-                                                </button>
-                                            ))}
+                                            {filteredLocations.map(
+                                                (location) => (
+                                                    <button
+                                                        key={location.id}
+                                                        className={`p-3 rounded-lg text-left transition-colors ${
+                                                            selectedLocation ===
+                                                            location.destination
+                                                                ? "bg-[#E4BF57] text-[#493711]"
+                                                                : "bg-gray-50 hover:bg-gray-100"
+                                                        }`}
+                                                        onClick={() =>
+                                                            setSelectedLocation(
+                                                                location.destination
+                                                            )
+                                                        }
+                                                    >
+                                                        <div className="font-bold">
+                                                            {
+                                                                location.destination
+                                                            }
+                                                        </div>
+                                                        <div className="text-sm">
+                                                            +₵{location.amount}{" "}
+                                                            delivery
+                                                        </div>
+                                                    </button>
+                                                )
+                                            )}
                                         </div>
                                     </>
                                 )}
@@ -450,7 +445,7 @@ const FoodOrderingPage = () => {
                                                 </button>
                                             </div>
                                             <div className="font-bold text-xl">
-                                                $
+                                                ₵
                                                 {calculateTotalPrice().toFixed(
                                                     2
                                                 )}
