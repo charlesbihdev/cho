@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { ShoppingCart, Plus, Minus, X } from "lucide-react";
+import { Link } from "@inertiajs/react";
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
-    const deliveryFee = 2.0; // Example delivery fee
+    const deliveryFee = 0; // Example delivery fee
 
     useEffect(() => {
         // Load cart items from local storage on component mount
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
         setCartItems(storedCart);
     }, []);
 
-    const subtotal = cartItems.reduce(
-        (total, item) => total + item.totalPrice,
-        0
-    );
+    const subtotal = cartItems.reduce((total, item) => total + item.price, 0);
     const totalAmount = subtotal + deliveryFee;
 
     const handleQuantityChange = (itemId, newQuantity) => {
@@ -25,7 +24,7 @@ const CartPage = () => {
                 return {
                     ...item,
                     quantity: newQuantity,
-                    totalPrice: item.price * newQuantity,
+                    // price: item.price * newQuantity,
                 };
             }
             return item;
@@ -46,17 +45,27 @@ const CartPage = () => {
         console.log("Proceeding to checkout with items:", cartItems);
         // Redirect to checkout page or implement payment logic
     };
-
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
             <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
                 <div className="max-w-6xl mx-auto flex justify-between items-center">
-                    <h1 className="text-2xl font-bold">Your Cart</h1>
-                    <button className="flex items-center">
+                    <Link href={route("landing")}>
+                        <h1 className="text-2xl font-bold">Cho Eats</h1>
+                    </Link>
+
+                    <Link
+                        as="button"
+                        href={route("cart")}
+                        className="relative p-2 hover:bg-[#E4BF57] hover:text-[#493711] rounded-full transition-colors"
+                    >
                         <ShoppingCart size={24} />
-                        <span className="ml-2">{cartItems.length}</span>
-                    </button>
+                        {cartItems.length > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-[#FBB60E] text-[#493711] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                {cartItems.length}
+                            </span>
+                        )}
+                    </Link>
                 </div>
             </div>
 
@@ -118,7 +127,10 @@ const CartPage = () => {
                                 </div>
                                 <div className="flex items-center">
                                     <span className="font-bold">
-                                        ${item.totalPrice.toFixed(2)}
+                                        $
+                                        {(item?.quantity * item?.price).toFixed(
+                                            2
+                                        )}
                                     </span>
                                     <button
                                         onClick={() =>

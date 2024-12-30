@@ -8,54 +8,8 @@ import {
     Search,
     X,
 } from "lucide-react";
-
+import { Link } from "@inertiajs/react";
 // Enhanced sample data
-const foodDatas = {
-    "Fried Rice": {
-        id: 1,
-        image: "https://status.pizza/101",
-        description: "Flavorful fried rice with fresh vegetables",
-        category: "Rice Dishes",
-
-        vendors: [
-            {
-                variants: [
-                    { name: "Assorted", basePrice: 12.99 },
-                    { name: "Beef", basePrice: 14.99 },
-                    { name: "Sausage", basePrice: 13.99 },
-                    { name: "Chicken", basePrice: 13.99 },
-                ],
-                name: "Asian Kitchen",
-                rating: 4.5,
-                locationPrices: {
-                    "Hall A": 2.0,
-                    "Hall B": 1.5,
-                    "Hall C": 3.0,
-                    "Graduate Housing": 2.5,
-                },
-            },
-            {
-                variants: [
-                    { name: "Assorted", basePrice: 12.99 },
-                    { name: "Beef", basePrice: 14.99 },
-                    { name: "Sausage", basePrice: 13.99 },
-                    { name: "Chicken", basePrice: 13.99 },
-                ],
-                name: "Quick Wok",
-                rating: 4.3,
-                locationPrices: {
-                    "Hall A": 1.5,
-                    "Hall B": 2.0,
-                    "Hall C": 2.5,
-                    "Graduate Housing": 3.0,
-                },
-            },
-        ],
-    },
-};
-
-// const locations = ["Hall A", "Hall B", "Hall C", "Graduate Housing"];
-// const categories = ["All", "Rice Dishes", "Noodles", "Fast Food", "Beverages"];
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
     // console.log(foodData);
@@ -75,9 +29,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCartCount(
-            storedCart.reduce((total, item) => total + item.quantity, 0)
-        );
+        setCartCount(storedCart.length);
     }, []);
     // console.log(selectedLocation);
 
@@ -96,9 +48,9 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     const calculateTotalPrice = () => {
         if (!selectedVariant || !selectedVendor || !selectedLocation) return 0;
         const basePrice = selectedVariant.price;
-        // const deliveryPrice = 0;
-        const deliveryPrice = selectedLocation.price;
-        return (basePrice + deliveryPrice) * quantity;
+        const deliveryPrice = 0;
+        // const deliveryPrice = selectedLocation.price;
+        return basePrice;
     };
 
     const handleFoodClick = (food) => {
@@ -110,26 +62,23 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
         setFoodNote("");
     };
 
+    console.log(selectedVariant);
+
     const addToCart = () => {
-        if (
-            !selectedVariant ||
-            !selectedVendor ||
-            !selectedLocation ||
-            !foodNote
-        ) {
+        if (!selectedVariant || !selectedVendor || !selectedLocation) {
             alert("Please select all options and enter a room number.");
             return;
         }
 
         const cartItem = {
-            id: selectedFood.id,
+            id: selectedVariant.id,
             name: selectedFood.name,
             variant: selectedVariant.name,
             vendor: selectedVendor.name,
             location: selectedLocation,
-            foodNote,
-            quantity,
-            totalPrice: calculateTotalPrice(),
+            foodNote: foodNote,
+            quantity: quantity,
+            price: calculateTotalPrice(),
         };
 
         // Retrieve existing cart from local storage
@@ -155,9 +104,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
         localStorage.setItem("cart", JSON.stringify(existingCart));
 
         // Update cart count
-        setCartCount(
-            existingCart.reduce((total, item) => total + item.quantity, 0)
-        );
+        setCartCount(existingCart.length);
 
         // Reset form
         setShowFoodDetail(false);
@@ -187,16 +134,22 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
             <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
                 <div className="max-w-6xl mx-auto">
                     <div className="flex justify-between items-center mb-4">
-                        <h1 className="text-2xl font-bold">Cho Eats</h1>
+                        <Link href={route("landing")}>
+                            <h1 className="text-2xl font-bold">Cho Eats</h1>
+                        </Link>
                         <div className="flex items-center">
-                            <button className="relative p-2 hover:bg-[#E4BF57] hover:text-[#493711] rounded-full transition-colors">
+                            <Link
+                                as="button"
+                                href={route("cart")}
+                                className="relative p-2 hover:bg-[#E4BF57] hover:text-[#493711] rounded-full transition-colors"
+                            >
                                 <ShoppingCart size={24} />
                                 {cartCount > 0 && (
                                     <span className="absolute -top-1 -right-1 bg-[#FBB60E] text-[#493711] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                                         {cartCount}
                                     </span>
                                 )}
-                            </button>
+                            </Link>
                         </div>
                     </div>
 
@@ -425,41 +378,17 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                         </div>
 
                                         {/* Quantity */}
-                                        <div className="flex items-center justify-between mb-4">
-                                            <div className="flex items-center gap-4">
-                                                <button
-                                                    className="p-2 rounded-full bg-[#FFB400] text-white hover:bg-[#FF9F00]"
-                                                    onClick={() =>
-                                                        setQuantity(
-                                                            Math.max(
-                                                                1,
-                                                                quantity - 1
-                                                            )
-                                                        )
-                                                    }
-                                                >
-                                                    <Minus size={20} />
-                                                </button>
-                                                <span className="text-xl font-bold">
-                                                    {quantity}
-                                                </span>
-                                                <button
-                                                    className="p-2 rounded-full bg-[#FFB400] text-white hover:bg-[#FF9F00]"
-                                                    onClick={() =>
-                                                        setQuantity(
-                                                            quantity + 1
-                                                        )
-                                                    }
-                                                >
-                                                    <Plus size={20} />
-                                                </button>
-                                            </div>
+                                        <div className=" mb-4">
                                             <div className="font-bold text-xl">
                                                 ₵
                                                 {calculateTotalPrice().toFixed(
                                                     2
                                                 )}
                                             </div>
+
+                                            <p className="text-sm text-gray-600">
+                                                without delivery fee
+                                            </p>
                                         </div>
 
                                         {/* Add to Cart Button */}

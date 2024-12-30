@@ -15,11 +15,11 @@ use App\Http\Controllers\LocationController;
 //     return Inertia::render('Landing', []);
 // });
 
-Route::get('/', [LandingController::class, 'index']);
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::get('/cart', function () {
     return Inertia::render('Cart');
-});
+})->name('cart');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
