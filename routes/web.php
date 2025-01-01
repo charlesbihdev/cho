@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\DishController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\DishController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LocationController;
 
@@ -40,6 +41,11 @@ Route::get('/dish', [DishController::class, 'index'])->name('dish');
 Route::get('/vendors', [VendorController::class, 'index'])->name('vendors');
 
 Route::get('/location', [LocationController::class, 'index'])->name('location');
+
+Route::post('/pay', [PaymentController::class, 'redirectToGateway'])->name('paystack.pay');
+
+
+Route::get('/payment/callback', [PaymentController::class, 'handleGatewayCallback'])->name('paystack.callback');
 
 
 require __DIR__ . '/auth.php';

@@ -62,19 +62,19 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
         setFoodNote("");
     };
 
-    console.log(selectedVariant);
-
     const addToCart = () => {
         if (!selectedVariant || !selectedVendor || !selectedLocation) {
-            alert("Please select all options and enter a room number.");
+            alert("Please select all options");
             return;
         }
 
         const cartItem = {
             id: selectedVariant.id,
             name: selectedFood.name,
+            image: selectedFood.thumbnail,
             variant: selectedVariant.name,
             vendor: selectedVendor.name,
+            vendor_id: selectedVendor.id,
             location: selectedLocation,
             foodNote: foodNote,
             quantity: quantity,

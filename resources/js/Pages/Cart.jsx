@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { ShoppingCart, Plus, Minus, X } from "lucide-react";
-import { Link } from "@inertiajs/react";
-
+import { Link, useForm } from "@inertiajs/react";
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
-    const deliveryFee = 0; // Example delivery fee
 
     useEffect(() => {
         // Load cart items from local storage on component mount
@@ -12,9 +10,6 @@ const CartPage = () => {
 
         setCartItems(storedCart);
     }, []);
-
-    const subtotal = cartItems.reduce((total, item) => total + item.price, 0);
-    const totalAmount = subtotal + deliveryFee;
 
     const handleQuantityChange = (itemId, newQuantity) => {
         if (newQuantity < 1) return; // Prevent quantity from going below 1
@@ -34,16 +29,67 @@ const CartPage = () => {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
+    // Create a unique list of locations for rendering
+    const uniqueLocations = Array.from(
+        new Set(cartItems.map((item) => item.location.id))
+    ).map((id) => cartItems.find((item) => item.location.id === id));
+
+    // Function to calculate total delivery fees
+    const calculateTotalDeliveryFees = (items) => {
+        let totalCost = 0;
+
+        items.forEach((item) => {
+            totalCost += item?.location?.price; // Assuming price is the same for the same location
+        });
+
+        return totalCost;
+    };
+
+    const calculateSubTotal = (items) => {
+        let subTotal = 0;
+
+        items.forEach((item) => {
+            subTotal += item?.price * item.quantity; // Assuming price is the same for the same location
+        });
+
+        return subTotal;
+    };
+
+    const subtotal = calculateSubTotal(cartItems);
+
+    const totalDeliveryFee = calculateTotalDeliveryFees(uniqueLocations);
+
+    const totalAmount = subtotal + totalDeliveryFee;
+
     const handleRemoveItem = (itemId) => {
         const updatedCart = cartItems.filter((item) => item.id !== itemId);
         setCartItems(updatedCart);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
-    const handleCheckout = () => {
-        // Here you can redirect to a payment page or handle payment processing
-        console.log("Proceeding to checkout with items:", cartItems);
-        // Redirect to checkout page or implement payment logic
+    const { data, setData, post, processing, errors, reset } = useForm({
+        orderData: [],
+        phone: "0554676725",
+        email: "karl@gmail.com",
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const orderData = cartItems.map((item) => ({
+            variant_id: item.id,
+            quantity: item.quantity,
+            location_id: item.location.id,
+            food_note: item?.foodNote,
+        }));
+
+        // Update the order_data in the form
+        setData("order_data", orderData);
+
+        post(route("paystack.pay"), {
+            preserveScroll: true,
+            preserveState: true,
+        });
     };
     return (
         <div className="min-h-screen bg-gray-50">
@@ -104,7 +150,7 @@ const CartPage = () => {
                                                         item.quantity - 1
                                                     )
                                                 }
-                                                className="p-1 bg-gray-200 rounded-full"
+                                                className="p-1 bg-gray-200 rounded-full cursor-pointer"
                                             >
                                                 <Minus size={16} />
                                             </button>
@@ -118,7 +164,7 @@ const CartPage = () => {
                                                         item.quantity + 1
                                                     )
                                                 }
-                                                className="p-1 bg-gray-200 rounded-full"
+                                                className="p-1 bg-gray-200 rounded-full cursor-pointer"
                                             >
                                                 <Plus size={16} />
                                             </button>
@@ -136,7 +182,7 @@ const CartPage = () => {
                                         onClick={() =>
                                             handleRemoveItem(item.id)
                                         }
-                                        className="ml-4 text-red-500"
+                                        className="ml-4 text-red-500 cursor-pointer"
                                     >
                                         <X size={20} />
                                     </button>
@@ -145,6 +191,23 @@ const CartPage = () => {
                         ))}
                     </div>
                 )}
+            </div>
+
+            {/* Delivery Cost Summary Section */}
+            <div className="max-w-6xl mx-auto p-4">
+                <h2 className="text-xl font-bold mb-4">Delivery Summary</h2>
+                <div className="bg-white p-4 rounded-lg shadow-md">
+                    {uniqueLocations.map((item) => (
+                        <div key={item.id} className="flex justify-between">
+                            <span>{`${item.vendor} - ${item.location.destination}`}</span>
+                            <span>${item.location.price.toFixed(2)}</span>
+                        </div>
+                    ))}
+                    <div className="flex justify-between font-bold">
+                        <span>Total Delivery Fee</span>
+                        <span>${totalDeliveryFee.toFixed(2)}</span>
+                    </div>
+                </div>
             </div>
 
             {/* Order Summary Section */}
@@ -157,14 +220,15 @@ const CartPage = () => {
                     </div>
                     <div className="flex justify-between">
                         <span>Delivery Fee</span>
-                        <span>${deliveryFee.toFixed(2)}</span>
+                        <span>${totalDeliveryFee.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between font-bold">
                         <span>Total</span>
                         <span>${totalAmount.toFixed(2)}</span>
                     </div>
                     <button
-                        onClick={handleCheckout}
+                        type="submit"
+                        onClick={handleSubmit}
                         className="w-full mt-4 bg-[#FBB60E] text-[#493711] py-3 rounded-full font-bold hover:bg-[#E4BF57] transition-colors"
                     >
                         Proceed to Checkout
