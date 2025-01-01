@@ -69,8 +69,6 @@ class PaymentController extends Controller
                 }
             }
 
-            dd($orderData);
-
 
             // Sum up the delivery fees
             $totalDeliveryFee = array_sum($deliveryFees);
@@ -157,6 +155,7 @@ class PaymentController extends Controller
                     foreach ($orderData as $item) {
                         $locationId = $item['location_id'];
                         $vendorId = $item['vendor_id'];
+                        $variantId = $item['variant_id'];
 
                         // Create a unique key for grouping
                         $key = "{$locationId}_{$vendorId}";
@@ -169,6 +168,9 @@ class PaymentController extends Controller
                                 'total_price' => 0,
                             ];
                         }
+
+                        $variant = Variant::findOrFail($variantId);
+                        $item['price'] = $variant->price;
 
                         // Add item to the grouped order
                         $groupedOrders[$key]['items'][] = $item;
