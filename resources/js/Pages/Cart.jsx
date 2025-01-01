@@ -71,7 +71,7 @@ const CartPage = () => {
 
     const { data, setData, post, processing, errors, reset } = useForm({
         orderData: [],
-        phone: "0554676725",
+        phone: "0548715098",
         email: "karl@gmail.com",
     });
 

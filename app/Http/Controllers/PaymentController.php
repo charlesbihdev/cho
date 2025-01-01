@@ -74,7 +74,7 @@ class PaymentController extends Controller
             $totalDeliveryFee = array_sum($deliveryFees);
 
             // Calculate the final total amount
-            $payableAmount = ceil($totalAmount + $totalDeliveryFee);
+            $payableAmount = number_format($totalAmount + $totalDeliveryFee, 1);
 
             // dd($payableAmount);
 
@@ -194,7 +194,7 @@ class PaymentController extends Controller
                         foreach ($orderGroup['items'] as $item) {
                             OrderItem::create([
                                 'quantity' => $item['quantity'],
-                                'total_price' => $item['price'] * $item['quantity'],
+                                'price' => $item['price'] * $item['quantity'],
                                 'variant_id' => $item['variant_id'],
                                 'order_id' => $order->id,
                             ]);

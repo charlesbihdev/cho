@@ -106,7 +106,7 @@ const ToastProvider = ({ children }) => {
 
     const flash = usePage().props.flash;
 
-    console.log(flash);
+    // console.log(flash);
 
     const handleHide = (type) => {
         setToasts((prev) => ({
