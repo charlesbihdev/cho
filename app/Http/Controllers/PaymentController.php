@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Inertia\Inertia;
+use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Variant;
 use App\Models\Location;
+use App\Models\OrderItem;
+use App\Notifications\OrderPlacedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 
 class PaymentController extends Controller
@@ -19,15 +23,15 @@ class PaymentController extends Controller
 
     public function redirectToGateway(Request $request)
     {
-
         $request->validate([
             'email' => 'required|email',
             'phone' => 'nullable|regex:/^0\d{9}$/',
-            'order_data' => 'required|array',
+            'order_data' => 'required|array|min:1',
+        ], [
+            'order_data' => 'No food items in the cart.', // Custom error message
         ]);
 
-        // dd($request->input('order_data'));
-
+        $orderData = $request->input('order_data');
 
         try {
             $totalAmount = 0;
@@ -35,18 +39,20 @@ class PaymentController extends Controller
             $locationIds = [];
 
 
-            foreach ($request->input('order_data') as $order) {
+            foreach ($orderData as $order) {
                 $variantId = $order['variant_id'];
+                $vendorId = $order['vendor_id'];
                 $quantity = $order['quantity'];
                 $locationId = $order['location_id'];
 
                 // Fetch variant price
                 $variant = Variant::findOrFail($variantId);
+                $order['vendor_id'] = $variant->vendor_id;
                 $variantPrice = $variant->price;
 
                 // Check if the location is valid and corresponds to the vendor
                 $location = Location::findOrFail($locationId);
-                if ($location->vendor_id !== $variant->vendor_id) {
+                if ($location->vendor_id !== $variant->vendor_id && $variant->vendor_id !== $vendorId) {
                     return back()->with([
                         'error' => 'Selected location does not match the vendor of the food item.',
                     ]);
@@ -63,11 +69,16 @@ class PaymentController extends Controller
                 }
             }
 
+            dd($orderData);
+
+
             // Sum up the delivery fees
             $totalDeliveryFee = array_sum($deliveryFees);
 
             // Calculate the final total amount
-            $payableAmount = $totalAmount + $totalDeliveryFee;
+            $payableAmount = ceil($totalAmount + $totalDeliveryFee);
+
+            // dd($payableAmount);
 
             // Generate a unique transaction reference
             $reference = paystack()->genTranxRef();
@@ -94,7 +105,7 @@ class PaymentController extends Controller
                 "callback_url" => route('paystack.callback'), // Define your callback route
                 "metadata" => [
                     "phone" => $request->input('phone'),
-                    "order_data" => $request->input('order_data'),
+                    "order_data" => $orderData,
                 ],
             ];
 
@@ -103,7 +114,7 @@ class PaymentController extends Controller
 
             // Redirect to Paystack for authorization
             $url = paystack()->getAuthorizationUrl($data);
-            Payment::create($paymentData);
+
             return Inertia::location($url->url);
         } catch (Exception $e) {
             dd($e->getMessage());
@@ -141,22 +152,60 @@ class PaymentController extends Controller
 
                 if ($payment && $metadata) {
                     $payment->transaction_id = $transactionId;
-                    $eventTitle = $metadata['event_title'];
+                    $orderData = $metadata['order_data'];
 
-                    if (empty($metadata['event_id']) || empty($metadata['user_id'])) {
-                        // throw new Exception("Event ID is required for 'event' payment type.");
-                        return back()->with([
-                            'error' => 'No metadata found in payment details.',
-                        ]);
+                    foreach ($orderData as $item) {
+                        $locationId = $item['location_id'];
+                        $vendorId = $item['vendor_id'];
+
+                        // Create a unique key for grouping
+                        $key = "{$locationId}_{$vendorId}";
+
+                        if (!isset($groupedOrders[$key])) {
+                            $groupedOrders[$key] = [
+                                'location_id' => $locationId,
+                                'vendor_id' => $vendorId,
+                                'items' => [],
+                                'total_price' => 0,
+                            ];
+                        }
+
+                        // Add item to the grouped order
+                        $groupedOrders[$key]['items'][] = $item;
+                        $groupedOrders[$key]['total_price'] += $item['price'] * $item['quantity'];
                     }
-                    $eventId = $metadata['event_id'];
 
-                    $payment->event_id = $eventId;
+                    // Create orders and order items
+                    foreach ($groupedOrders as $orderGroup) {
+                        // Create the order
+                        $order = Order::create([
+                            'location_id' => $orderGroup['location_id'],
+                            'vendor_id' => $orderGroup['vendor_id'],
+                            'note' => $paymentData['metadata']['note'] ?? null,
+                            'status' => 'pending',
+                            'total_price' => $orderGroup['total_price'],
+                            'email' => $paymentData['metadata']['email'] ?? null,
+                            'phone' => $paymentData['metadata']['phone'] ?? null,
+                        ]);
+
+                        // Create the order items
+                        foreach ($orderGroup['items'] as $item) {
+                            OrderItem::create([
+                                'quantity' => $item['quantity'],
+                                'total_price' => $item['price'] * $item['quantity'],
+                                'variant_id' => $item['variant_id'],
+                                'order_id' => $order->id,
+                            ]);
+                        }
+                    }
+
+
                     $payment->status = 'successful';
                     $payment->save();
+                    Notification::send($payment, new OrderPlacedNotification());
 
 
-                    return redirect()->route('cart')
+                    return redirect()->route('landing')
                         ->with([
                             'success' => 'Payment successful. You can go live now',
                         ]);
@@ -171,8 +220,7 @@ class PaymentController extends Controller
             }
         } catch (Exception $e) {
             // Log the error message for debugging purposes
-            Log::error("Payment handling error: " . $e->getMessage());
-
+            dd($e->getMessage());
             // Return back with an error message
             return back()->with([
                 'error' => 'An error occurred during payment processing: ' . $e->getMessage(),

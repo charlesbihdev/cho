@@ -17,7 +17,9 @@ return new class extends Migration
             $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');
             $table->string('note')->nullable();
             $table->string('status')->default('pending');
-            $table->decimal('total_price', 10, 2);
+            $table->decimal('total_price', 10, 2)->default(0);
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }
