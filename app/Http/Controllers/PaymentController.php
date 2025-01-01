@@ -149,7 +149,7 @@ class PaymentController extends Controller
                     ]);
                 }
 
-                if ($payment && $metadata) {
+                if ($payment && $metadata && $payment->status !== 'successful') {
                     $payment->transaction_id = $transactionId;
                     $orderData = $metadata['order_data'];
 
