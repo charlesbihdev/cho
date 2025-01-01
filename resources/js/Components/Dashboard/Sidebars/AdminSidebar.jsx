@@ -26,12 +26,12 @@ const AdminSidebar = forwardRef(
                     showSidebar ? "translate-x-0" : "-translate-x-full"
                 }  border-r md:translate-x-0 bg-[#493711]  ${className}`}
             >
-                <div className=" py-5 px-3 bg-white dark:bg-[#493711] ">
+                <div className=" py-5 px-3 bg-[#493711] ">
                     <ul className="space-y-2 mb-5">
                         <li>
                             <Link
                                 href="/orders"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-blue-100 dark:hover:bg-[#695019]  group"
+                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
                             >
                                 <FaShoppingCart className="text-xl text-white" />
                                 <span className="ml-3">Orders</span>
@@ -41,7 +41,7 @@ const AdminSidebar = forwardRef(
                         <li>
                             <Link
                                 href="/food"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-[#695019]  group"
+                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
                             >
                                 <FaUtensils className="text-xl text-white" />
                                 <span className="ml-3">Food</span>
@@ -51,7 +51,7 @@ const AdminSidebar = forwardRef(
                         <li>
                             <Link
                                 href="/vendors"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-[#695019]  group"
+                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
                             >
                                 <MdPeopleAlt className="text-xl text-white" />
                                 <span className="ml-3">Vendors</span>
@@ -61,7 +61,7 @@ const AdminSidebar = forwardRef(
                         <li>
                             <Link
                                 href="/location"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-[#695019]  group"
+                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
                             >
                                 <IoLocationSharp className="text-xl text-white" />
                                 <span className="ml-3">Location</span>
