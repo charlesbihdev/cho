@@ -103,6 +103,7 @@ class PaymentController extends Controller
                 "callback_url" => route('paystack.callback'), // Define your callback route
                 "metadata" => [
                     "phone" => $request->input('phone'),
+                    "email" => $request->input('email'),
                     "order_data" => $orderData,
                 ],
             ];
@@ -154,6 +155,7 @@ class PaymentController extends Controller
 
                     foreach ($orderData as $item) {
                         $locationId = $item['location_id'];
+                        $note = $item['food_note'];
                         $vendorId = $item['vendor_id'];
                         $variantId = $item['variant_id'];
 
@@ -166,6 +168,7 @@ class PaymentController extends Controller
                                 'vendor_id' => $vendorId,
                                 'items' => [],
                                 'total_price' => 0,
+                                'note' => $note ?? null,
                             ];
                         }
 
@@ -183,11 +186,10 @@ class PaymentController extends Controller
                         $order = Order::create([
                             'location_id' => $orderGroup['location_id'],
                             'vendor_id' => $orderGroup['vendor_id'],
-                            'note' => $paymentData['metadata']['note'] ?? null,
-                            'status' => 'pending',
+                            'status' => 'success',
                             'total_price' => $orderGroup['total_price'],
-                            'email' => $paymentData['metadata']['email'] ?? null,
-                            'phone' => $paymentData['metadata']['phone'] ?? null,
+                            'email' => $metadata['email'] ?? null,
+                            'phone' => $metadata['phone'] ?? null,
                         ]);
 
                         // Create the order items
@@ -196,6 +198,7 @@ class PaymentController extends Controller
                                 'quantity' => $item['quantity'],
                                 'price' => $item['price'] * $item['quantity'],
                                 'variant_id' => $item['variant_id'],
+                                'note' => $item['note'] ?? null,
                                 'order_id' => $order->id,
                             ]);
                         }
@@ -207,7 +210,7 @@ class PaymentController extends Controller
                     Notification::send($payment, new OrderPlacedNotification());
 
 
-                    return redirect()->route('landing')
+                    return redirect()->route('ordersucess')
                         ->with([
                             'success' => 'Payment successful. You can go live now',
                         ]);

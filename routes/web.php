@@ -22,6 +22,10 @@ Route::get('/cart', function () {
     return Inertia::render('Cart');
 })->name('cart');
 
+Route::get('/order-success', function () {
+    return Inertia::render('OrderSuccess');
+})->name('ordersucess');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
