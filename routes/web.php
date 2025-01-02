@@ -1,18 +1,30 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\DishController;
+use App\Http\Controllers\FoodController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LocationController;
 
-Route::get('/', function () {
-    return Inertia::render('Landing', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Landing', []);
+// });
+
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+
+Route::get('/cart', function () {
+    return Inertia::render('Cart');
+})->name('cart');
+
+Route::get('/order-success', function () {
+    return Inertia::render('OrderSuccess');
+})->name('ordersucess');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -24,22 +36,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/orders', function () {
-    return Inertia::render('Orders');
-});
+Route::get('/orders', [OrderController::class, 'index'])->name('orders');
 
-Route::get('/food', function () {
-    return Inertia::render('Food');
-});
+Route::get('/food-types', [FoodController::class, 'index'])->name('food');
 
-Route::get('/vendors', function () {
-    return Inertia::render('Vendors');
-});
+Route::get('/dish', [DishController::class, 'index'])->name('dish');
 
-Route::get('/location', function () {
-    return Inertia::render('Location');
-});
+Route::get('/vendors', [VendorController::class, 'index'])->name('vendors');
 
-                
-require __DIR__.'/auth.php';
+Route::get('/location', [LocationController::class, 'index'])->name('location');
 
+Route::post('/pay', [PaymentController::class, 'redirectToGateway'])->name('paystack.pay');
+
+
+Route::get('/payment/callback', [PaymentController::class, 'handleGatewayCallback'])->name('paystack.callback');
+
+
+require __DIR__ . '/auth.php';

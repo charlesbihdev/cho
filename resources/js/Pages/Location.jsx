@@ -3,7 +3,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import DangerButton from "@/Components/DangerButton";
 
-export default function Location() {
+export default function Location({ locations }) {
+    console.log(locations);
     return (
         //     <AuthenticatedLayout
         //         header={
@@ -14,7 +15,7 @@ export default function Location() {
         //     >
 
         <AdminLayout>
-            <Head title="Dashboard" />
+            <Head title="Location" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -30,7 +31,7 @@ export default function Location() {
                                             Destination
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            Price
+                                            Amount
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
                                             Action
@@ -38,7 +39,29 @@ export default function Location() {
                                     </tr>
                                 </thead>
 
-                                <tbody></tbody>
+                                <tbody>
+                                    {locations.map((location) => (
+                                        <tr key={location.id}>
+                                            <td className="border-b border-r-2 py-2 px-4">
+                                                {location.vendor.name}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2 px-4">
+                                                {location.destination}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2 px-4">
+                                                {location.amount}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2 px-4">
+                                                {/* <button className="bg-blue-500 text-white py-1 px-4 rounded">
+                                                    Edit
+                                                </button> */}
+                                                <button className="bg-red-600 text-white py-1 px-4 rounded">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
                         </div>
                     </div>

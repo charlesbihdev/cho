@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('variants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('base_price', 10, 2);
+            $table->decimal('price', 10, 2);
             $table->foreignId('food_id')->constrained('foods')->onDelete('cascade');
+            $table->foreignId('vendor_id')->constrained('vendors')->onDelete('cascade');
             $table->timestamps();
         });
     }
