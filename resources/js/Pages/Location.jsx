@@ -52,9 +52,9 @@ export default function Location({ locations }) {
                                                 {location.amount}
                                             </td>
                                             <td className="border-b border-r-2 py-2 px-4">
-                                                <button className="bg-blue-500 text-white py-1 px-4 rounded">
+                                                {/* <button className="bg-blue-500 text-white py-1 px-4 rounded">
                                                     Edit
-                                                </button>
+                                                </button> */}
                                                 <button className="bg-red-600 text-white py-1 px-4 rounded">
                                                     Delete
                                                 </button>

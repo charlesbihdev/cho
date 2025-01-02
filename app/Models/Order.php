@@ -12,7 +12,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['location_id', 'vendor_id', 'note', 'status', 'total_price'];
+    protected $fillable = ['location_id', 'vendor_id', 'status', 'phone', 'email', 'total_price'];
 
     public function location()
     {
