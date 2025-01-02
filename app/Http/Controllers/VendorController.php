@@ -11,7 +11,7 @@ class VendorController extends Controller
     public function index()
     {
         $vendors = Vendor::all();
-        return Inertia::render('Vendors', [
+        return Inertia::render('Admin/Vendors', [
             'vendors' => $vendors
         ]);
     }

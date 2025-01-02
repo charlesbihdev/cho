@@ -50,7 +50,7 @@ class DishController extends Controller
             }
         })->filter();
 
-        return Inertia::render('Dish', [
+        return Inertia::render('Admin/Dish', [
             'dishes' => $foods
         ]);
     }

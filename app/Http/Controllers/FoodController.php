@@ -13,7 +13,7 @@ class FoodController extends Controller
         $foods = Food::with(['category' => function ($query) {
             $query->select('id', 'name'); // Only select the 'id' and 'name' fields
         }])->get();
-        return Inertia::render('FoodType', [
+        return Inertia::render('Admin/FoodType', [
             'foods' => $foods
         ]);
     }
