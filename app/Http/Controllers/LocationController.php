@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Location;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
@@ -14,8 +15,16 @@ class LocationController extends Controller
             $query->select('id', 'name'); // Only select the 'id' and 'name' fields
         }])->get();
 
-        return Inertia::render('Location', [
-            'locations' => $locations
+        $vendors = Vendor::all();
+
+        return Inertia::render('Admin/Location', [
+            'locations' => $locations,
+            'vendors' => $vendors
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        dd($request->all());
     }
 }
