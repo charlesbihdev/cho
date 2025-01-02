@@ -179,7 +179,7 @@ const CartPage = () => {
                                     </div>
                                     <div className="flex items-center">
                                         <span className="font-bold">
-                                            $
+                                            ₵
                                             {(
                                                 item?.quantity * item?.price
                                             ).toFixed(2)}
@@ -206,12 +206,12 @@ const CartPage = () => {
                         {uniqueLocations.map((item) => (
                             <div key={item.id} className="flex justify-between">
                                 <span>{`${item.vendor} - ${item.location.destination}`}</span>
-                                <span>${item.location.price.toFixed(2)}</span>
+                                <span>₵{item.location.price.toFixed(2)}</span>
                             </div>
                         ))}
                         <div className="flex justify-between font-bold">
                             <span>Total Delivery Fee</span>
-                            <span>${totalDeliveryFee.toFixed(2)}</span>
+                            <span>₵{totalDeliveryFee.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
@@ -222,15 +222,15 @@ const CartPage = () => {
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <div className="flex justify-between">
                             <span>Subtotal</span>
-                            <span>${subtotal.toFixed(2)}</span>
+                            <span>₵{subtotal.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
                             <span>Delivery Fee</span>
-                            <span>${totalDeliveryFee.toFixed(2)}</span>
+                            <span>₵{totalDeliveryFee.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between font-bold">
                             <span>Total</span>
-                            <span>${totalAmount.toFixed(2)}</span>
+                            <span>₵{totalAmount.toFixed(2)}</span>
                         </div>
                         <InputError
                             className="text-center"

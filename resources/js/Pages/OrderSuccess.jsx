@@ -1,7 +1,16 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Check, Clock, MapPin, ChevronLeft, Receipt } from "lucide-react";
 
 const OrderSuccess = () => {
+    const [cartItems, setCartItems] = useState([]);
+
+    useEffect(() => {
+        // Load cart items from local storage on component mount
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCartItems(storedCart);
+        localStorage.removeItem("cart");
+    }, []);
+
     // Sample order details - in real app, this would come from props or state
     const orderDetails = {
         orderId: "ORD-2024-1234",
@@ -36,96 +45,17 @@ const OrderSuccess = () => {
                     <p className="text-gray-600 mb-6">
                         Your order #{orderDetails.orderId} has been placed
                     </p>
-
-                    {/* Delivery Info */}
-                    {/* <div className="flex items-center justify-center gap-2 text-[#493711]">
-                        <Clock size={20} />
-                        <span>
-                            Estimated delivery in{" "}
-                            {orderDetails.estimatedDelivery} mins
-                        </span>
-                    </div> */}
-                </div>
-
-                {/* Order Details */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <h2 className="text-lg font-bold text-[#493711] mb-4">
-                        Order Details
-                    </h2>
-
-                    {/* Delivery Location */}
-                    <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg mb-4">
-                        <MapPin className="text-[#FBB60E]" />
-                        <div>
-                            <p className="font-bold text-[#493711]">
-                                Delivery Location
-                            </p>
-                            <p className="text-gray-600">
-                                {orderDetails.location}
-                            </p>
-                            <p className="text-gray-600">
-                                {orderDetails.roomNumber}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Order Items */}
-                    <div className="border-t border-b py-4 mb-4">
-                        {orderDetails.items.map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex justify-between mb-2"
-                            >
-                                <div>
-                                    <p className="font-bold text-[#493711]">
-                                        {item.quantity}x {item.name} (
-                                        {item.variant})
-                                    </p>
-                                    <p className="text-sm text-gray-600">
-                                        from {item.vendor}
-                                    </p>
-                                </div>
-                                <p className="font-bold text-[#493711]">
-                                    ${(item.price * item.quantity).toFixed(2)}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Price Summary */}
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-gray-600">
-                            <span>Subtotal</span>
-                            <span>
-                                $
-                                {(
-                                    orderDetails.total -
-                                    orderDetails.deliveryFee
-                                ).toFixed(2)}
-                            </span>
-                        </div>
-                        <div className="flex justify-between text-gray-600">
-                            <span>Delivery Fee</span>
-                            <span>${orderDetails.deliveryFee.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between font-bold text-[#493711] text-lg pt-2 border-t">
-                            <span>Total</span>
-                            <span>${orderDetails.total.toFixed(2)}</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-4">
-                    <button
-                        onClick={() => (window.location.href = "/")}
-                        className="flex-1 py-3 px-4 rounded-full bg-[#FBB60E] text-[#493711] font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
-                    >
-                        <ChevronLeft size={20} />
-                        Back to Menu
-                    </button>
                 </div>
             </div>
+
+            {/* Action Buttons */}
+            <button
+                onClick={() => (window.location.href = "/")}
+                className="flex-1 py-3 px-4 rounded-full bg-[#FBB60E] text-[#493711] font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors mx-auto"
+            >
+                <ChevronLeft size={20} />
+                Back to Menu
+            </button>
         </div>
     );
 };
