@@ -30,9 +30,11 @@ const AdminSidebar = forwardRef(({ className, showSidebar }, ref) => {
                         <Link
                             prefetch
                             preserveScroll
-                            href={route("orders")}
+                            href={route("orders.index")}
                             className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
-                                route().current("orders") ? "bg-[#695019]" : ""
+                                route().current("orders.index")
+                                    ? "bg-[#695019]"
+                                    : ""
                             }`}
                         >
                             <FaShoppingCart className="text-xl text-white" />
@@ -44,9 +46,11 @@ const AdminSidebar = forwardRef(({ className, showSidebar }, ref) => {
                         <Link
                             prefetch
                             preserveScroll
-                            href={route("dishes")}
+                            href={route("dishes.index")}
                             className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
-                                route().current("dishes") ? "bg-[#695019]" : ""
+                                route().current("dishes.index")
+                                    ? "bg-[#695019]"
+                                    : ""
                             }`}
                         >
                             <MdFastfood className="text-xl text-white" />
@@ -58,9 +62,11 @@ const AdminSidebar = forwardRef(({ className, showSidebar }, ref) => {
                         <Link
                             prefetch
                             preserveScroll
-                            href={route("foods")}
+                            href={route("foods.index")}
                             className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
-                                route().current("foods") ? "bg-[#695019]" : ""
+                                route().current("foods.index")
+                                    ? "bg-[#695019]"
+                                    : ""
                             }`}
                         >
                             <FaUtensils className="text-xl text-white" />
@@ -72,9 +78,11 @@ const AdminSidebar = forwardRef(({ className, showSidebar }, ref) => {
                         <Link
                             prefetch
                             preserveScroll
-                            href={route("vendors")}
+                            href={route("vendors.index")}
                             className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
-                                route().current("vendors") ? "bg-[#695019]" : ""
+                                route().current("vendors.index")
+                                    ? "bg-[#695019]"
+                                    : ""
                             }`}
                         >
                             <MdPeopleAlt className="text-xl text-white" />
@@ -88,7 +96,7 @@ const AdminSidebar = forwardRef(({ className, showSidebar }, ref) => {
                             preserveScroll
                             href={route("locations.index")}
                             className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
-                                route().current("locations")
+                                route().current("locations.index")
                                     ? "bg-[#695019]"
                                     : ""
                             }`}

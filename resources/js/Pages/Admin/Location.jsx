@@ -11,8 +11,6 @@ export default function Location({ locations, vendors }) {
         setIsOpen(true);
     };
 
-    console.log(vendors);
-
     return (
         <AdminLayout>
             <Head title="Location" />
