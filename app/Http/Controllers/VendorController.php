@@ -15,4 +15,9 @@ class VendorController extends Controller
             'vendors' => $vendors
         ]);
     }
+
+    public function store(Request $request)
+    {
+        dd($request->all());
+    }
 }
