@@ -25,6 +25,12 @@ class LocationController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        Location::create([
+            'vendor_id' => $request->vendor_id,
+            'note' => $request->note,
+            'destination' => $request->destination,
+            'amount' => $request->amount
+        ]);
+        
     }
 }
