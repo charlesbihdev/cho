@@ -8,98 +8,123 @@ import { MdFastfood } from "react-icons/md";
 import Modal from "@/Components/Modal";
 import { Link } from "@inertiajs/react";
 
-const AdminSidebar = forwardRef(
-    (
-        { className, showSidebar, events, slug = "#", is_private = false },
-        ref
-    ) => {
-        const [isOpen, setIsOpen] = useState(false);
-        const [modalContent, setModalContent] = useState("");
+const AdminSidebar = forwardRef(({ className, showSidebar }, ref) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [modalContent, setModalContent] = useState("");
 
-        // Function to handle button clicks and show the modal with content
-        const handleButtonClick = (content) => {
-            setModalContent(content);
-            setIsOpen(true);
-        };
+    // Function to handle button clicks and show the modal with content
+    const handleButtonClick = (content) => {
+        setModalContent(content);
+        setIsOpen(true);
+    };
 
-        return (
-            <aside
-                className={`-mt-1 md:mt-[1.5px] z-40 transition-transform ${
-                    showSidebar ? "translate-x-0" : "-translate-x-full"
-                }  border-r md:translate-x-0 bg-[#493711]  ${className}`}
-            >
-                <div className=" py-5 px-3 bg-[#493711] ">
-                    <ul className="space-y-2 mb-5">
-                        <li>
-                            <Link
-                                href="/orders"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
-                            >
-                                <FaShoppingCart className="text-xl text-white" />
-                                <span className="ml-3">Orders</span>
-                            </Link>
-                        </li>
-
-                        <li>
-                            <Link
-                                href="/dish"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
-                            >
-                                <MdFastfood className="text-xl text-white" />
-                                <span className="ml-3">Dish</span>
-                            </Link>
-                        </li>
-
-                        <li>
-                            <Link
-                                href="/food-types"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
-                            >
-                                <FaUtensils className="text-xl text-white" />
-                                <span className="ml-3">Food Types</span>
-                            </Link>
-                        </li>
-
-                        <li>
-                            <Link
-                                href="/vendors"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
-                            >
-                                <MdPeopleAlt className="text-xl text-white" />
-                                <span className="ml-3">Vendors</span>
-                            </Link>
-                        </li>
-
-                        <li>
-                            <Link
-                                href="/location"
-                                className="flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  group"
-                            >
-                                <IoLocationSharp className="text-xl text-white" />
-                                <span className="ml-3">Location</span>
-                            </Link>
-                        </li>
-                    </ul>
-
-                    <hr />
-                </div>
-
-                {/* Modal */}
-                <Modal show={isOpen} onClose={() => setIsOpen(false)}>
-                    <div className="p-4">
-                        <h2 className="text-lg font-bold">Modal Content</h2>
-                        <p>{modalContent}</p>
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className="mt-4 text-red-500 hover:text-red-700"
+    return (
+        <aside
+            className={`-mt-1 md:mt-[1.5px] z-40 transition-transform ${
+                showSidebar ? "translate-x-0" : "-translate-x-full"
+            }  border-r md:translate-x-0 bg-[#493711]  ${className}`}
+        >
+            <div className=" py-5 px-3 bg-[#493711] ">
+                <ul className="space-y-2 mb-5">
+                    <li>
+                        <Link
+                            prefetch
+                            preserveScroll
+                            href={route("orders.index")}
+                            className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
+                                route().current("orders.index")
+                                    ? "bg-[#695019]"
+                                    : ""
+                            }`}
                         >
-                            Close
-                        </button>
-                    </div>
-                </Modal>
-            </aside>
-        );
-    }
-);
+                            <FaShoppingCart className="text-xl text-white" />
+                            <span className="ml-3">Orders</span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link
+                            prefetch
+                            preserveScroll
+                            href={route("dishes.index")}
+                            className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
+                                route().current("dishes.index")
+                                    ? "bg-[#695019]"
+                                    : ""
+                            }`}
+                        >
+                            <MdFastfood className="text-xl text-white" />
+                            <span className="ml-3">Dish</span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link
+                            prefetch
+                            preserveScroll
+                            href={route("foods.index")}
+                            className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
+                                route().current("foods.index")
+                                    ? "bg-[#695019]"
+                                    : ""
+                            }`}
+                        >
+                            <FaUtensils className="text-xl text-white" />
+                            <span className="ml-3">Food Types</span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link
+                            prefetch
+                            preserveScroll
+                            href={route("vendors.index")}
+                            className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
+                                route().current("vendors.index")
+                                    ? "bg-[#695019]"
+                                    : ""
+                            }`}
+                        >
+                            <MdPeopleAlt className="text-xl text-white" />
+                            <span className="ml-3">Vendors</span>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link
+                            prefetch
+                            preserveScroll
+                            href={route("locations.index")}
+                            className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
+                                route().current("locations.index")
+                                    ? "bg-[#695019]"
+                                    : ""
+                            }`}
+                        >
+                            <IoLocationSharp className="text-xl text-white" />
+                            <span className="ml-3">Location</span>
+                        </Link>
+                    </li>
+                </ul>
+
+                <hr />
+            </div>
+
+            {/* Modal */}
+            <Modal show={isOpen} onClose={() => setIsOpen(false)}>
+                <div className="p-4">
+                    <h2 className="text-lg font-bold">Modal Content</h2>
+                    <p>{modalContent}</p>
+                    <button
+                        onClick={() => setIsOpen(false)}
+                        className="mt-4 text-red-500 hover:text-red-700"
+                    >
+                        Close
+                    </button>
+                </div>
+            </Modal>
+        </aside>
+    );
+});
 
 export default AdminSidebar;

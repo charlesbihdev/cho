@@ -11,7 +11,7 @@ class OrderController extends Controller
     public function index()
     {
         $order = OrderItem::all();
-        return Inertia::render('Orders', [
+        return Inertia::render('Admin/Orders', [
             'order' => $order
         ]);
     }
