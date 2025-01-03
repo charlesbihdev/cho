@@ -10,7 +10,7 @@ class VendorController extends Controller
 {
     public function index()
     {
-        $vendors = Vendor::all();
+        $vendors = Vendor::latest()->get();
         return Inertia::render('Admin/Vendors', [
             'vendors' => $vendors
         ]);

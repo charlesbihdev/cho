@@ -18,7 +18,7 @@ class DishController extends Controller
         $foods = Food::all();
         $vendors = Vendor::all();
 
-        $dishes = Food::with(['vendors.variants'])->get();
+        $dishes = Food::with(['vendors.variants'])->latest()->get();
 
         $formattedDishes = $dishes->map(function ($food) {
             return [

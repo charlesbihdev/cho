@@ -14,7 +14,9 @@ class FoodController extends Controller
         $categories = Category::all();
         $foods = Food::with(['category' => function ($query) {
             $query->select('id', 'name', 'thumbnail');
-        }])->get();
+        }])
+            ->latest()
+            ->get();
         return Inertia::render('Admin/FoodType', [
             'foods' => $foods,
             'categories' => $categories
