@@ -27,9 +27,8 @@ class LocationController extends Controller
     {
         Location::create([
             'vendor_id' => $request->vendor_id,
-            'note' => $request->note,
             'destination' => $request->destination,
-            'amount' => $request->amount
+            'amount' => $request->price
         ]);
     }
 
