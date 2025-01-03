@@ -44,7 +44,7 @@ export default function FoodType({ foods, categories }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleAddFoodClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded"
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 font-semibold"
                         >
                             Add Food
                         </button>
@@ -87,7 +87,7 @@ export default function FoodType({ foods, categories }) {
                                                     <img
                                                         src={food.thumbnail}
                                                         alt={food.name}
-                                                        className="w-16 h-16 object-cover"
+                                                        className="w-[80px] h-[80px] object-cover rounded-md"
                                                     />
                                                 </div>
                                             </td>

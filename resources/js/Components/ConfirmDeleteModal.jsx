@@ -15,14 +15,14 @@ const ConfirmDeleteModal = ({ show, onClose, onConfirm, name, processing }) => {
                 <div className="flex justify-center space-x-4">
                     <button
                         onClick={onConfirm}
-                        className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
+                        className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
                         disabled={processing}
                     >
                         {processing ? "Deleting..." : "Delete"}
                     </button>
                     <button
                         onClick={onClose}
-                        className="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400 transition"
+                        className="bg-gray-300 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-400 transition"
                     >
                         Cancel
                     </button>

@@ -1,17 +1,41 @@
 import Modal from "@/Components/Modal";
+import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
+import { useState } from "react";
+import { useForm } from "@inertiajs/react";
 
-const DishDetailsModal = ({ food, show, onClose }) => {
-    const handleEditVariant = (variant) => {
-        console.log("Editing variant:", variant.name);
+const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [variantToDelete, setVariantToDelete] = useState(null);
+
+    const handleDeleteClick = (variant) => {
+        setVariantToDelete(variant.id); // Pass only the ID
+        setIsDeleteModalOpen(true);
     };
 
-    const handleDeleteVariant = (variant) => {
-        console.log("Deleting variant:", variant.name);
+    const { delete: destroy, processing } = useForm();
+
+    // Function to confirm deletion
+    const confirmDelete = () => {
+        if (!variantToDelete) {
+            console.error("No variant selected for deletion!");
+            return;
+        }
+
+        console.log(`Deleting variant with ID: ${variantToDelete}`);
+
+        destroy(route("variants.destroy", variantToDelete), {
+            onSuccess: () => {
+                setIsDeleteModalOpen(false);
+                setVariantToDelete(null); // Reset after successful deletion
+                console.log(`Variant ${variantToDelete} deleted successfully.`);
+            },
+            preserveScroll: true,
+        });
     };
 
     return (
         <Modal show={show} onClose={onClose}>
-            <div className="p-4 h-[90%] overflow-y-auto">
+            <div className="p-4 max-h-[90vh] overflow-y-auto">
                 <h3 className="text-xl font-bold mb-4">
                     {food.name} - Details
                 </h3>
@@ -33,18 +57,10 @@ const DishDetailsModal = ({ food, show, onClose }) => {
                                             ${variant.price.toFixed(2)}
                                         </span>
                                         <div>
-                                            {/* <button
-                                                className="text-blue-600 hover:underline mr-2"
-                                                onClick={() =>
-                                                    handleEditVariant(variant)
-                                                }
-                                            >
-                                                Edit
-                                            </button> */}
                                             <button
                                                 className="text-red-600 hover:underline"
                                                 onClick={() =>
-                                                    handleDeleteVariant(variant)
+                                                    handleDeleteClick(variant)
                                                 }
                                             >
                                                 Delete
@@ -65,6 +81,14 @@ const DishDetailsModal = ({ food, show, onClose }) => {
                     </button>
                 </div>
             </div>
+
+            {/* Confirmation Delete Modal */}
+            <ConfirmDeleteModal
+                show={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+                name={"Variant"}
+            />
         </Modal>
     );
 };

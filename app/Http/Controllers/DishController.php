@@ -81,14 +81,10 @@ class DishController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        $variant = Variant::find($id);
-
-        if(!$variant) {
-            return response()->json(['message' => 'Variant not found'], 404);
-        }else {
-            $variant->delete();
-        }
-    }
-}
+        $variant = Variant::findOrFail($id);
+        $variant->delete();
+    
+      
+    }}
