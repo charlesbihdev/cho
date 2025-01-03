@@ -51,23 +51,23 @@ export default function FoodType({ foods, categories }) {
                     </div>
 
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="overflow-x-auto border-l border-r border-t border-b">
+                        <div className="overflow-x-auto border-l border-r border-t border-b border-gray-300 b">
                             <table className="w-full text-center table-auto border-collapse">
                                 <thead>
                                     <tr className="text-black">
-                                        <th className="border-b border-t border-r py-2 px-4">
+                                        <th className="border-b  border-r border-gray-400 py-2 px-4">
                                             #
                                         </th>
-                                        <th className="border-b border-r py-2 px-4">
+                                        <th className="border-b border-r py-2 border-gray-400 px-4">
                                             Name
                                         </th>
-                                        <th className="border-b border-r py-2 px-4">
+                                        <th className="border-b border-r py-2 border-gray-400 px-4">
                                             Thumbnail
                                         </th>
-                                        <th className="border-b border-r py-2 px-4">
+                                        <th className="border-b border-r py-2 border-gray-400 px-4">
                                             Category
                                         </th>
-                                        <th className="border-b border-r py-2 px-4">
+                                        <th className="border-b border-r py-2 border-gray-400 px-4">
                                             Action
                                         </th>
                                     </tr>
@@ -76,13 +76,13 @@ export default function FoodType({ foods, categories }) {
                                 <tbody>
                                     {foods.map((food, index) => (
                                         <tr key={food.id}>
-                                            <td className="border-b border-r py-2 px-4">
+                                            <td className="border-b border-r py-2 border-gray-400 px-4">
                                                 {index + 1}
                                             </td>
-                                            <td className="border-b border-r py-2 px-4">
+                                            <td className="border-b border-r py-2 border-gray-400 px-4">
                                                 {food.name}
                                             </td>
-                                            <td className="border-b border-r py-2 px-4">
+                                            <td className="border-b border-r py-2 border-gray-400 px-4">
                                                 <div className="flex justify-center">
                                                     <img
                                                         src={food.thumbnail}
@@ -91,10 +91,10 @@ export default function FoodType({ foods, categories }) {
                                                     />
                                                 </div>
                                             </td>
-                                            <td className="border-b border-r py-2 px-4">
+                                            <td className="border-b border-r py-2 px-4 border-gray-400">
                                                 {food.category.name}
                                             </td>
-                                            <td className="border-b py-2 px-4">
+                                            <td className="border-b py-2 px-4 border-gray-400">
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteClick(

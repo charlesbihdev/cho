@@ -53,16 +53,19 @@ export default function Location({ locations, vendors }) {
                             <table className="w-full text-center table-auto border-collapse">
                                 <thead>
                                     <tr className="text-black">
-                                        <th className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                            #
+                                        </th>
+                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
                                             Vendor
                                         </th>
-                                        <th className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
                                             Destination
                                         </th>
-                                        <th className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
                                             Amount
                                         </th>
-                                        <th className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
                                             Action
                                         </th>
                                     </tr>
@@ -70,16 +73,19 @@ export default function Location({ locations, vendors }) {
                                 <tbody>
                                     {locations.map((location, index) => (
                                         <tr key={location.id}>
-                                            <td className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                                {index + 1}
+                                            </td>
+                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
                                                 {location.vendor.name}
                                             </td>
-                                            <td className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
                                                 {location.destination}
                                             </td>
-                                            <td className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
                                                 {location.amount}
                                             </td>
-                                            <td className="border-b border-l border-r border-gray-300 py-2 px-4">
+                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteClick(
