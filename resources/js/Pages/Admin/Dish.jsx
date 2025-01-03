@@ -2,11 +2,23 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
 import AddDishModal from "./Dishes/AddDishModal";
+import DishDetailsModal from "./Dishes/DishDetailsModal";
 
 export default function Dish({ dishes, vendors, foods }) {
     console.log(dishes);
     const [isOpen, setIsOpen] = useState(false);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [selectedFood, setSelectedFood] = useState(null);
 
+    const handleViewDetails = (food) => {
+        setSelectedFood(food);
+        setShowDetailsModal(true);
+    };
+
+    const closeModal = () => {
+        setSelectedFood(null);
+        setShowDetailsModal(false);
+    };
     // Function to handle button clicks and show the modal with content
     const handleButtonClick = () => {
         setIsOpen(true);
@@ -33,29 +45,65 @@ export default function Dish({ dishes, vendors, foods }) {
                                 <thead>
                                     <tr className="text-black">
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            Food
+                                            Food Name
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
                                             Category
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            Vendor
+                                            Thumbnail
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            Variants
+                                            Total Vendors
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            Prices
-                                        </th>
-                                        <th className="border-b border-r-2 py-2 px-4">
-                                            Action
+                                            Actions
                                         </th>
                                     </tr>
                                 </thead>
-
-                                <tbody></tbody>
+                                <tbody>
+                                    {dishes.map((food) => (
+                                        <tr key={food.id}>
+                                            <td className="border-b border-r-2 py-2">
+                                                {food.name}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2">
+                                                {food.category}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2">
+                                                <img
+                                                    src={food.thumbnail}
+                                                    alt={food.name}
+                                                    className="w-16 h-16 object-cover"
+                                                />
+                                            </td>
+                                            <td className="border-b border-r-2 py-2">
+                                                {food.vendors.length}
+                                            </td>
+                                            <td className="border-b border-r-2 py-2">
+                                                <button
+                                                    className="text-blue-600 hover:underline"
+                                                    onClick={() =>
+                                                        handleViewDetails(food)
+                                                    }
+                                                >
+                                                    View Details
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
                         </div>
+
+                        {/* Food Details Modal */}
+                        {selectedFood && (
+                            <DishDetailsModal
+                                show={showDetailsModal}
+                                food={selectedFood}
+                                onClose={closeModal}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
