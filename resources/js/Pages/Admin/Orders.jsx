@@ -1,20 +1,12 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { AiOutlineEye } from "react-icons/ai";
 
-export default function Orders() {
+export default function Orders({ orders }) {
+    console.log(orders);
     return (
-        //     <AuthenticatedLayout
-        //         header={
-        //             <h2 className="text-xl font-semibold leading-tight text-gray-800">
-        //                 Dashboard
-        //             </h2>
-        //         }
-        //     >
-
         <AdminLayout>
-            <Head title="Dashboard" />
+            <Head title="Orders" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -36,19 +28,62 @@ export default function Orders() {
                                             Total Price
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            <button className="">
-                                                <AiOutlineEye className="size-5" />
-                                            </button>
+                                            Status
+                                        </th>
+                                        <th className="border-b border-r-2 py-2 px-4">
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    {orders.map((order, index) => (
+                                        <tr
+                                            key={index}
+                                            className="text-gray-700"
+                                        >
+                                            <td className="border-b border-r py-2 px-4">
+                                                {order.email}
+                                            </td>
+                                            <td className="border-b border-r py-2 px-4">
+                                                {order.phone}
+                                            </td>
+                                            <td className="border-b border-r py-2 px-4">
+                                                {order.location.vendor?.name} -{" "}
+                                                {order.location.destination}
+                                            </td>
+                                            <td className="border-b border-r py-2 px-4">
+                                                ₵{order.total_price}
+                                            </td>
+                                            <td className="border-b border-r py-2 px-4">
+                                                {/* Display status creatively */}
+                                                <span
+                                                    className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${
+                                                        order.status ===
+                                                        "pending"
+                                                            ? "bg-yellow-200 text-yellow-800"
+                                                            : order.status ===
+                                                              "success"
+                                                            ? "bg-green-200 text-green-800"
+                                                            : "bg-red-200 text-red-800"
+                                                    }`}
+                                                >
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                            <td className="border-b border-r py-2 px-4">
+                                                <button className="text-blue-500 hover:underline">
+                                                    <AiOutlineEye className="inline-block mr-1" />
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
         </AdminLayout>
-        // </AuthenticatedLayout>
     );
 }

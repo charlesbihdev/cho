@@ -22,4 +22,9 @@ class VendorController extends Controller
             'name' => $request->name
         ]);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        Vendor::destroy($id);
+    }
 }

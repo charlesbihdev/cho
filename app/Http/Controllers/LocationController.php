@@ -31,6 +31,12 @@ class LocationController extends Controller
             'destination' => $request->destination,
             'amount' => $request->amount
         ]);
-        
+    }
+
+    public function destroy(Request $request, $id)
+    {
+
+
+        Location::destroy($id);
     }
 }
