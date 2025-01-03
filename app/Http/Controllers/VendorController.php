@@ -25,6 +25,10 @@ class VendorController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        Vendor::destroy($id);
+        $vendors = Vendor::find($id);
+        if(!$vendors){
+            return response()->json(['message' => 'Vendor not found'], 404);
+        }
+        $vendors->delete();
     }
 }

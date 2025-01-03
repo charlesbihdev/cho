@@ -52,6 +52,10 @@ class FoodController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        Food::destroy($id);
+        $food = Food::find($id);
+        if(!$food){
+            return response()->json(['message' => 'Food not found'], 404);
+        }
+        $food->delete();
     }
 }
