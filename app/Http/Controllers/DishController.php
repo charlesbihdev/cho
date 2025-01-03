@@ -18,10 +18,35 @@ class DishController extends Controller
         $foods = Food::all();
         $vendors = Vendor::all();
 
+        $dishes = Food::with(['vendors.variants'])->get();
+
+        $formattedDishes = $dishes->map(function ($food) {
+            return [
+                'id' => $food->id,
+                'name' => $food->name,
+                'category' => $food->category->name,
+                'thumbnail' => $food->thumbnail,
+                'vendors' => $food->vendors->map(function ($vendor) {
+                    return [
+                        'id' => $vendor->id,
+                        'name' => $vendor->name,
+                        'variants' => $vendor->variants->map(function ($variant) {
+                            return [
+                                'id' => $variant->id,
+                                'name' => $variant->name,
+                                'price' => $variant->price,
+                            ];
+                        }),
+                    ];
+                }),
+            ];
+        });
+
 
         return Inertia::render('Admin/Dish', [
             'vendors' => $vendors,
-            'foods' => $foods
+            'foods' => $foods,
+            'dishes' => $formattedDishes
         ]);
     }
 
@@ -58,8 +83,12 @@ class DishController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        $variant = Variant::find($id);
 
-
-        Variant::destroy($id);
+        if(!$variant) {
+            return response()->json(['message' => 'Variant not found'], 404);
+        }else {
+            $variant->delete();
+        }
     }
 }

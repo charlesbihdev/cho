@@ -32,11 +32,10 @@ class LocationController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $location = Location::findOrFail($id); // Find the location
-        $location->delete(); // Delete it
-        return redirect()->route('locations.index')->with('success', 'Location deleted successfully.');
+
+
+        Location::destroy($id);
     }
-    
 }

@@ -25,8 +25,10 @@ class VendorController extends Controller
 
     public function destroy($id)
     {
-        $vendor = Vendor::findOrFail($id); // Find the vendor
-        $vendor->delete(); // Delete it
-        return redirect()->route('vendors.index')->with('success', 'Vendor deleted successfully.');
+        $vendors = Vendor::find($id);
+        if(!$vendors){
+            return response()->json(['message' => 'Vendor not found'], 404);
+        }
+        $vendors->delete();
     }
 }
