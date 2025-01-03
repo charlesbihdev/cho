@@ -18,6 +18,13 @@ class VendorController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        Vendor::create([
+            'name' => $request->name
+        ]);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        Vendor::destroy($id);
     }
 }
