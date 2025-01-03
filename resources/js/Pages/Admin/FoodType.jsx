@@ -2,15 +2,32 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
 import AddFoodTypeModal from "./Foods/AddFoodTypeModal";
+import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
 
 export default function FoodType({ foods, categories }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isAddFoodModalOpen, setIsAddFoodModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [foodToDelete, setFoodToDelete] = useState(null);
 
-    // Function to handle button clicks and show the modal with content
-    const handleButtonClick = () => {
-        setIsOpen(true);
+    // Function to show the Add Food Modal
+    const handleAddFoodClick = () => {
+        setIsAddFoodModalOpen(true);
     };
-    console.log(foods);
+
+    // Function to show the Delete Modal
+    const handleDeleteClick = (foodId) => {
+        setFoodToDelete(foodId);
+        setIsDeleteModalOpen(true);
+    };
+
+    // Function to confirm deletion
+    const confirmDelete = () => {
+        console.log(`Deleting food with ID: ${foodToDelete}`);
+
+        setIsDeleteModalOpen(false);
+        setFoodToDelete(null);
+    };
+
     return (
         <AdminLayout>
             <Head title="Food" />
@@ -19,7 +36,7 @@ export default function FoodType({ foods, categories }) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="w-full flex justify-end mb-3">
                         <button
-                            onClick={handleButtonClick}
+                            onClick={handleAddFoodClick}
                             className="bg-blue-600 text-white py-2 px-4 rounded"
                         >
                             Add Food
@@ -31,14 +48,14 @@ export default function FoodType({ foods, categories }) {
                             <table className="w-full text-center table-auto border-collapse">
                                 <thead>
                                     <tr className="text-black">
-                                        <th className="border-b border-t-2 border-r-2 border-l-2  py-2 px-4">
-                                            id
+                                        <th className="border-b border-t-2 border-r-2 border-l-2 py-2 px-4">
+                                            ID
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
                                             Name
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
-                                            thumbnail
+                                            Thumbnail
                                         </th>
                                         <th className="border-b border-r-2 py-2 px-4">
                                             Category
@@ -69,10 +86,14 @@ export default function FoodType({ foods, categories }) {
                                                 {food.category.name}
                                             </td>
                                             <td className="border-b border-r-2 py-2 px-4">
-                                                {/* <button className="bg-blue-500 text-white py-1 px-4 rounded">
-                                                    Edit
-                                                </button> */}
-                                                <button className="bg-red-600 text-white py-1 px-4 rounded">
+                                                <button
+                                                    onClick={() =>
+                                                        handleDeleteClick(
+                                                            food.id
+                                                        )
+                                                    }
+                                                    className="bg-red-600 text-white py-1 px-4 rounded"
+                                                >
                                                     Delete
                                                 </button>
                                             </td>
@@ -84,11 +105,19 @@ export default function FoodType({ foods, categories }) {
                     </div>
                 </div>
             </div>
+
             <AddFoodTypeModal
                 categories={categories}
-                show={isOpen}
-                onClose={() => setIsOpen(false)}
+                show={isAddFoodModalOpen}
+                onClose={() => setIsAddFoodModalOpen(false)}
             />
+
+            <ConfirmDeleteModal
+                show={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+                name="Food"
+            ></ConfirmDeleteModal>
         </AdminLayout>
     );
 }

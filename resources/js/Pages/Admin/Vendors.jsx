@@ -1,15 +1,40 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import AddVendorModal from "./Vendors/AddVendorModal";
+import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
 import { useState } from "react";
 
 export default function Vendors({ vendors }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isAddVendorModalOpen, setIsAddVendorModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [vendorToDelete, setVendorToDelete] = useState(null);
 
-    // Function to handle button clicks and show the modal with content
-    const handleButtonClick = () => {
-        setIsOpen(true);
+    // Function to show the Add Vendor Modal
+    const handleAddVendorClick = () => {
+        setIsAddVendorModalOpen(true);
     };
+
+    // Function to show the Delete Modal
+    const handleDeleteClick = (vendorId) => {
+        setVendorToDelete(vendorId);
+        setIsDeleteModalOpen(true);
+    };
+
+    const { delete: destroy, processing } = useForm();
+    // Function to confirm deletion
+    const confirmDelete = () => {
+        destroy(route("vendors.destroy", vendorToDelete), {
+            onSuccess: () => {
+                setIsDeleteModalOpen(false);
+                setVendorToDelete(null); // Corrected here
+            },
+            preserveScroll: true,
+        });
+
+        console.log(`Deleting vendor with ID: ${vendorToDelete}`);
+        // Perform deletion logic here, e.g., send a request to the backend
+    };
+
     return (
         <AdminLayout>
             <Head title="Vendors" />
@@ -18,7 +43,7 @@ export default function Vendors({ vendors }) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="w-full flex justify-end mb-3">
                         <button
-                            onClick={handleButtonClick}
+                            onClick={handleAddVendorClick}
                             className="bg-blue-600 text-white py-2 px-4 rounded"
                         >
                             Add Vendor
@@ -43,7 +68,7 @@ export default function Vendors({ vendors }) {
 
                                 <tbody>
                                     {vendors.map((vendor, index) => (
-                                        <tr key={index}>
+                                        <tr key={vendor.id}>
                                             <td className="border-b border-r-2 py-2 px-4">
                                                 {index + 1}
                                             </td>
@@ -51,10 +76,14 @@ export default function Vendors({ vendors }) {
                                                 {vendor.name}
                                             </td>
                                             <td className="border-b border-r-2 py-2 px-4">
-                                                {/* <button className="bg-blue-500 text-white py-1 px-4 rounded">
-                                                    Edit
-                                                </button> */}
-                                                <button className="bg-red-600 text-white py-1 px-4 rounded">
+                                                <button
+                                                    onClick={() =>
+                                                        handleDeleteClick(
+                                                            vendor.id
+                                                        )
+                                                    }
+                                                    className="bg-red-600 text-white py-1 px-4 rounded"
+                                                >
                                                     Delete
                                                 </button>
                                             </td>
@@ -66,12 +95,19 @@ export default function Vendors({ vendors }) {
                     </div>
                 </div>
             </div>
+
             <AddVendorModal
                 vendors={vendors}
-                show={isOpen}
-                onClose={() => setIsOpen(false)}
+                show={isAddVendorModalOpen}
+                onClose={() => setIsAddVendorModalOpen(false)}
+            />
+
+            <ConfirmDeleteModal
+                show={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+                name="Vendor"
             />
         </AdminLayout>
-        // </AuthenticatedLayout>
     );
 }

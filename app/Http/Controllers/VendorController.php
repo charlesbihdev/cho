@@ -23,8 +23,10 @@ class VendorController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        Vendor::destroy($id);
+        $vendor = Vendor::findOrFail($id); // Find the vendor
+        $vendor->delete(); // Delete it
+        return redirect()->route('vendors.index')->with('success', 'Vendor deleted successfully.');
     }
 }
