@@ -17,4 +17,19 @@ class OrderController extends Controller
             'orders' => $orders,
         ]);
     }
+
+    public function destroy(Request $request, $id)
+        {
+            $order = Order::find($id);
+
+            if (!$order) {
+                return response()->json(['message' => 'Order not found'], 404);
+            }
+
+            if ($request->user()->cannot('delete', $order)) {
+                return response()->json(['message' => 'Unauthorized action'], 403);
+            }
+
+            $order->delete();
+        }
 }
