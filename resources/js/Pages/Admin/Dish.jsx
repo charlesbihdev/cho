@@ -33,7 +33,7 @@ export default function Dish({ dishes, vendors, foods }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleButtonClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 font-semibold"
+                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 font-semibold hover:scale-105  transition-all"
                         >
                             Add Dish
                         </button>
@@ -71,7 +71,7 @@ export default function Dish({ dishes, vendors, foods }) {
                                                 {food.category}
                                             </td>
                                             <td className="border-b border-r border-gray-400 py-2">
-                                                <div className=" flex justify-center">
+                                                <div className=" flex justify-center hover:scale-110  transition-all">
                                                     <img
                                                         src={food.thumbnail}
                                                         alt={food.name}

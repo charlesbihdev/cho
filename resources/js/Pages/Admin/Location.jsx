@@ -42,7 +42,7 @@ export default function Location({ locations, vendors }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleAddLocationClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 font-semibold"
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 hover:scale-105  transition-all font-semibold"
                         >
                             Add Location
                         </button>
@@ -92,7 +92,7 @@ export default function Location({ locations, vendors }) {
                                                             location.id
                                                         )
                                                     }
-                                                    className="bg-red-600 text-white py-1 px-4 rounded"
+                                                    className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700 transition"
                                                     disabled={processing}
                                                 >
                                                     Delete

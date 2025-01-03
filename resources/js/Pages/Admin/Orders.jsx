@@ -71,7 +71,7 @@ export default function Orders({ orders }) {
                                                 </span>
                                             </td>
                                             <td className="border-b border-r py-2 px-4">
-                                                <button className="text-blue-500 hover:underline">
+                                                <button className="text-blue-500 hover:underline transition">
                                                     <AiOutlineEye className="inline-block mr-1" />
                                                     View
                                                 </button>

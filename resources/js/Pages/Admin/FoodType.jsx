@@ -44,7 +44,7 @@ export default function FoodType({ foods, categories }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleAddFoodClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 font-semibold"
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 hover:scale-105  transition-all font-semibold"
                         >
                             Add Food
                         </button>
@@ -83,7 +83,7 @@ export default function FoodType({ foods, categories }) {
                                                 {food.name}
                                             </td>
                                             <td className="border-b border-r py-2 border-gray-400 px-4">
-                                                <div className="flex justify-center">
+                                                <div className="flex justify-center hover:scale-110  transition-all">
                                                     <img
                                                         src={food.thumbnail}
                                                         alt={food.name}
@@ -101,7 +101,7 @@ export default function FoodType({ foods, categories }) {
                                                             food.id
                                                         )
                                                     }
-                                                    className="bg-red-600 text-white py-1 px-4 rounded"
+                                                    className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700 transition"
                                                 >
                                                     Delete
                                                 </button>
