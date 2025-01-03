@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,10 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $order = OrderItem::all();
+        $orders = Order::with(['location.vendor', 'orderItems'])->get();
+
         return Inertia::render('Admin/Orders', [
-            'order' => $order
+            'orders' => $orders,
         ]);
     }
 }
