@@ -44,7 +44,7 @@ export default function Vendors({ vendors }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleAddVendorClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded"
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 hover:scale-105  transition-all"
                         >
                             Add Vendor
                         </button>
@@ -82,7 +82,7 @@ export default function Vendors({ vendors }) {
                                                             vendor.id
                                                         )
                                                     }
-                                                    className="bg-red-600 text-white py-1 px-4 rounded"
+                                                    className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700 transition"
                                                 >
                                                     Delete
                                                 </button>

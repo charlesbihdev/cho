@@ -53,7 +53,8 @@ Route::resource('vendors', VendorController::class);
 // Route::get('/location', [LocationController::class, 'index'])->name('locations');
 Route::resource('locations', LocationController::class);
 
-
+//Variants
+Route::delete('/variants/{id}', [DishController::class, 'destroy'])->name('variants.destroy');
 
 
 
