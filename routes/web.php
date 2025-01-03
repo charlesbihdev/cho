@@ -55,6 +55,9 @@ Route::resource('locations', LocationController::class);
 
 
 
+
+
+
 //payment
 Route::post('/pay', [PaymentController::class, 'redirectToGateway'])->name('paystack.pay');
 

@@ -48,7 +48,7 @@ class FoodController extends Controller
     }
 
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $food = Food::find($id);
         if(!$food){

@@ -23,7 +23,7 @@ class VendorController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $vendors = Vendor::find($id);
         if(!$vendors){
