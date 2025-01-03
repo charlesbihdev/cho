@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "@/Components/Modal";
 
-const ConfirmDeleteModal = ({ show, onClose, onConfirm, name }) => {
+const ConfirmDeleteModal = ({ show, onClose, onConfirm, name, processing }) => {
     return (
         <Modal show={show} onClose={onClose}>
             <div className="p-6 bg-white rounded shadow-md text-center">
@@ -16,8 +16,9 @@ const ConfirmDeleteModal = ({ show, onClose, onConfirm, name }) => {
                     <button
                         onClick={onConfirm}
                         className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
+                        disabled={processing}
                     >
-                        Delete
+                        {processing ? "Deleting..." : "Delete"}
                     </button>
                     <button
                         onClick={onClose}

@@ -1,5 +1,5 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import { useState } from "react";
 import AddFoodTypeModal from "./Foods/AddFoodTypeModal";
 import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
@@ -20,12 +20,19 @@ export default function FoodType({ foods, categories }) {
         setIsDeleteModalOpen(true);
     };
 
+    const { delete: destroy, processing } = useForm();
+
     // Function to confirm deletion
     const confirmDelete = () => {
-        console.log(`Deleting food with ID: ${foodToDelete}`);
+        destroy(route("foods.destroy", foodToDelete), {
+            onSuccess: () => {
+                setIsDeleteModalOpen(false);
+                setFoodToDelete(null); // Reset foodToDelete after successful deletion
+            },
+            preserveScroll: true,
+        });
 
-        setIsDeleteModalOpen(false);
-        setFoodToDelete(null);
+        console.log(`Deleting food with ID: ${foodToDelete}`);
     };
 
     return (
@@ -48,44 +55,46 @@ export default function FoodType({ foods, categories }) {
                             <table className="w-full text-center table-auto border-collapse">
                                 <thead>
                                     <tr className="text-black">
-                                        <th className="border-b border-t-2 border-r-2 border-l-2 py-2 px-4">
-                                            ID
+                                        <th className="border-b border-t border-r py-2 px-4">
+                                            #
                                         </th>
-                                        <th className="border-b border-r-2 py-2 px-4">
+                                        <th className="border-b border-r py-2 px-4">
                                             Name
                                         </th>
-                                        <th className="border-b border-r-2 py-2 px-4">
+                                        <th className="border-b border-r py-2 px-4">
                                             Thumbnail
                                         </th>
-                                        <th className="border-b border-r-2 py-2 px-4">
+                                        <th className="border-b border-r py-2 px-4">
                                             Category
                                         </th>
-                                        <th className="border-b border-r-2 py-2 px-4">
+                                        <th className="border-b border-r py-2 px-4">
                                             Action
                                         </th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    {foods.map((food) => (
+                                    {foods.map((food, index) => (
                                         <tr key={food.id}>
-                                            <td className="border-b border-r-2 border-l-2 py-2 px-4">
-                                                {food.id}
+                                            <td className="border-b border-r py-2 px-4">
+                                                {index + 1}
                                             </td>
-                                            <td className="border-b border-r-2 py-2 px-4">
+                                            <td className="border-b border-r py-2 px-4">
                                                 {food.name}
                                             </td>
-                                            <td className="border-b border-r-2 py-2 px-4">
-                                                <img
-                                                    src={food.thumbnail}
-                                                    alt={food.name}
-                                                    className="w-16 h-16 object-cover"
-                                                />
+                                            <td className="border-b border-r py-2 px-4">
+                                                <div className="flex justify-center">
+                                                    <img
+                                                        src={food.thumbnail}
+                                                        alt={food.name}
+                                                        className="w-16 h-16 object-cover"
+                                                    />
+                                                </div>
                                             </td>
-                                            <td className="border-b border-r-2 py-2 px-4">
+                                            <td className="border-b border-r py-2 px-4">
                                                 {food.category.name}
                                             </td>
-                                            <td className="border-b border-r-2 py-2 px-4">
+                                            <td className="border-b py-2 px-4">
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteClick(
@@ -117,7 +126,7 @@ export default function FoodType({ foods, categories }) {
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={confirmDelete}
                 name="Food"
-            ></ConfirmDeleteModal>
+            />
         </AdminLayout>
     );
 }

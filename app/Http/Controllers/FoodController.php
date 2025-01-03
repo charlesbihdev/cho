@@ -48,8 +48,14 @@ class FoodController extends Controller
     }
 
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        Food::destroy($id);
+        // Find the food by ID, if not found will throw a 404 error
+        $food = Food::findOrFail($id);
+
+        // Delete the food
+        $food->delete();
+
+        // Redirect with success message
+        return redirect()->route('foods.index')->with('success', 'Food deleted successfully.');}
     }
-}

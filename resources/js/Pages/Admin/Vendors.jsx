@@ -50,17 +50,17 @@ export default function Vendors({ vendors }) {
                         </button>
                     </div>
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="overflow-x-auto border-l border-r border-t border-b">
+                        <div className="overflow-x-auto border-b border-gray-300">
                             <table className="w-full text-center table-auto border-collapse">
                                 <thead>
                                     <tr className="text-black">
-                                        <th className="border-b border-r-2 py-2 px-4">
+                                        <th className="border-b border-t border-r border-l border-gray-300 py-2 px-4">
                                             ID
                                         </th>
-                                        <th className="border-b border-r-2 py-2 px-4">
+                                        <th className="border-b border-t border-r border-l border-gray-300 py-2 px-4">
                                             Name
                                         </th>
-                                        <th className="border-b border-r-2 py-2 px-4">
+                                        <th className="border-b border-t border-r border-l border-gray-300 py-2 px-4">
                                             Action
                                         </th>
                                     </tr>
@@ -69,13 +69,13 @@ export default function Vendors({ vendors }) {
                                 <tbody>
                                     {vendors.map((vendor, index) => (
                                         <tr key={vendor.id}>
-                                            <td className="border-b border-r-2 py-2 px-4">
+                                            <td className="border-b border-r border-l py-2 px-4">
                                                 {index + 1}
                                             </td>
-                                            <td className="border-b border-r-2 py-2 px-4">
+                                            <td className="border-b border-r border-l py-2 px-4">
                                                 {vendor.name}
                                             </td>
-                                            <td className="border-b border-r-2 py-2 px-4">
+                                            <td className="border-b border-r border-l py-2 px-4">
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteClick(
