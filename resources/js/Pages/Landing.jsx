@@ -11,6 +11,7 @@ import {
 
 import { Head, Link } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
+import AppLogo from "@/Components/AppLogo";
 // Enhanced sample data
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
@@ -126,7 +127,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     //     );
     // }, [selectedVendor, locations]);
 
-    // console.log(selectedVendor);
+    // console.log(selectedVendor)6
     // console.log(filteredLocations);
 
     return (
@@ -138,7 +139,11 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                     <div className="max-w-6xl mx-auto">
                         <div className="flex justify-between items-center mb-4">
                             <Link href={route("landing")}>
-                                <h1 className="text-2xl font-bold">Cho Eats</h1>
+                                <img
+                                    src="cho-delivery.png"
+                                    alt="Cho-App Logo"
+                                    className={`md:w-[80px] md:h-[70px] w-[55px] h-[50px]`}
+                                />
                             </Link>
                             <div className="flex items-center">
                                 <Link

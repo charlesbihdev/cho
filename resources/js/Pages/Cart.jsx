@@ -101,7 +101,11 @@ const CartPage = () => {
                 <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
                     <div className="max-w-6xl mx-auto flex justify-between items-center">
                         <Link href={route("landing")}>
-                            <h1 className="text-2xl font-bold">Cho Eats</h1>
+                            <img
+                                src="cho-delivery.png"
+                                alt="Cho-App Logo"
+                                className={`md:w-[80px] md:h-[70px] w-[55px] h-[50px]`}
+                            />
                         </Link>
 
                         <Link
