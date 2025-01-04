@@ -24,7 +24,7 @@ export default function Orders({ orders }) {
                     <div className="overflow-hidden bg-white shadow-lg sm:rounded-lg">
                         <div className="overflow-x-auto border-l border-r border-t border-b">
                             <table className="w-full text-center table-auto border-collapse">
-                                <thead className="bg-gray-100 text-gray-700">
+                                <thead className="bg-gray-100 text-gray-700 uppercase">
                                     <tr>
                                         <th className="py-3 px-4 border-b border-gray-400">
                                             #
