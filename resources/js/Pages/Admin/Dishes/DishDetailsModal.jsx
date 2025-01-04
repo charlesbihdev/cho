@@ -29,19 +29,19 @@ const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
                 setVariantToDelete(null);
             },
             preserveScroll: true,
-            preserveState: true,
+            // preserveState: true,
         });
     };
 
     return (
         <Modal show={show} onClose={onClose}>
             <div className="p-4 max-h-[90vh] overflow-y-auto">
-                <h3 className="text-xl font-bold mb-4">
+                <h3 className="text-xl font-bold mb-4 text-center">
                     {food.name} - Details
                 </h3>
                 {food.vendors.map((vendor) => (
                     <div key={vendor.id} className="mt-4 border-b pb-4">
-                        <h4 className="text-lg font-semibold mb-2">
+                        <h4 className="text-lg font-semibold mb-2 text-[#d5a234] text-center">
                             Vendor: {vendor.name}
                         </h4>
                         <div className="mt-2">
@@ -54,7 +54,7 @@ const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
                                     >
                                         <span>{variant.name}</span>
                                         <span className="font-semibold text-gray-700">
-                                            ${variant.price.toFixed(2)}
+                                            ₵{variant.price.toFixed(2)}
                                         </span>
                                         <div>
                                             <button
