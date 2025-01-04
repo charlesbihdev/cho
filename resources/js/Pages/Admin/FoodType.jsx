@@ -44,64 +44,67 @@ export default function FoodType({ foods, categories }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleAddFoodClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 hover:scale-105  transition-all font-semibold"
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 hover:scale-105 transition-all font-semibold"
                         >
                             Add Food
                         </button>
                     </div>
 
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="overflow-x-auto border-l border-r border-t border-b border-gray-300 b">
+                    <div className="overflow-hidden bg-white shadow-lg rounded-lg">
+                        <div className="overflow-x-auto border-gray-200">
                             <table className="w-full text-center table-auto border-collapse">
-                                <thead>
-                                    <tr className="text-black">
-                                        <th className="border-b  border-r border-gray-400 py-2 px-4">
+                                <thead className="bg-gray-100 text-gray-700 uppercase">
+                                    <tr>
+                                        <th className="py-3 px-4 border-b">
                                             #
                                         </th>
-                                        <th className="border-b border-r py-2 border-gray-400 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Name
                                         </th>
-                                        <th className="border-b border-r py-2 border-gray-400 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Thumbnail
                                         </th>
-                                        <th className="border-b border-r py-2 border-gray-400 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Category
                                         </th>
-                                        <th className="border-b border-r py-2 border-gray-400 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Action
                                         </th>
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <tbody className="text-gray-700">
                                     {foods.map((food, index) => (
-                                        <tr key={food.id}>
-                                            <td className="border-b border-r py-2 border-gray-400 px-4">
+                                        <tr
+                                            key={food.id}
+                                            className="hover:bg-gray-50 transform transition-all duration-200"
+                                        >
+                                            <td className="py-4 px-4 border-b">
                                                 {index + 1}
                                             </td>
-                                            <td className="border-b border-r py-2 border-gray-400 px-4">
+                                            <td className="py-4 px-4 border-b">
                                                 {food.name}
                                             </td>
-                                            <td className="border-b border-r py-2 border-gray-400 px-4">
-                                                <div className="flex justify-center hover:scale-110  transition-all">
+                                            <td className="py-4 px-4 border-b">
+                                                <div className="flex justify-center hover:scale-110 transition-all">
                                                     <img
                                                         src={food.thumbnail}
                                                         alt={food.name}
-                                                        className="w-[80px] h-[80px] object-cover rounded-md"
+                                                        className="w-20 h-20 object-cover rounded-md"
                                                     />
                                                 </div>
                                             </td>
-                                            <td className="border-b border-r py-2 px-4 border-gray-400">
+                                            <td className="py-4 px-4 border-b">
                                                 {food.category.name}
                                             </td>
-                                            <td className="border-b py-2 px-4 border-gray-400">
+                                            <td className="py-4 px-4 border-b">
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteClick(
                                                             food.id
                                                         )
                                                     }
-                                                    className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700 transition"
+                                                    className="text-red-600 hover:text-red-800 font-semibold transition-all duration-200"
                                                 >
                                                     Delete
                                                 </button>

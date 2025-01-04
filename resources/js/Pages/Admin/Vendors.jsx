@@ -9,6 +9,9 @@ export default function Vendors({ vendors }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [vendorToDelete, setVendorToDelete] = useState(null);
 
+    // State for loading indicator
+    const [loading, setLoading] = useState(false);
+
     // Function to show the Add Vendor Modal
     const handleAddVendorClick = () => {
         setIsAddVendorModalOpen(true);
@@ -23,16 +26,20 @@ export default function Vendors({ vendors }) {
     const { delete: destroy, processing } = useForm();
     // Function to confirm deletion
     const confirmDelete = () => {
+        setLoading(true); // Show loading indicator
         destroy(route("vendors.destroy", vendorToDelete), {
             onSuccess: () => {
                 setIsDeleteModalOpen(false);
-                setVendorToDelete(null); // Corrected here
+                setVendorToDelete(null); // Reset vendorToDelete
+                setLoading(false); // Hide loading indicator
+            },
+            onError: () => {
+                setLoading(false); // Hide loading indicator in case of error
             },
             preserveScroll: true,
         });
 
         console.log(`Deleting vendor with ID: ${vendorToDelete}`);
-        // Perform deletion logic here, e.g., send a request to the backend
     };
 
     return (
@@ -44,7 +51,7 @@ export default function Vendors({ vendors }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleAddVendorClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 hover:scale-105  transition-all"
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 hover:scale-105 transition-all"
                         >
                             Add Vendor
                         </button>
@@ -52,15 +59,15 @@ export default function Vendors({ vendors }) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="overflow-x-auto border-b border-gray-300">
                             <table className="w-full text-center table-auto border-collapse">
-                                <thead>
-                                    <tr className="text-black">
-                                        <th className="border-b border-t border-r border-l border-gray-400 py-2 px-4">
+                                <thead className="bg-gray-100 text-gray-700 uppercase">
+                                    <tr>
+                                        <th className="py-3 px-4 border-b border-gray-400">
                                             #
                                         </th>
-                                        <th className="border-b border-t border-r border-l border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b border-gray-400">
                                             Name
                                         </th>
-                                        <th className="border-b border-t border-r border-l border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b border-gray-400">
                                             Action
                                         </th>
                                     </tr>
@@ -68,23 +75,29 @@ export default function Vendors({ vendors }) {
 
                                 <tbody>
                                     {vendors.map((vendor, index) => (
-                                        <tr key={vendor.id}>
-                                            <td className="border-b border-r border-l border-gray-400  py-2 px-4">
+                                        <tr
+                                            key={vendor.id}
+                                            className="hover:bg-gray-50 transition-all duration-200"
+                                        >
+                                            <td className="py-4 px-4 border-b border-gray-400">
                                                 {index + 1}
                                             </td>
-                                            <td className="border-b border-r border-l border-gray-400  py-2 px-4">
+                                            <td className="py-4 px-4 border-b border-gray-400">
                                                 {vendor.name}
                                             </td>
-                                            <td className="border-b border-r border-l border-gray-400  py-2 px-4">
+                                            <td className="py-4 px-4 border-b border-gray-400">
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteClick(
                                                             vendor.id
                                                         )
                                                     }
-                                                    className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700 transition"
+                                                    className="text-red-600 hover:text-red-800 font-semibold transition-all duration-200"
+                                                    disabled={loading}
                                                 >
-                                                    Delete
+                                                    {loading
+                                                        ? "Deleting..."
+                                                        : "Delete"}
                                                 </button>
                                             </td>
                                         </tr>

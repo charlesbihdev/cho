@@ -11,7 +11,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['location.vendor', 'orderItems'])->get();
+        $orders = Order::with(['location.vendor', 'orderItems.variant.food'])->get();
 
         return Inertia::render('Admin/Orders', [
             'orders' => $orders,
