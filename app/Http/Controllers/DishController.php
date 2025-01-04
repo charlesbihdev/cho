@@ -41,6 +41,8 @@ class DishController extends Controller
             ];
         });
 
+        // dd($formattedDishes);
+
 
         return Inertia::render('Admin/Dish', [
             'vendors' => $vendors,
@@ -53,6 +55,7 @@ class DishController extends Controller
     public function store(Request $request)
     {
 
+        // dd($request->all());
         // Validate the incoming request
         $request->validate([
             'food_id' => 'required|exists:foods,id',

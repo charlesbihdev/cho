@@ -103,7 +103,10 @@ const AddDishModal = ({ show, onClose, foods, vendors }) => {
                             Variant Details
                         </h3>
                         {data.variants.map((variant, index) => (
-                            <div key={index} className="flex gap-4 mb-2">
+                            <div
+                                key={index}
+                                className="flex flex-wrap gap-4 mb-2"
+                            >
                                 <input
                                     type="text"
                                     value={variant.name}
