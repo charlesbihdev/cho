@@ -11,6 +11,7 @@ use Database\Seeders\VendorSeeder;
 use Database\Seeders\VariantSeeder;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\LocationSeeder;
+use Illuminate\Support\Facades\Hash;
 use Database\Seeders\OrderItemSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,27 +22,23 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // VendorSeeder::class,
             CategorySeeder::class,
-            // FoodSeeder::class,
-            LocationSeeder::class,
-            // OrderSeeder::class,
-            VariantSeeder::class,
-            // OrderItemSeeder::class,
+            // LocationSeeder::class,
+            // VariantSeeder::class,
 
-            VendorSeeder::class,
-            FoodSeeder::class,
-            VariantSeeder::class,
-            FoodVendorVariantSeeder::class,
+            // VendorSeeder::class,
+            // FoodSeeder::class,
+            // FoodVendorVariantSeeder::class,
 
 
         ]);
 
         // User::factory(10)->create();
 
-        //     User::factory()->create([
-        //         'name' => 'Test User',
-        //         'email' => 'test@example.com',
-        //     ]);
+        User::factory()->create([
+            'name' => 'Charles Bih',
+            'email' => 'charlesowusubih@gmail.com',
+            'password' => Hash::make('@Sambo2000'),
+        ]);
     }
 }

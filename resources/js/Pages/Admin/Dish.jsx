@@ -5,7 +5,6 @@ import AddDishModal from "./Dishes/AddDishModal";
 import DishDetailsModal from "./Dishes/DishDetailsModal";
 
 export default function Dish({ dishes, vendors, foods }) {
-    console.log(dishes);
     const [isOpen, setIsOpen] = useState(false);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [selectedFood, setSelectedFood] = useState(null);

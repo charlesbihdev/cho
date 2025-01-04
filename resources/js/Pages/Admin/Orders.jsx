@@ -13,7 +13,7 @@ export default function Orders({ orders }) {
         setIsOpen(true);
     };
 
-    console.log(orders);
+    // console.log(orders);
 
     return (
         <AdminLayout>

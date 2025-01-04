@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
     ShoppingCart,
     ChevronDown,
@@ -8,7 +8,8 @@ import {
     Search,
     X,
 } from "lucide-react";
-import { Link } from "@inertiajs/react";
+
+import { Head, Link } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 // Enhanced sample data
 
@@ -49,7 +50,6 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     const calculateTotalPrice = () => {
         if (!selectedVariant || !selectedVendor || !selectedLocation) return 0;
         const basePrice = selectedVariant.price;
-        const deliveryPrice = 0;
         // const deliveryPrice = selectedLocation.price;
         return basePrice;
     };
@@ -131,6 +131,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
 
     return (
         <ToastProvider>
+            <Head title="Food Ordering" />
             <div className="min-h-screen bg-gray-50">
                 {/* Header */}
                 <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
@@ -209,14 +210,20 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                     <h3 className="font-bold text-[#493711]">
                                         {data.name}
                                     </h3>
-                                    <p className="text-sm text-gray-600 mt-1">
-                                        {data?.description || "no desc"}
-                                    </p>
+
                                     <p className="text-sm text-[#FBB60E] mt-2">
-                                        From ₵10
-                                        {/* {Math.min(
-                                        ...data.variants.map((v) => v.basePrice)
-                                    )} */}
+                                        From ₵
+                                        {data.vendors.length > 0
+                                            ? Math.min(
+                                                  ...data.vendors.flatMap(
+                                                      (vendor) =>
+                                                          vendor.variants.map(
+                                                              (variant) =>
+                                                                  variant.price
+                                                          )
+                                                  )
+                                              )
+                                            : null}
                                     </p>
                                 </div>
                             </div>
@@ -355,7 +362,9 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                             </div>
                                                             <div className="text-sm">
                                                                 +₵
-                                                                {location.price}{" "}
+                                                                {
+                                                                    location.price
+                                                                }{" "}
                                                                 delivery
                                                             </div>
                                                         </button>

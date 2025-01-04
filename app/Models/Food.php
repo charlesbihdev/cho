@@ -28,17 +28,15 @@ class Food extends Model
     }
 
 
+
     public function vendors()
     {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Vendor::class,
-            Variant::class,
-            'food_id', // Foreign key on the variants table
-            'id',      // Foreign key on the food_vendor_variant table (vendor_id)
-            'id',      // Local key on the foods table
-            'id'       // Local key on the variants table
-        )->join('food_vendor_variant', 'food_vendor_variant.variant_id', '=', 'variants.id')
-            ->select('vendors.*'); // Select only vendor fields
+            'variants',     // The pivot table name
+            'food_id',      // Foreign key on the pivot table for Food
+            'vendor_id'     // Foreign key on the pivot table for Vendor
+        )->distinct();      // Ensures unique vendors are retrieved
     }
 
 

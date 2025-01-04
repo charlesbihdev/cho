@@ -186,7 +186,7 @@ class PaymentController extends Controller
                         $order = Order::create([
                             'location_id' => $orderGroup['location_id'],
                             'vendor_id' => $orderGroup['vendor_id'],
-                            'status' => 'success',
+                            'status' => 'pending',
                             'total_price' => $orderGroup['total_price'],
                             'email' => $metadata['email'] ?? null,
                             'phone' => $metadata['phone'] ?? null,

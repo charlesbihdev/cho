@@ -34,29 +34,24 @@ Route::middleware('auth')->group(function () {
 
 // Admin
 
-// Route::get('/orders', [OrderController::class, 'index'])->name('orders');
-Route::resource('orders', OrderController::class);
+Route::middleware('auth')->group(function () {
+
+    Route::resource('orders', OrderController::class);
 
 
-// Route::get('/food-types', [FoodController::class, 'index'])->name('foods');
-Route::resource('foods', FoodController::class);
+    Route::resource('foods', FoodController::class);
 
 
-// Route::get('/dish', [DishController::class, 'index'])->name('dishes');
-Route::resource('dishes', DishController::class);
+    Route::resource('dishes', DishController::class);
 
 
-// Route::get('/vendors', [VendorController::class, 'index'])->name('vendors');
-Route::resource('vendors', VendorController::class);
+    Route::resource('vendors', VendorController::class);
 
 
-// Route::get('/location', [LocationController::class, 'index'])->name('locations');
-Route::resource('locations', LocationController::class);
+    Route::resource('locations', LocationController::class);
+});
 
 //Variants
-Route::delete('/variants/{id}', [DishController::class, 'destroy'])->name('variants.destroy');
-
-
 
 
 //payment

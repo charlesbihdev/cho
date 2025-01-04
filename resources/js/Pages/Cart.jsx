@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ShoppingCart, Plus, Minus, X } from "lucide-react";
-import { Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 import InputError from "@/Components/InputError";
 const CartPage = () => {
@@ -98,6 +98,8 @@ const CartPage = () => {
     };
     return (
         <ToastProvider>
+            <Head title="Cart" />
+
             <div className="min-h-screen bg-gray-50">
                 {/* Header */}
                 <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
