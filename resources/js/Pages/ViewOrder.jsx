@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 const ViewOrder = ({ order }) => {
+    console.log(order);
     const getStatusColor = (status) => {
         switch (status) {
             case "completed":
@@ -56,7 +57,7 @@ const ViewOrder = ({ order }) => {
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                                 <div>
                                     <h1 className="text-3xl font-bold">
-                                        Order #{order.id}
+                                        Order #{order.order_id}
                                     </h1>
                                     <p className="mt-2 text-gray-300">
                                         Placed on{" "}
@@ -78,8 +79,10 @@ const ViewOrder = ({ order }) => {
                                             order.status
                                         )}`}
                                     >
-                                        {order.status.charAt(0).toUpperCase() +
-                                            order.status.slice(1)}
+                                        {order?.status
+                                            ?.charAt(0)
+                                            .toUpperCase() +
+                                            order?.status?.slice(1)}
                                     </span>
                                 </div>
                             </div>
@@ -97,14 +100,14 @@ const ViewOrder = ({ order }) => {
                                     </div>
                                 </div>
                                 <div className="divide-y divide-gray-100">
-                                    {order.order_items.map((item, index) => (
+                                    {order?.order_items?.map((item, index) => (
                                         <div key={index} className="p-6">
-                                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                                            <div className="flex sm:flex-row justify-between sm:items-start gap-4">
                                                 <div>
                                                     <h3 className="text-lg font-semibold text-gray-900">
                                                         {item.variant.food.name}
                                                     </h3>
-                                                    <p className="text-blue-600 font-medium mt-1">
+                                                    <p className="text-[#a37c28] font-medium mt-1">
                                                         {item.variant.name}
                                                     </p>
                                                     {item.note && (
@@ -127,12 +130,17 @@ const ViewOrder = ({ order }) => {
                                     ))}
                                 </div>
                                 <div className="px-6 py-4 bg-gray-50 rounded-b-xl">
+                                    <span className="text-lg font-semibold text-gray-600">
+                                        + Delivery ₵{order.location.amount}
+                                    </span>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-lg font-semibold text-gray-900">
-                                            Total Amount
+                                        <span className="text-lg font-semibold text-green-600">
+                                            Total Amount Paid
                                         </span>
-                                        <span className="text-2xl font-bold text-gray-900">
-                                            ₵{order.total_price}
+                                        <span className="text-2xl font-bold text-green-600">
+                                            ₵
+                                            {order.total_price +
+                                                order.location.amount}
                                         </span>
                                     </div>
                                 </div>
@@ -157,9 +165,9 @@ const ViewOrder = ({ order }) => {
                                                 </h3>
                                             </div>
                                             <p className="text-gray-900 ml-6">
-                                                {order.location.destination}
+                                                {order?.location?.destination}
                                             </p>
-                                            {order.location.note && (
+                                            {order?.location?.note && (
                                                 <p className="mt-2 text-sm text-gray-600 bg-gray-50 p-2 rounded-lg ml-6">
                                                     {order.location.note}
                                                 </p>
@@ -173,7 +181,7 @@ const ViewOrder = ({ order }) => {
                                                 </h3>
                                             </div>
                                             <p className="text-gray-900 ml-6">
-                                                {order.location.vendor.name}
+                                                {order.location?.vendor?.name}
                                             </p>
                                         </div>
                                     </div>

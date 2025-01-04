@@ -27,7 +27,7 @@ class OrderController extends Controller
 
     public function show($order_id)
     {
-        $order = Order::with(['location.vendor', 'orderItems.variant', 'orderItems.variant.food'])->where('order_id', $order_id);
+        $order = Order::with(['location.vendor', 'orderItems.variant', 'orderItems.variant.food'])->where('order_id', $order_id)->first();
 
         return Inertia::render('ViewOrder', [
             'order' => $order,

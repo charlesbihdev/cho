@@ -9,15 +9,16 @@ import {
     X,
 } from "lucide-react";
 
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePoll } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
-import AppLogo from "@/Components/AppLogo";
 // Enhanced sample data
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
     // console.log(foodData);
     // console.log(categories);
     // console.log(selectedVendor);
+
+    // usePoll();
 
     const [selectedFood, setSelectedFood] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);

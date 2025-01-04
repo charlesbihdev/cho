@@ -202,7 +202,11 @@ const CartPage = () => {
                 </div>
 
                 {/* User Info Section */}
-                <div className="max-w-6xl mx-auto p-4">
+                <div
+                    className={`max-w-6xl mx-auto p-4 ${
+                        cartItems.length === 0 ? "hidden" : ""
+                    }`}
+                >
                     <h2 className="text-xl font-bold mb-4">User Information</h2>
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <div className="mb-4">

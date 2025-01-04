@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Check, Clock, MapPin, ChevronLeft, Receipt } from "lucide-react";
+import { Head } from "@inertiajs/react";
 
 const OrderSuccess = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -13,6 +14,7 @@ const OrderSuccess = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
+            <Head title="Order Success" />
             <div className="max-w-lg mx-auto">
                 {/* Success Animation */}
                 <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">

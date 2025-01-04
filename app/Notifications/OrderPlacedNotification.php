@@ -59,7 +59,7 @@ class OrderPlacedNotification extends Notification
 
     public function toSms($notifiable): string
     {
-        $trackingUrl = route('orders.track', ['orderId' => $this->orderId]);
+        $trackingUrl = route('orders.track', ['order_id' => $this->orderId]);
 
         // Retrieve event details
 
