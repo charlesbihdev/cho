@@ -11,6 +11,7 @@ use Database\Seeders\VendorSeeder;
 use Database\Seeders\VariantSeeder;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\LocationSeeder;
+use Illuminate\Support\Facades\Hash;
 use Database\Seeders\OrderItemSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -37,7 +38,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Charles Bih',
             'email' => 'charlesowusubih@gmail.com',
-            'password' => '@Charles2004',
+            'password' => Hash::make('@Sambo2000'),
         ]);
     }
 }
