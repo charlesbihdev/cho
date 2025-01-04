@@ -13,7 +13,7 @@ class LandingController extends Controller
     public function index()
     {
         // Get all foods with their variants and associated vendors
-        $foods = Food::with(['category', 'vendors.variants', 'vendors.locations'])->get();
+        $foods = Food::with(['category', 'vendors.variants', 'vendors.locations'])->latest()->get();
 
         $foodData = [
             'foods' => $foods->map(function ($food) {
