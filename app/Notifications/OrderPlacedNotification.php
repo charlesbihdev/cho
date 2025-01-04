@@ -13,13 +13,16 @@ class OrderPlacedNotification extends Notification
 {
     use Queueable;
 
+    private $orderId;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($orderId)
     {
-        //
+        $this->orderId = $orderId;
     }
+
 
     /**
      * Get the notification's delivery channels.
@@ -56,15 +59,11 @@ class OrderPlacedNotification extends Notification
 
     public function toSms($notifiable): string
     {
-        // Retrieve event details
-        // $event = $this->event;
-        // $datetime = $this->datetime;
-        // $humanReadableDate = Carbon::parse($datetime)->format('l, F jS, Y \a\t g:i A');
-        // $url = route('ticket.view', ['ticket_id' => $this->ticketId]);
+        $trackingUrl = route('orders.track', ['orderId' => $this->orderId]);
 
-        // Construct the SMS message
-        // return "Hello {$this->name}, your ticket for {$event->name} is confirmed. Ticket ID: {$this->ticketId}. Ticket Link: {$url}. Event happening on {$humanReadableDate}. We look forward to seeing you there!";
-        return "Hello your order is placed successfully";
+        // Retrieve event details
+
+        return "Hello, your order has been placed successfully. You can track your order here: $trackingUrl";
     }
 
 

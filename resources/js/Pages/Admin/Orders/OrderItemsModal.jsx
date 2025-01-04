@@ -1,8 +1,13 @@
-import React from "react";
 import Modal from "@/Components/Modal";
-import { Package, Phone, MapPin, UtensilsCrossed } from "lucide-react";
+import { Phone, MapPin, UtensilsCrossed } from "lucide-react";
+import { Link, router } from "@inertiajs/react";
 
 const OrderItemsModal = ({ show, onClose, order }) => {
+    const handleToggle = (e) => {
+        e.preventDefault();
+        router.put(route("orders.update", order.id));
+        onClose();
+    };
     return (
         <Modal show={show} onClose={onClose}>
             <div className="p-6 max-h-[80vh] overflow-y-auto">
@@ -31,19 +36,26 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                                     <div className="flex justify-between items-start gap-4">
                                         <div className="flex-1">
                                             <h4 className="font-medium text-gray-800">
-                                                Food Name:{" "}
-                                                {item.variant?.food?.name}
+                                                <span className="text-[#ac8125]">
+                                                    Food Name:
+                                                </span>
+                                                {" " + item.variant?.food?.name}
                                             </h4>
                                             <p className="font-medium text-gray-800">
-                                                Variant: {item.variant?.name}
+                                                <span className="text-[#ac8125]">
+                                                    Variant:
+                                                </span>
+
+                                                {" " + item.variant?.name}
                                             </p>
                                             <div>
                                                 <p className=" font-medium text-gray-800">
-                                                    Vendor:{" "}
-                                                    {
+                                                    <span className="text-[#ac8125]">
+                                                        Vendor:
+                                                    </span>
+                                                    {" " +
                                                         order?.location.vendor
-                                                            ?.name
-                                                    }
+                                                            ?.name}
                                                 </p>
                                             </div>
                                             {item.note && (
@@ -76,7 +88,6 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                             </div>
                         </div>
                     </div>
-
                     {/* Contact Information */}
                     <div className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-center gap-3 mb-3">
@@ -116,6 +127,38 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                             )}
                         </div>
                     </div>
+                </div>
+                <div className="mt-6 pt-4 border-t">
+                    <label className="flex justify-center items-center cursor-pointer">
+                        <input
+                            onChange={handleToggle}
+                            checked={order.status === "completed"}
+                            type="checkbox"
+                            className="hidden"
+                            aria-label="Order processed toggle"
+                        />
+                        <div className="relative">
+                            <div
+                                className={`block w-14 h-8 rounded-full transition duration-200 ease-in-out ${
+                                    order.status === "completed"
+                                        ? "bg-green-500"
+                                        : "bg-gray-400"
+                                }`}
+                            ></div>
+                            <div
+                                className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full shadow-md transition duration-200 ease-in-out ${
+                                    order.status === "completed"
+                                        ? "translate-x-6 bg-green-400"
+                                        : ""
+                                }`}
+                            ></div>
+                        </div>
+                        <span className="ml-3 text-gray-700 font-semibold">
+                            {order.status === "completed"
+                                ? "Processed"
+                                : "Pending"}
+                        </span>
+                    </label>
                 </div>
                 <div className="mt-6 pt-4 border-t">
                     <button

@@ -64,7 +64,7 @@ class LandingController extends Controller
         return Inertia::render('Landing', [
             'foodData' => $foodData['foods'],
             'locations' => $locations,
-            'categories' => Category::latest()->get()->pluck('name'),
+            'categories' => Category::get()->pluck('name'),
         ]);
     }
 }

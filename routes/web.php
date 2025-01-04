@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+//track
+Route::get('/orders/{order_id}/track', [OrderController::class, 'show'])->name('orders.track');
 
 // Admin
 
