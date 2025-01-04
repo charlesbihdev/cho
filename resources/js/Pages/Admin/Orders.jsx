@@ -13,7 +13,7 @@ export default function Orders({ orders }) {
         setIsOpen(true);
     };
 
-    // console.log(orders);
+    console.log(orders);
 
     return (
         <AdminLayout>
@@ -78,7 +78,7 @@ export default function Orders({ orders }) {
                                                         "pending"
                                                             ? "bg-yellow-200 text-yellow-800"
                                                             : order.status ===
-                                                              "success"
+                                                              "completed"
                                                             ? "bg-green-200 text-green-800"
                                                             : "bg-red-200 text-red-800"
                                                     }`}

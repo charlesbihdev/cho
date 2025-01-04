@@ -25,7 +25,7 @@ class PaymentController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'phone' => 'nullable|regex:/^0\d{9}$/',
+            'phone' => 'required|regex:/^0\d{9}$/',
             'order_data' => 'required|array|min:1',
         ], [
             'order_data' => 'No food items in the cart.', // Custom error message
@@ -116,7 +116,7 @@ class PaymentController extends Controller
 
             return Inertia::location($url->url);
         } catch (Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
             return back()->with([
                 'error' => 'Couldn\'t to initiate payment. Connect and try Again',
             ]);
@@ -184,6 +184,7 @@ class PaymentController extends Controller
                     foreach ($groupedOrders as $orderGroup) {
                         // Create the order
                         $order = Order::create([
+                            'order_id' => Order::generateUniqueOrderId(),
                             'location_id' => $orderGroup['location_id'],
                             'vendor_id' => $orderGroup['vendor_id'],
                             'status' => 'pending',
@@ -191,6 +192,8 @@ class PaymentController extends Controller
                             'email' => $metadata['email'] ?? null,
                             'phone' => $metadata['phone'] ?? null,
                         ]);
+
+
 
                         // Create the order items
                         foreach ($orderGroup['items'] as $item) {
@@ -202,12 +205,13 @@ class PaymentController extends Controller
                                 'order_id' => $order->id,
                             ]);
                         }
+
+                        Notification::send($payment, new OrderPlacedNotification($order->order_id));
                     }
 
 
                     $payment->status = 'successful';
                     $payment->save();
-                    Notification::send($payment, new OrderPlacedNotification());
 
 
                     return redirect()->route('ordersucess')

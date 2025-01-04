@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Food;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FoodController extends Controller
 {
@@ -53,8 +54,9 @@ class FoodController extends Controller
     public function destroy($id)
     {
         $food = Food::find($id);
-        if(!$food){
-            return response()->json(['message' => 'Food not found'], 404);
+        if ($food->thumbnail) {
+            $thumbnailPath = str_replace(asset('storage/'), '', $food->thumbnail); // Convert URL to relative path
+            Storage::disk('public')->delete($thumbnailPath);
         }
         $food->delete();
     }

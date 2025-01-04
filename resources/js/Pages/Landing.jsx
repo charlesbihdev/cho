@@ -1,13 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-    ShoppingCart,
-    ChevronDown,
-    Plus,
-    Minus,
-    MapPin,
-    Search,
-    X,
-} from "lucide-react";
+import { ShoppingCart, Search, X } from "lucide-react";
 
 import { Head, Link } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
@@ -17,6 +9,8 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     // console.log(foodData);
     // console.log(categories);
     // console.log(selectedVendor);
+
+    // usePoll();
 
     const [selectedFood, setSelectedFood] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
@@ -126,7 +120,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     //     );
     // }, [selectedVendor, locations]);
 
-    // console.log(selectedVendor);
+    // console.log(selectedVendor)6
     // console.log(filteredLocations);
 
     return (
@@ -138,7 +132,11 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                     <div className="max-w-6xl mx-auto">
                         <div className="flex justify-between items-center mb-4">
                             <Link href={route("landing")}>
-                                <h1 className="text-2xl font-bold">Cho Eats</h1>
+                                <img
+                                    src="cho-delivery.png"
+                                    alt="Cho-App Logo"
+                                    className={`md:w-[80px] md:h-[70px] w-[55px] h-[50px]`}
+                                />
                             </Link>
                             <div className="flex items-center">
                                 <Link

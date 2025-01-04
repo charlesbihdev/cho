@@ -1,6 +1,5 @@
 import Modal from "@/Components/Modal";
 import { useForm } from "@inertiajs/react";
-import { useState } from "react";
 const AddFoodTypeModal = ({ show, onClose, categories }) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Check, Clock, MapPin, ChevronLeft, Receipt } from "lucide-react";
+import { Check, ChevronLeft } from "lucide-react";
+import { Head } from "@inertiajs/react";
 
 const OrderSuccess = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -11,27 +12,9 @@ const OrderSuccess = () => {
         localStorage.removeItem("cart");
     }, []);
 
-    // Sample order details - in real app, this would come from props or state
-    const orderDetails = {
-        orderId: "ORD-2024-1234",
-        estimatedDelivery: "30-40",
-        location: "Hall B",
-        roomNumber: "Room 234",
-        items: [
-            {
-                name: "Fried Rice",
-                variant: "Beef",
-                vendor: "Asian Kitchen",
-                quantity: 2,
-                price: 14.99,
-            },
-        ],
-        deliveryFee: 2.0,
-        total: 31.98,
-    };
-
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
+            <Head title="Order Success" />
             <div className="max-w-lg mx-auto">
                 {/* Success Animation */}
                 <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 text-center">
@@ -43,7 +26,8 @@ const OrderSuccess = () => {
                         Order Successful!
                     </h1>
                     <p className="text-gray-600 mb-6">
-                        Your order #{orderDetails.orderId} has been placed
+                        Your order has been placed. Check your SMS to get a link
+                        to track your order
                     </p>
                 </div>
             </div>

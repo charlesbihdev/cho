@@ -3,13 +3,15 @@ import { ShoppingCart, Plus, Minus, X } from "lucide-react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 import InputError from "@/Components/InputError";
+
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
 
     useEffect(() => {
         // Load cart items from local storage on component mount
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-
         setCartItems(storedCart);
     }, []);
 
@@ -21,7 +23,6 @@ const CartPage = () => {
                 return {
                     ...item,
                     quantity: newQuantity,
-                    // price: item.price * newQuantity,
                 };
             }
             return item;
@@ -31,36 +32,28 @@ const CartPage = () => {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
-    // Create a unique list of locations for rendering
     const uniqueLocations = Array.from(
         new Set(cartItems.map((item) => item.location.id))
     ).map((id) => cartItems.find((item) => item.location.id === id));
 
-    // Function to calculate total delivery fees
     const calculateTotalDeliveryFees = (items) => {
         let totalCost = 0;
-
         items.forEach((item) => {
-            totalCost += item?.location?.price; // Assuming price is the same for the same location
+            totalCost += item?.location?.price;
         });
-
         return totalCost;
     };
 
     const calculateSubTotal = (items) => {
         let subTotal = 0;
-
         items.forEach((item) => {
-            subTotal += item?.price * item.quantity; // Assuming price is the same for the same location
+            subTotal += item?.price * item.quantity;
         });
-
         return subTotal;
     };
 
     const subtotal = calculateSubTotal(cartItems);
-
     const totalDeliveryFee = calculateTotalDeliveryFees(uniqueLocations);
-
     const totalAmount = subtotal + totalDeliveryFee;
 
     const handleRemoveItem = (itemId) => {
@@ -70,9 +63,9 @@ const CartPage = () => {
     };
 
     const { data, setData, post, processing, errors, reset } = useForm({
-        orderData: [],
-        phone: "0548715098",
-        email: "karl@gmail.com",
+        order_data: [],
+        phone,
+        email,
     });
 
     useEffect(() => {
@@ -83,19 +76,22 @@ const CartPage = () => {
             location_id: item.location.id,
             food_note: item?.foodNote,
         }));
-
-        // Update the order_data in the form whenever cartItems change
         setData("order_data", orderData);
     }, [cartItems]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Update phone and email in the form data
+        setData("phone", phone);
+        setData("email", email);
+
         post(route("paystack.pay"), {
             preserveScroll: true,
             preserveState: true,
         });
     };
+
     return (
         <ToastProvider>
             <Head title="Cart" />
@@ -105,7 +101,11 @@ const CartPage = () => {
                 <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
                     <div className="max-w-6xl mx-auto flex justify-between items-center">
                         <Link href={route("landing")}>
-                            <h1 className="text-2xl font-bold">Cho Eats</h1>
+                            <img
+                                src="cho-delivery.png"
+                                alt="Cho-App Logo"
+                                className={`md:w-[80px] md:h-[70px] w-[55px] h-[50px]`}
+                            />
                         </Link>
 
                         <Link
@@ -199,6 +199,53 @@ const CartPage = () => {
                             ))}
                         </div>
                     )}
+                </div>
+
+                {/* User Info Section */}
+                <div
+                    className={`max-w-6xl mx-auto p-4 ${
+                        cartItems.length === 0 ? "hidden" : ""
+                    }`}
+                >
+                    <h2 className="text-xl font-bold mb-4">User Information</h2>
+                    <div className="bg-white p-4 rounded-lg shadow-md">
+                        <div className="mb-4">
+                            <label
+                                className="block text-gray-700 mb-1"
+                                htmlFor="phone"
+                            >
+                                Phone
+                            </label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                className="w-full p-2 border rounded"
+                                placeholder="Enter your phone number"
+                                required
+                            />
+                            <InputError message={errors.phone} />
+                        </div>
+                        <div>
+                            <label
+                                className="block text-gray-700 mb-1"
+                                htmlFor="email"
+                            >
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full p-2 border rounded"
+                                placeholder="Enter your email address"
+                                required
+                            />
+                            <InputError message={errors.email} />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Delivery Cost Summary Section */}
