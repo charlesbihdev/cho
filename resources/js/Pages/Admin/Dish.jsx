@@ -19,7 +19,7 @@ export default function Dish({ dishes, vendors, foods }) {
         setSelectedFood(null);
         setShowDetailsModal(false);
     };
-    // Function to handle button clicks and show the modal with content
+
     const handleButtonClick = () => {
         setIsOpen(true);
     };
@@ -33,58 +33,67 @@ export default function Dish({ dishes, vendors, foods }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleButtonClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 font-semibold hover:scale-105  transition-all"
+                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 font-semibold transition-all duration-200 transform hover:scale-105"
                         >
                             Add Dish
                         </button>
                     </div>
 
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="overflow-x-auto border-l border-r border-gray-300 border-t border-b">
+                    <div className="overflow-hidden bg-white shadow-lg rounded-lg">
+                        <div className="overflow-x-auto border-gray-200">
                             <table className="w-full text-center table-auto border-collapse">
-                                <thead>
-                                    <tr className="text-black">
-                                        <th className="border-b border-r border-gray-400 py-2 px-4">
+                                <thead className="bg-gray-100 text-gray-700 uppercase">
+                                    <tr>
+                                        <th className="py-3 px-4 border-b">
+                                            #
+                                        </th>
+                                        <th className="py-3 px-4 border-b">
                                             Food Name
                                         </th>
-                                        <th className="border-b border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Category
                                         </th>
-                                        <th className="border-b border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Thumbnail
                                         </th>
-                                        <th className="border-b border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Total Vendors
                                         </th>
-                                        <th className="border-b border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {dishes.map((food) => (
-                                        <tr key={food.id}>
-                                            <td className="border-b border-r border-gray-400 py-2">
+                                <tbody className="text-gray-700">
+                                    {dishes.map((food, index) => (
+                                        <tr
+                                            key={food.id}
+                                            className="hover:bg-gray-50 transform transition-all duration-200"
+                                        >
+                                            <td className="py-4 px-4 border-b">
+                                                {index + 1}
+                                            </td>
+                                            <td className="py-4 px-4 border-b">
                                                 {food.name}
                                             </td>
-                                            <td className="border-b border-r border-gray-400 py-2">
+                                            <td className="py-4 px-4 border-b">
                                                 {food.category}
                                             </td>
-                                            <td className="border-b border-r border-gray-400 py-2">
-                                                <div className=" flex justify-center hover:scale-110  transition-all">
+                                            <td className="py-4 px-4 border-b">
+                                                <div className="flex justify-center">
                                                     <img
                                                         src={food.thumbnail}
                                                         alt={food.name}
-                                                        className="w-[80px] h-[80px] object-cover rounded-md"
+                                                        className="w-20 h-20 object-cover rounded-md hover:scale-110 transition-all duration-200"
                                                     />
                                                 </div>
                                             </td>
-                                            <td className="border-b border-r border-gray-400 py-2">
+                                            <td className="py-4 px-4 border-b">
                                                 {food.vendors.length}
                                             </td>
-                                            <td className="border-b border-r border-gray-400 py-2">
+                                            <td className="py-4 px-4 border-b">
                                                 <button
-                                                    className="text-blue-600 hover:underline"
+                                                    className="text-blue-600 hover:text-blue-800 font-semibold transition-all duration-200"
                                                     onClick={() =>
                                                         handleViewDetails(food)
                                                     }

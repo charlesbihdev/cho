@@ -42,57 +42,60 @@ export default function Location({ locations, vendors }) {
                     <div className="w-full flex justify-end mb-3">
                         <button
                             onClick={handleAddLocationClick}
-                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 hover:scale-105  transition-all font-semibold"
+                            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 hover:scale-105 transition-all font-semibold"
                         >
                             Add Location
                         </button>
                     </div>
 
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="overflow-x-auto border-l border-r border-t border-b border-gray-300">
-                            <table className="w-full text-center table-auto border-collapse">
-                                <thead>
-                                    <tr className="text-black">
-                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
+                    <div className="overflow-hidden bg-white shadow-lg rounded-lg">
+                        <div className="overflow-x-auto border-gray-200">
+                            <table className="w-full text-center table-auto border-collapse ">
+                                <thead className="bg-gray-100 text-gray-700 uppercase">
+                                    <tr>
+                                        <th className="py-3 px-4 border-b">
                                             #
                                         </th>
-                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Vendor
                                         </th>
-                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Destination
                                         </th>
-                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Amount
                                         </th>
-                                        <th className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                        <th className="py-3 px-4 border-b">
                                             Action
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="text-gray-700">
                                     {locations.map((location, index) => (
-                                        <tr key={location.id}>
-                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                        <tr
+                                            key={location.id}
+                                            className="hover:bg-gray-50 transform transition-all duration-200"
+                                        >
+                                            <td className="py-4 px-4 border-b">
                                                 {index + 1}
                                             </td>
-                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                            <td className="py-4 px-4 border-b">
                                                 {location.vendor.name}
                                             </td>
-                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                            <td className="py-4 px-4 border-b">
                                                 {location.destination}
                                             </td>
-                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                            <td className="py-4 px-4 border-b">
                                                 {location.amount}
                                             </td>
-                                            <td className="border-b border-l border-r border-gray-400 py-2 px-4">
+                                            <td className="py-4 px-4 border-b">
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteClick(
                                                             location.id
                                                         )
                                                     }
-                                                    className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700 transition"
+                                                    className="text-red-600 hover:text-red-800 font-semibold transition-all duration-200"
                                                     disabled={processing}
                                                 >
                                                     Delete
