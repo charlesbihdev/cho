@@ -23,13 +23,13 @@ const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
 
         console.log(`Deleting variant with ID: ${variantToDelete}`);
 
-        destroy(route("variants.destroy", variantToDelete), {
+        destroy(route("dishes.destroy", variantToDelete), {
             onSuccess: () => {
                 setIsDeleteModalOpen(false);
-                setVariantToDelete(null); // Reset after successful deletion
-                console.log(`Variant ${variantToDelete} deleted successfully.`);
+                setVariantToDelete(null);
             },
             preserveScroll: true,
+            preserveState: true,
         });
     };
 

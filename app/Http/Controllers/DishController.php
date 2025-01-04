@@ -8,8 +8,7 @@ use App\Models\Vendor;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 use App\Models\FoodVendorVariant;
-
-
+use Termwind\Components\Dd;
 
 class DishController extends Controller
 {
@@ -81,10 +80,10 @@ class DishController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $variant = Variant::findOrFail($id);
+        $variant = Variant::find($id);
+
         $variant->delete();
-    
-      
-    }}
+    }
+}
