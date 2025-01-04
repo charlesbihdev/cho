@@ -1,15 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-    ShoppingCart,
-    ChevronDown,
-    Plus,
-    Minus,
-    MapPin,
-    Search,
-    X,
-} from "lucide-react";
+import { ShoppingCart, Search, X } from "lucide-react";
 
-import { Head, Link, usePoll } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 // Enhanced sample data
 

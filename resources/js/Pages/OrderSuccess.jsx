@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Check, Clock, MapPin, ChevronLeft, Receipt } from "lucide-react";
+import { Check, ChevronLeft } from "lucide-react";
 import { Head } from "@inertiajs/react";
 
 const OrderSuccess = () => {
