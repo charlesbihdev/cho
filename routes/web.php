@@ -34,19 +34,22 @@ Route::middleware('auth')->group(function () {
 
 // Admin
 
-Route::resource('orders', OrderController::class);
+Route::middleware('auth')->group(function () {
+
+    Route::resource('orders', OrderController::class);
 
 
-Route::resource('foods', FoodController::class);
+    Route::resource('foods', FoodController::class);
 
 
-Route::resource('dishes', DishController::class);
+    Route::resource('dishes', DishController::class);
 
 
-Route::resource('vendors', VendorController::class);
+    Route::resource('vendors', VendorController::class);
 
 
-Route::resource('locations', LocationController::class);
+    Route::resource('locations', LocationController::class);
+});
 
 //Variants
 

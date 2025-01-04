@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
     ShoppingCart,
     ChevronDown,
@@ -8,12 +8,13 @@ import {
     Search,
     X,
 } from "lucide-react";
-import { Link } from "@inertiajs/react";
+
+import { Head, Link } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 // Enhanced sample data
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
-    console.log(foodData);
+    // console.log(foodData);
     // console.log(categories);
     // console.log(selectedVendor);
 
@@ -130,6 +131,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
 
     return (
         <ToastProvider>
+            <Head title="Food Ordering" />
             <div className="min-h-screen bg-gray-50">
                 {/* Header */}
                 <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
