@@ -78,12 +78,16 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                             ))}
                         </div>
                         <div className="mt-3 pt-3 border-t">
+                            <p className="font-semibold text-gray-800">
+                                + Delivery ₵{order.location.amount}
+                            </p>
                             <div className="flex justify-between items-center">
                                 <p className="font-semibold text-gray-800">
                                     Total Amount
                                 </p>
                                 <p className="font-semibold text-gray-800">
-                                    ₵{order?.total_price}
+                                    ₵
+                                    {order?.total_price + order.location.amount}
                                 </p>
                             </div>
                         </div>

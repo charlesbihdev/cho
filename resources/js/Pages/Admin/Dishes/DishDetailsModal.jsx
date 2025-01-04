@@ -29,7 +29,7 @@ const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
                 setVariantToDelete(null);
             },
             preserveScroll: true,
-            // preserveState: true,
+            preserveState: false,
         });
     };
 
