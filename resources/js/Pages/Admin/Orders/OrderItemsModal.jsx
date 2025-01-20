@@ -98,6 +98,8 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                                                     price: item.variant?.price,
                                                     quantity: item.quantity,
                                                     phone: order?.phone,
+                                                    name: order?.name,
+                                                    orderId: order?.order_id,
                                                 }}
                                             />
                                         </div>

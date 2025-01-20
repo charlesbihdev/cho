@@ -12,12 +12,14 @@ const CopyToClipboardBttn = ({ data }) => {
     // Generate the text to copy
     const generateCopyText = () => {
         return `
+      Order ID: ${data.orderId}
       Food Name: ${data.foodName}
       Variant: ${data.variant}
       Vendor: ${data.vendor}
       Note: ${data.note || "None"}
       Variant Price: ${data.price}
       Qty: ${data.quantity}
+      Name: ${data.name}
       Phone: ${data.phone}
     `;
     };

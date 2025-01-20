@@ -201,6 +201,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                 onClick={() => handleFoodClick(data)}
                             >
                                 <img
+                                    loading="lazy"
                                     src={data.thumbnail}
                                     alt={data.name}
                                     className="w-full h-40 object-cover"
@@ -247,6 +248,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
 
                                 <div className="p-4">
                                     <img
+                                        loading="lazy"
                                         src={selectedFood.thumbnail}
                                         alt={selectedFood.name}
                                         className="w-full h-48 object-cover rounded-lg mb-4"
