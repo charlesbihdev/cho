@@ -13,15 +13,15 @@ export default function Orders({ orders }) {
         setIsOpen(true);
     };
 
-    console.log(orders);
+    // console.log(orders);
 
     return (
         <AdminLayout>
             <Head title="Orders" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-lg sm:rounded-lg">
+                <div className="mx-auto sm:px-2 w-full">
+                    <div className="w-full overflow-hidden bg-white shadow-lg sm:rounded-lg">
                         <div className="overflow-x-auto border-l border-r border-t border-b">
                             <table className="w-full text-center table-auto border-collapse">
                                 <thead className="bg-gray-100 text-gray-700 uppercase">
@@ -30,10 +30,13 @@ export default function Orders({ orders }) {
                                             #
                                         </th>
                                         <th className="py-3 px-4 border-b border-gray-400">
-                                            Username
+                                            Username | Email
                                         </th>
                                         <th className="py-3 px-4 border-b border-gray-400">
                                             Phone
+                                        </th>
+                                        <th className="py-3 px-4 border-b border-gray-400">
+                                            Order ID
                                         </th>
                                         <th className="py-3 px-4 border-b border-gray-400">
                                             Location
@@ -59,10 +62,15 @@ export default function Orders({ orders }) {
                                                 {index + 1}
                                             </td>
                                             <td className="py-4 px-4 border-b border-gray-400">
-                                                {order.email}
+                                                {order.name +
+                                                    " | " +
+                                                    order.email}
                                             </td>
                                             <td className="py-4 px-4 border-b border-gray-400">
                                                 {order.phone}
+                                            </td>
+                                            <td className="py-4 px-4 border-b border-gray-400">
+                                                {order.order_id}
                                             </td>
                                             <td className="py-4 px-4 border-b border-gray-400">
                                                 {order.location.vendor?.name} -{" "}

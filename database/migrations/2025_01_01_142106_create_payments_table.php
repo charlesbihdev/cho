@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->string('transaction_id')->unique(); // Unique transaction identifier
+            $table->string('name')->nullable(); // Name of the user
             $table->string('email'); // Email of the user making the payment
             $table->string('phone')->nullable(); // Phone number of the user
             $table->decimal('amount', 10, 2); // Total amount for the payment

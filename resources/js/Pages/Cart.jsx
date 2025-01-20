@@ -6,6 +6,7 @@ import InputError from "@/Components/InputError";
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
 
@@ -64,6 +65,7 @@ const CartPage = () => {
 
     const { data, setData, post, processing, errors, reset } = useForm({
         order_data: [],
+        name,
         phone,
         email,
     });
@@ -83,6 +85,7 @@ const CartPage = () => {
         e.preventDefault();
 
         // Update phone and email in the form data
+        setData("name", name);
         setData("phone", phone);
         setData("email", email);
 
@@ -209,6 +212,25 @@ const CartPage = () => {
                 >
                     <h2 className="text-xl font-bold mb-4">User Information</h2>
                     <div className="bg-white p-4 rounded-lg shadow-md">
+                        <div className="mb-4">
+                            <label
+                                className="block text-gray-700 mb-1"
+                                htmlFor="name"
+                            >
+                                Fullname
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full p-2 border rounded"
+                                placeholder="Enter your fullname"
+                                required
+                            />
+                            <InputError message={errors.name} />
+                        </div>
+
                         <div className="mb-4">
                             <label
                                 className="block text-gray-700 mb-1"
