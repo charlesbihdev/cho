@@ -3,6 +3,7 @@ import { ShoppingCart, Search, X } from "lucide-react";
 
 import { Head, Link } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
+import LocationSelector from "@/Components/Landing/LocationSelector";
 // Enhanced sample data
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
@@ -329,47 +330,14 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                             </div>
                                         </div>
                                     )}
-
                                     {selectedVariant && (
-                                        <>
-                                            {/* Location Selection */}
-                                            <h3 className="font-bold uppercase text-[#493711] mb-2">
-                                                Delivery Location
-                                            </h3>
-                                            <div className="grid grid-cols-2 gap-2 mb-4">
-                                                {selectedVendor.locations.map(
-                                                    (location) => (
-                                                        <button
-                                                            key={location.id}
-                                                            className={`p-3 rounded-lg text-left transition-colors ${
-                                                                selectedLocation?.destination ===
-                                                                location?.destination
-                                                                    ? "bg-[#E4BF57] text-[#493711]"
-                                                                    : "bg-gray-50 hover:bg-gray-100"
-                                                            }`}
-                                                            onClick={() =>
-                                                                setSelectedLocation(
-                                                                    location
-                                                                )
-                                                            }
-                                                        >
-                                                            <div className="font-bold">
-                                                                {
-                                                                    location?.destination
-                                                                }
-                                                            </div>
-                                                            <div className="text-sm">
-                                                                +₵
-                                                                {
-                                                                    location.price
-                                                                }{" "}
-                                                                delivery
-                                                            </div>
-                                                        </button>
-                                                    )
-                                                )}
-                                            </div>
-                                        </>
+                                        <LocationSelector
+                                            selectedVendor={selectedVendor}
+                                            selectedLocation={selectedLocation}
+                                            setSelectedLocation={
+                                                setSelectedLocation
+                                            }
+                                        />
                                     )}
 
                                     {selectedLocation && (
