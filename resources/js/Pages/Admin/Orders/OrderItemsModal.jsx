@@ -100,6 +100,9 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                                                     phone: order?.phone,
                                                     name: order?.name,
                                                     orderId: order?.order_id,
+                                                    location:
+                                                        order?.location
+                                                            .destination,
                                                 }}
                                             />
                                         </div>

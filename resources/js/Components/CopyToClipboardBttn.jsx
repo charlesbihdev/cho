@@ -19,6 +19,7 @@ const CopyToClipboardBttn = ({ data }) => {
       Note: ${data.note || "None"}
       Variant Price: ${data.price}
       Qty: ${data.quantity}
+      Location: ${data.location}
       Name: ${data.name}
       Phone: ${data.phone}
     `;
