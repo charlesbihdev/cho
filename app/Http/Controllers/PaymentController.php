@@ -211,7 +211,7 @@ class PaymentController extends Controller
                             ]);
                         }
 
-                        Notification::send($payment, new OrderPlacedNotification($order->order_id));
+                        Notification::send($order, new OrderPlacedNotification($order->order_id));
                     }
 
 
