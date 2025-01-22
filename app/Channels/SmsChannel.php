@@ -14,8 +14,8 @@ class SmsChannel
 
     public function __construct()
     {
-        $this->apiUrl = env('SMS_API_URL');
-        $this->senderId = env('SMS_SENDER_ID', 'Event-Pulse');
+        $this->apiUrl = env('SMS_API_URL', "https://webapp.usmsgh.com/api/http/sms/send");
+        $this->senderId = env('SMS_SENDER_ID', 'CHO APP');
         $this->apiToken = env('SMS_API_TOKEN');
     }
 
@@ -47,8 +47,13 @@ class SmsChannel
         // Optionally handle response or log errors
         if ($response->successful()) {
             // Log success or perform additional actions
+
+            Log::info('SMS sent successfully.', [
+                'response_body' => $response->body(),
+            ]);
         } else {
             // Log error details
+            // dd($response->body());
             Log::error('SMS sending failed: ' . $response->body());
         }
     }

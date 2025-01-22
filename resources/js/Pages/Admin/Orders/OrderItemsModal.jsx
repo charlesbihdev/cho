@@ -1,6 +1,7 @@
 import Modal from "@/Components/Modal";
 import { Phone, MapPin, UtensilsCrossed } from "lucide-react";
-import { Link, router } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
+import CopyToClipboardBttn from "@/Components/CopyToClipboardBttn";
 
 const OrderItemsModal = ({ show, onClose, order }) => {
     const handleToggle = (e) => {
@@ -8,17 +9,23 @@ const OrderItemsModal = ({ show, onClose, order }) => {
         router.put(route("orders.update", order.id));
         onClose();
     };
+
+    // console.log(order);
     return (
         <Modal show={show} onClose={onClose}>
-            <div className="p-6 max-h-[80vh] overflow-y-auto">
+            <div className="py-6 px-3 max-h-[80vh] overflow-y-auto">
                 {" "}
                 {/* Limit height and add scrolling */}
                 <div className="border-b pb-4 mb-6">
                     <h2 className="text-2xl font-bold text-gray-800">
-                        Order Details
+                        Order Details - {order?.name}
                     </h2>
                     <p className="text-gray-500 text-sm mt-1">
-                        Order #{order?.id || "N/A"}
+                        Order #
+                        <span className="font-bold text-blue-700">
+                            {" "}
+                            {order?.order_id || "N/A"}
+                        </span>
                     </p>
                 </div>
                 <div className="space-y-6">
@@ -58,11 +65,46 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                                                             ?.name}
                                                 </p>
                                             </div>
-                                            {item.note && (
-                                                <p className="text-sm text-gray-500 mt-1">
-                                                    Note: {item.note}
+                                            <div>
+                                                <p className=" font-medium text-gray-800">
+                                                    <span className="text-[#ac8125]">
+                                                        Destination:
+                                                    </span>
+                                                    {" " +
+                                                        order?.location
+                                                            .destination}
                                                 </p>
+                                            </div>
+                                            {item.note && (
+                                                <div>
+                                                    <p className="font-medium text-gray-800 mt-1 italic">
+                                                        <span className="text-[#ac8125] not-italic">
+                                                            Note:
+                                                        </span>
+                                                        {" " + item.note}
+                                                    </p>
+                                                </div>
                                             )}
+
+                                            <CopyToClipboardBttn
+                                                data={{
+                                                    foodName:
+                                                        item.variant?.food
+                                                            ?.name,
+                                                    variant: item.variant?.name,
+                                                    vendor: order?.location
+                                                        .vendor?.name,
+                                                    note: item.note,
+                                                    price: item.variant?.price,
+                                                    quantity: item.quantity,
+                                                    phone: order?.phone,
+                                                    name: order?.name,
+                                                    orderId: order?.order_id,
+                                                    location:
+                                                        order?.location
+                                                            .destination,
+                                                }}
+                                            />
                                         </div>
                                         <div className="text-right shrink-0">
                                             <p className="font-medium text-gray-800">
@@ -100,6 +142,7 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                                 Contact Details
                             </h3>
                         </div>
+                        <p className="text-gray-800">{order?.name}</p>
                         <p className="text-gray-800">{order?.phone}</p>
                         <p className="text-gray-800">{order?.email}</p>
                     </div>

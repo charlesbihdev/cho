@@ -38,7 +38,7 @@ const OrderSuccess = () => {
                 className="flex-1 py-3 px-4 rounded-full bg-[#FBB60E] text-[#493711] font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors mx-auto"
             >
                 <ChevronLeft size={20} />
-                Back to Menu
+                Back to Home
             </button>
         </div>
     );

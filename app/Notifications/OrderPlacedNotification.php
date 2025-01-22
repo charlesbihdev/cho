@@ -31,7 +31,7 @@ class OrderPlacedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [SmsChannel::class];
+        return ['mail', SmsChannel::class];
     }
 
     /**
@@ -39,10 +39,15 @@ class OrderPlacedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $trackingUrl = route('orders.track', ['order_id' => $this->orderId]);
+
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->subject('Order Confirmation - CHO')
+            ->greeting('Hello,')
+            ->line('Your order has been placed successfully!')
+            ->line('You can track your order using the link below:')
+            ->action('Track Your Order', $trackingUrl)
+            ->line('Thank you for choosing our service!');
     }
 
     /**

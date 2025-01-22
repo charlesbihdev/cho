@@ -3,11 +3,13 @@ import { ShoppingCart, Plus, Minus, X } from "lucide-react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 import InputError from "@/Components/InputError";
+import DeliveryInfoBanner from "@/Components/DeliveryInfoBanner";
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
-    const [phone, setPhone] = useState("");
-    const [email, setEmail] = useState("");
+    // const [name, setName] = useState("");
+    // const [phone, setPhone] = useState("");
+    // const [email, setEmail] = useState("");
 
     useEffect(() => {
         // Load cart items from local storage on component mount
@@ -64,8 +66,9 @@ const CartPage = () => {
 
     const { data, setData, post, processing, errors, reset } = useForm({
         order_data: [],
-        phone,
-        email,
+        name: "",
+        phone: "",
+        email: "",
     });
 
     useEffect(() => {
@@ -83,8 +86,9 @@ const CartPage = () => {
         e.preventDefault();
 
         // Update phone and email in the form data
-        setData("phone", phone);
-        setData("email", email);
+        // setData("name", name);
+        // setData("phone", phone);
+        // setData("email", email);
 
         post(route("paystack.pay"), {
             preserveScroll: true,
@@ -102,6 +106,7 @@ const CartPage = () => {
                     <div className="max-w-6xl mx-auto flex justify-between items-center">
                         <Link href={route("landing")}>
                             <img
+                                loading="lazy"
                                 src="cho-delivery.png"
                                 alt="Cho-App Logo"
                                 className={`md:w-[80px] md:h-[70px] w-[55px] h-[50px]`}
@@ -140,6 +145,7 @@ const CartPage = () => {
                                 >
                                     <div className="flex items-center">
                                         <img
+                                            loading="lazy"
                                             src={item.image}
                                             alt={item.name}
                                             className="w-20 h-20 object-cover rounded-lg mr-4"
@@ -202,99 +208,141 @@ const CartPage = () => {
                 </div>
 
                 {/* User Info Section */}
-                <div
-                    className={`max-w-6xl mx-auto p-4 ${
-                        cartItems.length === 0 ? "hidden" : ""
-                    }`}
-                >
-                    <h2 className="text-xl font-bold mb-4">User Information</h2>
-                    <div className="bg-white p-4 rounded-lg shadow-md">
-                        <div className="mb-4">
-                            <label
-                                className="block text-gray-700 mb-1"
-                                htmlFor="phone"
-                            >
-                                Phone
-                            </label>
-                            <input
-                                type="tel"
-                                id="phone"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                className="w-full p-2 border rounded"
-                                placeholder="Enter your phone number"
-                                required
-                            />
-                            <InputError message={errors.phone} />
-                        </div>
-                        <div>
-                            <label
-                                className="block text-gray-700 mb-1"
-                                htmlFor="email"
-                            >
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-2 border rounded"
-                                placeholder="Enter your email address"
-                                required
-                            />
-                            <InputError message={errors.email} />
-                        </div>
-                    </div>
-                </div>
 
-                {/* Delivery Cost Summary Section */}
-                <div className="max-w-6xl mx-auto p-4">
-                    <h2 className="text-xl font-bold mb-4">Delivery Summary</h2>
-                    <div className="bg-white p-4 rounded-lg shadow-md">
-                        {uniqueLocations.map((item) => (
-                            <div key={item.id} className="flex justify-between">
-                                <span>{`${item.vendor} - ${item.location.destination}`}</span>
-                                <span>₵{item.location.price.toFixed(2)}</span>
+                <form onSubmit={handleSubmit}>
+                    <div
+                        className={`max-w-6xl mx-auto p-4 ${
+                            cartItems.length === 0 ? "hidden" : ""
+                        }`}
+                    >
+                        <h2 className="text-xl font-bold mb-4">
+                            User Information
+                        </h2>
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 mb-1"
+                                    htmlFor="name"
+                                >
+                                    Fullname
+                                </label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={data.name}
+                                    onChange={(e) =>
+                                        setData("name", e.target.value)
+                                    }
+                                    className="w-full p-2 border rounded"
+                                    placeholder="Enter your fullname"
+                                    required
+                                />
+                                <InputError message={errors.name} />
                             </div>
-                        ))}
-                        <div className="flex justify-between font-bold">
-                            <span>Total Delivery Fee</span>
-                            <span>₵{totalDeliveryFee.toFixed(2)}</span>
-                        </div>
-                    </div>
-                </div>
 
-                {/* Order Summary Section */}
-                <div className="max-w-6xl mx-auto p-4">
-                    <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-                    <div className="bg-white p-4 rounded-lg shadow-md">
-                        <div className="flex justify-between">
-                            <span>Subtotal</span>
-                            <span>₵{subtotal.toFixed(2)}</span>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 mb-1"
+                                    htmlFor="phone"
+                                >
+                                    Phone
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value={data.phone}
+                                    onChange={(e) =>
+                                        setData("phone", e.target.value)
+                                    }
+                                    className="w-full p-2 border rounded"
+                                    placeholder="Enter your phone number"
+                                    required
+                                />
+                                <InputError message={errors.phone} />
+                            </div>
+                            <div>
+                                <label
+                                    className="block text-gray-700 mb-1"
+                                    htmlFor="email"
+                                >
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={data.email}
+                                    onChange={(e) =>
+                                        setData("email", e.target.value)
+                                    }
+                                    className="w-full p-2 border rounded"
+                                    placeholder="Enter your email address"
+                                    required
+                                />
+                                <InputError message={errors.email} />
+                            </div>
                         </div>
-                        <div className="flex justify-between">
-                            <span>Delivery Fee</span>
-                            <span>₵{totalDeliveryFee.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between font-bold">
-                            <span>Total</span>
-                            <span>₵{totalAmount.toFixed(2)}</span>
-                        </div>
-                        <InputError
-                            className="text-center"
-                            message={errors.order_data}
-                        />
-                        <button
-                            type="submit"
-                            onClick={handleSubmit}
-                            className="w-full mt-4 bg-[#FBB60E] text-[#493711] py-3 rounded-full font-bold hover:bg-[#E4BF57] transition-colors"
-                        >
-                            Proceed to Checkout
-                        </button>
                     </div>
-                </div>
+
+                    {/* Delivery Cost Summary Section */}
+                    <div className="max-w-6xl mx-auto p-4">
+                        <h2 className="text-xl font-bold mb-4">
+                            Delivery Summary
+                        </h2>
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            {uniqueLocations.map((item) => (
+                                <div
+                                    key={item.id}
+                                    className="flex justify-between"
+                                >
+                                    <span>{`${item.vendor} - ${item.location.destination}`}</span>
+                                    <span>
+                                        ₵{item.location.price.toFixed(2)}
+                                    </span>
+                                </div>
+                            ))}
+                            <div className="flex justify-between font-bold">
+                                <span>Total Delivery Fee</span>
+                                <span>₵{totalDeliveryFee.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Order Summary Section */}
+                    <div className="max-w-6xl mx-auto p-4">
+                        <h2 className="text-xl font-bold mb-4">
+                            Order Summary
+                        </h2>
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <div className="flex justify-between">
+                                <span>Subtotal</span>
+                                <span>₵{subtotal.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Delivery Fee</span>
+                                <span>₵{totalDeliveryFee.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between font-bold">
+                                <span>Total</span>
+                                <span>₵{totalAmount.toFixed(2)}</span>
+                            </div>
+                            <InputError
+                                className="text-center"
+                                message={errors.order_data}
+                            />
+                            <button
+                                type="submit"
+                                className="w-full mt-4 bg-[#FBB60E] text-[#493711] py-3 rounded-full font-bold hover:bg-[#E4BF57] transition-colors"
+                            >
+                                Proceed to Checkout
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
+            <DeliveryInfoBanner />
         </ToastProvider>
     );
 };

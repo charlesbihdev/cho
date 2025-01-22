@@ -16,5 +16,6 @@ class Payment extends Model
         'status',
         'email',
         'phone',
+        'name',
     ];
 }

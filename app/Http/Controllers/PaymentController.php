@@ -24,6 +24,7 @@ class PaymentController extends Controller
     public function redirectToGateway(Request $request)
     {
         $request->validate([
+            'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required|regex:/^0\d{9}$/',
             'order_data' => 'required|array|min:1',
@@ -84,6 +85,7 @@ class PaymentController extends Controller
             // Prepare payment data
             $paymentData = [
                 'transaction_id' => $reference,
+                "name" => $request->input('name'),
                 "email" => $request->input('email'),
                 'phone' => $request->input('phone'),
                 'amount' => $payableAmount,
@@ -102,6 +104,7 @@ class PaymentController extends Controller
                 "reference" => $reference,
                 "callback_url" => route('paystack.callback'), // Define your callback route
                 "metadata" => [
+                    "name" => $request->input('name'),
                     "phone" => $request->input('phone'),
                     "email" => $request->input('email'),
                     "order_data" => $orderData,
@@ -132,7 +135,7 @@ class PaymentController extends Controller
             $transactionId = $paymentDetails['data']['id'];
             $payment = Payment::where('payment_reference', $reference)->first();
             $metadata = $paymentDetails['data']['metadata'];
-
+            // dd($metadata);
             if (!$payment) {
                 // throw new Exception("Payment record not found.");
                 return back()->with([
@@ -176,6 +179,7 @@ class PaymentController extends Controller
                         $item['price'] = $variant->price;
 
                         // Add item to the grouped order
+                        $item['note'] = $note;
                         $groupedOrders[$key]['items'][] = $item;
                         $groupedOrders[$key]['total_price'] += $item['price'] * $item['quantity'];
                     }
@@ -189,6 +193,7 @@ class PaymentController extends Controller
                             'vendor_id' => $orderGroup['vendor_id'],
                             'status' => 'pending',
                             'total_price' => $orderGroup['total_price'],
+                            'name' => $metadata['name'] ?? null,
                             'email' => $metadata['email'] ?? null,
                             'phone' => $metadata['phone'] ?? null,
                         ]);
@@ -206,7 +211,7 @@ class PaymentController extends Controller
                             ]);
                         }
 
-                        Notification::send($payment, new OrderPlacedNotification($order->order_id));
+                        Notification::send($order, new OrderPlacedNotification($order->order_id));
                     }
 
 
@@ -229,7 +234,7 @@ class PaymentController extends Controller
             }
         } catch (Exception $e) {
             // Log the error message for debugging purposes
-            dd($e->getMessage());
+            // dd($e->getMessage());
             // Return back with an error message
             return back()->with([
                 'error' => 'An error occurred during payment processing: ' . $e->getMessage(),
