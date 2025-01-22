@@ -3,6 +3,7 @@ import { ShoppingCart, Plus, Minus, X } from "lucide-react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 import InputError from "@/Components/InputError";
+import DeliveryInfoBanner from "@/Components/DeliveryInfoBanner";
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -341,6 +342,7 @@ const CartPage = () => {
                     </div>
                 </form>
             </div>
+            <DeliveryInfoBanner />
         </ToastProvider>
     );
 };
