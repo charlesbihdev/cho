@@ -25,17 +25,20 @@ class LandingController extends Controller
                         'id' => $food->category->id,
                         'name' => $food->category->name,
                     ],
-                    'vendors' => $food->vendors->map(function ($vendor) {
+                    'vendors' => $food->vendors->map(function ($vendor) use ($food) {
                         return [
                             'id' => $vendor->id,
                             'name' => $vendor->name,
-                            'variants' => $vendor->variants->map(function ($variant) {
-                                return [
-                                    'id' => $variant->id,
-                                    'name' => $variant->name,
-                                    'price' => $variant->price,
-                                ];
-                            }),
+                            'variants' => $vendor->variants
+                                ->where('food_id', $food->id)
+                                ->values()
+                                ->map(function ($variant) {
+                                    return [
+                                        'id' => $variant->id,
+                                        'name' => $variant->name,
+                                        'price' => $variant->price,
+                                    ];
+                                }),
                             'locations' => $vendor->locations->map(function ($location) {
                                 return [
                                     'id' => $location->id,
