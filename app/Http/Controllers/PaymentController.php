@@ -221,24 +221,39 @@ class PaymentController extends Controller
 
                     return redirect()->route('ordersucess')
                         ->with([
-                            'success' => 'Payment successful. You can go live now',
+                            'success' => 'Payment successful',
                         ]);
+                } else {
+
+                    if ($payment->status = 'successful') {
+                        return back()->with([
+                            'success' => 'Your order has already been processed successfully. No need to verify payment'
+                        ]);
+                    }
                 }
             } else {
                 $payment->status = 'failed';
                 $payment->transaction_id = $transactionId;
                 $payment->save();
-                return back()->with([
-                    'error' => 'Payment failed',
-                ]);
+
+                return redirect()->route('paystack.manual.verify', ['trxref' => $reference])->with([
+                    'error' => 'Payment verification failed. Approve transaction and verify'
+                ]);;
             }
         } catch (Exception $e) {
             // Log the error message for debugging purposes
             // dd($e->getMessage());
             // Return back with an error message
             return back()->with([
-                'error' => 'An error occurred during payment processing: ' . $e->getMessage(),
+                'error' => 'An error occurred during payment processing: ',
             ]);
         }
+    }
+
+    public function showManualVerificationPage($trxref)
+    {
+        return Inertia::render('ManualVerifyPayment', [
+            'trxref' => $trxref,
+        ]);
     }
 }

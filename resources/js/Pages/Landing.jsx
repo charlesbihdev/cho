@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
-import { ShoppingCart, Search, X } from "lucide-react";
+import { X } from "lucide-react";
 
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePoll } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 import LocationSelector from "@/Components/Landing/LocationSelector";
 import DeliveryInfoBanner from "@/Components/DeliveryInfoBanner";
+import Header from "@/Components/Header";
 // Enhanced sample data
 
 const FoodOrderingPage = ({ foodData, locations, categories }) => {
@@ -12,7 +13,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     // console.log(categories);
     // console.log(selectedVendor);
 
-    // usePoll();
+    usePoll(2000);
 
     const [selectedFood, setSelectedFood] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
@@ -130,48 +131,11 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
             <Head title="Food Ordering" />
             <div className="min-h-screen bg-gray-50">
                 {/* Header */}
-                <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
-                    <div className="max-w-6xl mx-auto">
-                        <div className="flex justify-between items-center mb-4">
-                            <Link href={route("landing")}>
-                                <img
-                                    src="cho-delivery.png"
-                                    alt="Cho-App Logo"
-                                    className={`md:w-[80px] md:h-[70px] w-[55px] h-[50px]`}
-                                />
-                            </Link>
-                            <div className="flex items-center">
-                                <Link
-                                    as="button"
-                                    href={route("cart")}
-                                    className="relative p-2 hover:bg-[#E4BF57] hover:text-[#493711] rounded-full transition-colors"
-                                >
-                                    <ShoppingCart size={24} />
-                                    {cartCount > 0 && (
-                                        <span className="absolute -top-1 -right-1 bg-[#FBB60E] text-[#493711] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                            {cartCount}
-                                        </span>
-                                    )}
-                                </Link>
-                            </div>
-                        </div>
-
-                        {/* Search Bar */}
-                        <div className="relative">
-                            <Search
-                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                size={20}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Search for food..."
-                                className="w-full pl-10 pr-4 py-2 rounded-full bg-white text-[#493711] focus:outline-none focus:ring-2 focus:ring-[#E4BF57]"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                </div>
+                <Header
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    showSearchBar
+                />
 
                 {/* Main Content */}
                 <div className="max-w-6xl mx-auto p-4">
@@ -263,35 +227,71 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                             </h3>
                                             <div className="space-y-2 mb-4">
                                                 {selectedFood.vendors.map(
-                                                    (vendor, index) => (
-                                                        <button
-                                                            key={index}
-                                                            className={`w-full p-3 rounded-lg text-left transition-colors
-                            ${
-                                selectedVendor === vendor
-                                    ? "bg-[#E4BF57] text-[#493711]"
-                                    : "bg-gray-50 hover:bg-gray-100"
-                            }`}
-                                                            onClick={() =>
-                                                                setSelectedVendor(
-                                                                    vendor
-                                                                )
-                                                            }
-                                                        >
-                                                            <div className="flex justify-between text-gray-600">
-                                                                <span className="font-bold">
-                                                                    {
-                                                                        vendor.name
-                                                                    }
-                                                                </span>
-                                                                <span>
-                                                                    ⭐{" "}
-                                                                    {vendor.rating ||
-                                                                        5}
-                                                                </span>
-                                                            </div>
-                                                        </button>
-                                                    )
+                                                    (vendor, index) => {
+                                                        const isSelected =
+                                                            selectedVendor ===
+                                                            vendor;
+                                                        const isAvailable =
+                                                            vendor.isActive;
+
+                                                        let buttonClasses =
+                                                            "w-full p-3 rounded-lg text-left transition-colors ";
+
+                                                        if (!isAvailable) {
+                                                            buttonClasses +=
+                                                                "bg-gray-300 cursor-not-allowed";
+                                                        } else if (isSelected) {
+                                                            buttonClasses +=
+                                                                "bg-[#E4BF57] text-[#493711]";
+                                                        } else {
+                                                            buttonClasses +=
+                                                                "bg-gray-50 hover:bg-gray-100";
+                                                        }
+
+                                                        return (
+                                                            <button
+                                                                key={index}
+                                                                disabled={
+                                                                    !isAvailable
+                                                                }
+                                                                className={
+                                                                    buttonClasses
+                                                                }
+                                                                onClick={() => {
+                                                                    if (
+                                                                        isAvailable
+                                                                    )
+                                                                        setSelectedVendor(
+                                                                            vendor
+                                                                        );
+                                                                }}
+                                                            >
+                                                                <div className="flex justify-between text-black">
+                                                                    <span
+                                                                        className={`font-bold ${
+                                                                            !isAvailable
+                                                                                ? "line-through"
+                                                                                : ""
+                                                                        }`}
+                                                                    >
+                                                                        {
+                                                                            vendor.name
+                                                                        }
+                                                                    </span>
+                                                                    <span>
+                                                                        ⭐{" "}
+                                                                        {vendor.rating ||
+                                                                            5}
+                                                                    </span>
+                                                                </div>
+                                                                {!isAvailable && (
+                                                                    <div className="text-xs text-red-500 mt-1">
+                                                                        Unavailable
+                                                                    </div>
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    }
                                                 )}
                                             </div>
                                         </>

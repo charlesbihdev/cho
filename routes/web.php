@@ -23,7 +23,7 @@ Route::get('/order-success', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('vendors', VendorController::class);
+    Route::post('/vendors/{id}/toggle-active', [VendorController::class, 'toggleActive'])->name('vendors.toggle-active');
+
 
 
     Route::resource('locations', LocationController::class);
@@ -60,6 +62,8 @@ Route::middleware('auth')->group(function () {
 Route::post('/pay', [PaymentController::class, 'redirectToGateway'])->name('paystack.pay');
 
 Route::get('/payment/callback', [PaymentController::class, 'handleGatewayCallback'])->name('paystack.callback');
+
+Route::get('/verify-payment/{trxref}', [PaymentController::class, 'showManualVerificationPage'])->name('paystack.manual.verify');
 
 
 require __DIR__ . '/auth.php';

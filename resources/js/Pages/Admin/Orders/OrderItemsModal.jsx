@@ -20,6 +20,22 @@ const OrderItemsModal = ({ show, onClose, order }) => {
                     <h2 className="text-2xl font-bold text-gray-800">
                         Order Details - {order?.name}
                     </h2>
+
+                    <p className="text-gray-500 text-sm mt-1">
+                        Date:
+                        {" " +
+                            new Date(order.created_at).toLocaleDateString(
+                                "en-US",
+                                {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                }
+                            )}
+                    </p>
+
                     <p className="text-gray-500 text-sm mt-1">
                         Order #
                         <span className="font-bold text-blue-700">

@@ -50,7 +50,6 @@ const Toast = ({ type, message }) => {
                         : "bg-red-50 border-red-200"
                 }`}
             >
-                <h1>heyyyy</h1>
                 <div className="flex items-start gap-2">
                     {getIcon()}
                     <div className="flex-1">

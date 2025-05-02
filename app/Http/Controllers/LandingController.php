@@ -29,6 +29,7 @@ class LandingController extends Controller
                         return [
                             'id' => $vendor->id,
                             'name' => $vendor->name,
+                            'isActive' => $vendor->active,
                             'variants' => $vendor->variants
                                 ->where('food_id', $food->id)
                                 ->values()

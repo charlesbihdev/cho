@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { ShoppingCart, Plus, Minus, X } from "lucide-react";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Plus, Minus, X } from "lucide-react";
+import { Head, useForm } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 import InputError from "@/Components/InputError";
 import DeliveryInfoBanner from "@/Components/DeliveryInfoBanner";
+import Header from "@/Components/Header";
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -102,31 +103,7 @@ const CartPage = () => {
 
             <div className="min-h-screen bg-gray-50">
                 {/* Header */}
-                <div className="bg-[#493711] text-white p-4 sticky top-0 z-50">
-                    <div className="max-w-6xl mx-auto flex justify-between items-center">
-                        <Link href={route("landing")}>
-                            <img
-                                loading="lazy"
-                                src="cho-delivery.png"
-                                alt="Cho-App Logo"
-                                className={`md:w-[80px] md:h-[70px] w-[55px] h-[50px]`}
-                            />
-                        </Link>
-
-                        <Link
-                            as="button"
-                            href={route("cart")}
-                            className="relative p-2 hover:bg-[#E4BF57] hover:text-[#493711] rounded-full transition-colors"
-                        >
-                            <ShoppingCart size={24} />
-                            {cartItems.length > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-[#FBB60E] text-[#493711] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                    {cartItems.length}
-                                </span>
-                            )}
-                        </Link>
-                    </div>
-                </div>
+                <Header />
 
                 {/* Cart Items Section */}
                 <div className="max-w-6xl mx-auto p-4">
