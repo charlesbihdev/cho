@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 const ViewOrder = ({ order }) => {
-    console.log(order);
+    // console.log(order);
     const getStatusColor = (status) => {
         switch (status) {
             case "completed":

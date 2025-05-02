@@ -41,10 +41,13 @@ class OrderController extends Controller
             ]);
         }
 
-        // Fetch filtered results
-        $orders = $query->latest()->paginate(30)
-            ->appends(request()->query());
-        // 👈 paginate + keep filters
+
+
+        $orders = $query->latest()
+            ->paginate(1)
+            ->appends(request()->query())
+            ->onEachSide(1);
+
 
 
         // Return filtered results to the Inertia view

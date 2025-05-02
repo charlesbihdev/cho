@@ -12,7 +12,7 @@ import Pagination from "@/Components/Pagination";
 export default function Orders({ orderItems }) {
     const orders = orderItems.data;
 
-    console.log(orderItems);
+    // console.log(orderItems);
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
