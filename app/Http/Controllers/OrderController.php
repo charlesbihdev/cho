@@ -42,11 +42,14 @@ class OrderController extends Controller
         }
 
         // Fetch filtered results
-        $orders = $query->latest()->get();
+        $orders = $query->latest()->paginate(5)
+            ->appends(request()->query());
+        // 👈 paginate + keep filters
+
 
         // Return filtered results to the Inertia view
         return Inertia::render('Admin/Orders', [
-            'orders' => $orders,
+            'orderItems' => $orders,
         ]);
     }
 

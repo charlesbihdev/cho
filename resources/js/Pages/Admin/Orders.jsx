@@ -7,8 +7,13 @@ import OrderItemsModal from "./Orders/OrderItemsModal";
 import { router } from "@inertiajs/react";
 import { debounce } from "lodash";
 import { Search } from "lucide-react";
+import Pagination from "@/Components/Pagination";
 
-export default function Orders({ orders }) {
+export default function Orders({ orderItems }) {
+    const orders = orderItems.data;
+
+    console.log(orderItems);
+
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -218,6 +223,8 @@ export default function Orders({ orders }) {
                         </div>
                     </div>
                 </div>
+
+                <Pagination links={orderItems.links} />
             </div>
 
             {selectedOrder && (

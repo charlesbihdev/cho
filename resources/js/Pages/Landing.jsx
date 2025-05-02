@@ -13,7 +13,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     // console.log(categories);
     // console.log(selectedVendor);
 
-    usePoll(2000);
+    usePoll(8000);
 
     const [selectedFood, setSelectedFood] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
