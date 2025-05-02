@@ -42,7 +42,7 @@ class OrderController extends Controller
         }
 
         // Fetch filtered results
-        $orders = $query->latest()->paginate(5)
+        $orders = $query->latest()->paginate(30)
             ->appends(request()->query());
         // 👈 paginate + keep filters
 
