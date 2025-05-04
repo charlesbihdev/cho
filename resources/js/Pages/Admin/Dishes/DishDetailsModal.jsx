@@ -1,15 +1,23 @@
 import Modal from "@/Components/Modal";
 import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
 import { useState } from "react";
-import { useForm } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 
 const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [variantToDelete, setVariantToDelete] = useState(null);
 
+    // console.log(food);
+
     const handleDeleteClick = (variant) => {
         setVariantToDelete(variant.id); // Pass only the ID
         setIsDeleteModalOpen(true);
+    };
+
+    const handleToggle = (e, id) => {
+        e.preventDefault();
+        router.post(route("dishes.toggle-active", id));
+        onClose();
     };
 
     const { delete: destroy, processing } = useForm();
@@ -50,12 +58,40 @@ const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
                                 {vendor.variants.map((variant) => (
                                     <li
                                         key={variant.id}
-                                        className="flex justify-between items-center p-2 border rounded hover:bg-gray-100"
+                                        className="grid grid-cols-2 md:grid-cols-4 gap-x-4 justify-right items-center p-2 border rounded hover:bg-gray-100 text-center"
                                     >
                                         <span>{variant.name}</span>
                                         <span className="font-semibold text-gray-700">
                                             ₵{variant.price.toFixed(2)}
                                         </span>
+
+                                        <label className="flex justify-center items-center cursor-pointer my-3">
+                                            <input
+                                                onChange={(e) =>
+                                                    handleToggle(e, variant.id)
+                                                }
+                                                checked={variant.active}
+                                                type="checkbox"
+                                                className="hidden"
+                                                aria-label="Order processed toggle"
+                                            />
+                                            <div className="relative">
+                                                <div
+                                                    className={`block w-14 h-8 rounded-full transition duration-200 ease-in-out ${
+                                                        variant.active
+                                                            ? "bg-green-500"
+                                                            : "bg-gray-400"
+                                                    }`}
+                                                ></div>
+                                                <div
+                                                    className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full shadow-md transition duration-200 ease-in-out ${
+                                                        variant.active
+                                                            ? "translate-x-6 bg-green-400"
+                                                            : ""
+                                                    }`}
+                                                ></div>
+                                            </div>
+                                        </label>
                                         <div>
                                             <button
                                                 className="text-red-600 hover:underline"

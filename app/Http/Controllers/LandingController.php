@@ -38,6 +38,8 @@ class LandingController extends Controller
                                         'id' => $variant->id,
                                         'name' => $variant->name,
                                         'price' => $variant->price,
+                                        'isActive' => $variant->active,
+
                                     ];
                                 }),
                             'locations' => $vendor->locations->map(function ($location) {

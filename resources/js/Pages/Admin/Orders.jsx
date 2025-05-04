@@ -90,34 +90,54 @@ export default function Orders({ orderItems }) {
                 <div className="mx-auto sm:px-2 w-full">
                     <div className="w-full overflow-hidden bg-white shadow-lg sm:rounded-lg">
                         {/* Search Section */}
-                        <div className="flex flex-wrap gap-4 p-4 border-b">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={filters.search}
-                                onChange={handleSearchChange}
-                                className="border px-3 py-2 rounded-md"
-                            />
-                            <input
-                                type="date"
-                                name="from"
-                                value={filters.from}
-                                onChange={handleDateChange}
-                                className="border px-3 py-2 rounded-md"
-                            />
-                            <input
-                                type="date"
-                                name="to"
-                                value={filters.to}
-                                onChange={handleDateChange}
-                                className="border px-3 py-2 rounded-md"
-                            />
-                            <button
-                                onClick={clearFilters}
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                            >
-                                Clear
-                            </button>
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 p-4 border-b">
+                            <div className="flex flex-col w-full sm:w-auto">
+                                <label className="mb-1 text-sm font-medium text-gray-700">
+                                    Search
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Type name or keyword"
+                                    value={filters.search}
+                                    onChange={handleSearchChange}
+                                    className="border px-3 py-2 rounded-md w-full sm:w-64"
+                                />
+                            </div>
+
+                            <div className="flex flex-col w-full sm:w-auto">
+                                <label className="mb-1 text-sm font-medium text-gray-700">
+                                    From Date
+                                </label>
+                                <input
+                                    type="date"
+                                    name="from"
+                                    value={filters.from}
+                                    onChange={handleDateChange}
+                                    className="border px-3 py-2 rounded-md w-full sm:w-48"
+                                />
+                            </div>
+
+                            <div className="flex flex-col w-full sm:w-auto">
+                                <label className="mb-1 text-sm font-medium text-gray-700">
+                                    To Date
+                                </label>
+                                <input
+                                    type="date"
+                                    name="to"
+                                    value={filters.to}
+                                    onChange={handleDateChange}
+                                    className="border px-3 py-2 rounded-md w-full sm:w-48"
+                                />
+                            </div>
+
+                            <div className="flex items-end">
+                                <button
+                                    onClick={clearFilters}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full sm:w-auto"
+                                >
+                                    Clear Filters
+                                </button>
+                            </div>
                         </div>
 
                         <div className="overflow-x-auto border-l border-r border-t border-b">

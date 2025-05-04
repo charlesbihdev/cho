@@ -11,7 +11,7 @@ class Variant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'price', 'food_id', 'vendor_id'];
+    protected $fillable = ['name', 'price', 'food_id', 'active', 'vendor_id'];
 
 
     public function food()

@@ -228,19 +228,16 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                             <div className="space-y-2 mb-4">
                                                 {selectedFood.vendors.map(
                                                     (vendor, index) => {
-                                                        const isSelected =
-                                                            selectedVendor ===
-                                                            vendor;
-                                                        const isAvailable =
-                                                            vendor.isActive;
-
                                                         let buttonClasses =
                                                             "w-full p-3 rounded-lg text-left transition-colors ";
 
-                                                        if (!isAvailable) {
+                                                        if (!vendor.isActive) {
                                                             buttonClasses +=
-                                                                "bg-gray-300 cursor-not-allowed";
-                                                        } else if (isSelected) {
+                                                                "bg-gray-200 text-gray-500 cursor-not-allowed";
+                                                        } else if (
+                                                            selectedVendor ==
+                                                            vendor
+                                                        ) {
                                                             buttonClasses +=
                                                                 "bg-[#E4BF57] text-[#493711]";
                                                         } else {
@@ -252,25 +249,25 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                             <button
                                                                 key={index}
                                                                 disabled={
-                                                                    !isAvailable
+                                                                    !vendor.isActive
                                                                 }
                                                                 className={
                                                                     buttonClasses
                                                                 }
                                                                 onClick={() => {
                                                                     if (
-                                                                        isAvailable
+                                                                        vendor.isActive
                                                                     )
                                                                         setSelectedVendor(
                                                                             vendor
                                                                         );
                                                                 }}
                                                             >
-                                                                <div className="flex justify-between text-black">
+                                                                <div className="flex justify-between">
                                                                     <span
                                                                         className={`font-bold ${
-                                                                            !isAvailable
-                                                                                ? "line-through"
+                                                                            !vendor.isActive
+                                                                                ? "text-gray-400"
                                                                                 : ""
                                                                         }`}
                                                                     >
@@ -284,7 +281,7 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                                                             5}
                                                                     </span>
                                                                 </div>
-                                                                {!isAvailable && (
+                                                                {!vendor.isActive && (
                                                                     <div className="text-xs text-red-500 mt-1">
                                                                         Unavailable
                                                                     </div>
@@ -303,32 +300,54 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                             </h3>
                                             <div className="grid grid-cols-2 gap-2 mb-4">
                                                 {selectedVendor.variants.map(
-                                                    (variant, index) => (
-                                                        <button
-                                                            key={
-                                                                variant.id ||
-                                                                index
-                                                            } // Preferably use variant.id if available
-                                                            className={`p-3 rounded-lg text-left transition-colors
+                                                    (variant, index) => {
+                                                        return (
+                                                            <button
+                                                                key={
+                                                                    variant.id ||
+                                                                    index
+                                                                }
+                                                                className={`p-3 rounded-lg text-left transition-colors w-full
                     ${
-                        selectedVariant === variant
+                        !variant.isActive
+                            ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                            : selectedVariant == variant
                             ? "bg-[#E4BF57] text-[#493711]"
                             : "bg-gray-50 hover:bg-gray-100"
                     }`}
-                                                            onClick={() =>
-                                                                setSelectedVariant(
-                                                                    variant
-                                                                )
-                                                            }
-                                                        >
-                                                            <div className="font-bold">
-                                                                {variant.name}
-                                                            </div>
-                                                            <div className="text-sm">
-                                                                ₵{variant.price}
-                                                            </div>
-                                                        </button>
-                                                    )
+                                                                onClick={() => {
+                                                                    if (
+                                                                        variant.isActive
+                                                                    ) {
+                                                                        setSelectedVariant(
+                                                                            variant
+                                                                        );
+                                                                    }
+                                                                }}
+                                                                disabled={
+                                                                    !variant.isActive
+                                                                }
+                                                            >
+                                                                <div className="font-bold">
+                                                                    {
+                                                                        variant.name
+                                                                    }
+                                                                </div>
+                                                                <div className="text-sm">
+                                                                    ₵
+                                                                    {
+                                                                        variant.price
+                                                                    }
+                                                                </div>
+
+                                                                {!variant.isActive && (
+                                                                    <div className="text-xs text-red-500 mt-1">
+                                                                        Unavailable
+                                                                    </div>
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    }
                                                 )}
                                             </div>
                                         </div>

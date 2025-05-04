@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('dishes', DishController::class);
+    Route::post('/dishes/{id}/toggle-active', [DishController::class, 'toggleActive'])->name('dishes.toggle-active');
 
 
     Route::resource('vendors', VendorController::class);

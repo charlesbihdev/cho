@@ -44,7 +44,7 @@ class OrderController extends Controller
 
 
         $orders = $query->latest()
-            ->paginate(1)
+            ->paginate(30)
             ->appends(request()->query())
             ->onEachSide(1);
 
