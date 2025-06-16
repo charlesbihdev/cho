@@ -79,6 +79,8 @@ class OrderController extends Controller
         }
 
         $order->delete();
+
+        return back()->with('success', 'deleted successfully');
     }
 
 
@@ -88,5 +90,6 @@ class OrderController extends Controller
         $order = Order::find($id);
         $newStatus = $order->status === 'pending' ? 'completed' : 'pending';
         $order->update(['status' => $newStatus]);
+        return back()->with('success', 'order updated successfully');
     }
 }

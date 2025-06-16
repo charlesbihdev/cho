@@ -50,7 +50,7 @@ class SettingController extends Controller
             Setting::setValue('delivery_discount_active', $validated['delivery_discount_active']);
         }
 
-        return back()->with('flash.success', 'Delivery discount updated successfully.');
+        return back()->with('success', 'Delivery discount updated successfully.');
     }
 
     public function addUser(Request $request)

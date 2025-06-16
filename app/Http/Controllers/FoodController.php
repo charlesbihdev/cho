@@ -48,6 +48,8 @@ class FoodController extends Controller
             'thumbnail' => $thumbnailUrl, // Save the URL
             'category_id' => $validated['category_id'],
         ]);
+
+        return back()->with('success', 'Food saved successfully');
     }
 
 
@@ -59,5 +61,7 @@ class FoodController extends Controller
             Storage::disk('public')->delete($thumbnailPath);
         }
         $food->delete();
+
+        return back()->with('success', 'Food deleted successfully');
     }
 }

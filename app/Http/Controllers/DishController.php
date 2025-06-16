@@ -81,6 +81,9 @@ class DishController extends Controller
                 'variant_id' => $variant->id,
                 'vendor_id' => $request->vendor_id,
             ]);
+
+
+            return back()->with('success', 'Dish saved successfully');
         }
     }
 
@@ -102,5 +105,7 @@ class DishController extends Controller
         $variant = Variant::find($id);
 
         $variant->delete();
+
+        return back()->with('success', 'Dish deleted successfully');
     }
 }
