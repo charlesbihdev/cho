@@ -10,6 +10,8 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LocationController;
+use App\Http\Middleware\RestrictIPMiddleware;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
@@ -60,11 +62,18 @@ Route::middleware('auth')->group(function () {
 
 
 //payment
-Route::post('/pay', [PaymentController::class, 'redirectToGateway'])->name('paystack.pay');
-
 Route::get('/payment/callback', [PaymentController::class, 'handleGatewayCallback'])->name('paystack.callback');
 
+Route::post('/payment/webhook', [PaymentController::class, 'handleWebhook'])
+    // ->middleware(RestrictIPMiddleware::class)
+    ->withoutMiddleware([VerifyCsrfToken::class])
+    ->name('paystack.webhook');
+
+
 Route::get('/verify-payment/{trxref}', [PaymentController::class, 'showManualVerificationPage'])->name('paystack.manual.verify');
+
+Route::post('/pay', [PaymentController::class, 'redirectToGateway'])->name('paystack.pay');
+
 
 
 require __DIR__ . '/auth.php';
