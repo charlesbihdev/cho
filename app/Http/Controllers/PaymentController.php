@@ -184,8 +184,7 @@ class PaymentController extends Controller
     {
         $paymentDetails = $request->all();
 
-        // Log::info('details', $paymentDetails);
-
+        Log::info('details', $paymentDetails);
 
         $reference = $paymentDetails['data']['reference'];
         $payment = Payment::where('payment_reference', $reference)->first();
