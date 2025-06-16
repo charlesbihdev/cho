@@ -77,6 +77,11 @@ class PaymentController extends Controller
             // Calculate the final total amount
             $payableAmount = number_format($totalAmount + $totalDeliveryFee, 1);
 
+            //paystack fee
+            $serviceFee = 0.19 * $payableAmount;
+
+            $payableAmount = ceil($payableAmount + $serviceFee);
+
             // dd($payableAmount);
 
             // Generate a unique transaction reference
