@@ -9,6 +9,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LocationController;
 use App\Http\Middleware\RestrictIPMiddleware;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -56,6 +57,18 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('locations', LocationController::class);
+
+
+    Route::resource('settings', SettingController::class)->only(['index']);
+    Route::patch('/settings/update-discount', [SettingController::class, 'updateDiscount'])->name('settings.update-discount');
+    Route::post('/settings/toggle-user/{id}', [SettingController::class, 'toggleUser'])->name('settings.toggle-user');
+
+    Route::post('/settings/delete-user/{id}', [SettingController::class, 'deleteUser'])->name('settings.delete-user');
+
+    Route::post('/users', [SettingController::class, 'addUser'])->name('settings.user.store');
+
+    Route::post('/settings/discount-active', [SettingController::class, 'toggleDiscountActive'])
+        ->name('settings.discount.active');
 });
 
 //Variants

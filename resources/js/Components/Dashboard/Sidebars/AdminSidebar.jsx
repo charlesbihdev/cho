@@ -2,6 +2,7 @@ import { useState, forwardRef } from "react";
 import { FaUtensils } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
+import { IoSettingsSharp } from "react-icons/io5";
 import { MdPeopleAlt } from "react-icons/md";
 import { MdFastfood } from "react-icons/md";
 
@@ -105,9 +106,25 @@ const AdminSidebar = forwardRef(({ className, showSidebar }, ref) => {
                             <span className="ml-3">Location</span>
                         </Link>
                     </li>
-                </ul>
 
-                <hr />
+                    <hr />
+
+                    <li>
+                        <Link
+                            prefetch
+                            preserveScroll
+                            href={route("settings.index")}
+                            className={`flex items-center w-full p-2 text-base font-medium rounded-lg text-white hover:bg-[#695019]  ${
+                                route().current("settings.index")
+                                    ? "bg-[#695019]"
+                                    : ""
+                            }`}
+                        >
+                            <IoSettingsSharp className="text-xl text-white" />
+                            <span className="ml-3">Settings</span>
+                        </Link>
+                    </li>
+                </ul>
             </div>
 
             {/* Modal */}
