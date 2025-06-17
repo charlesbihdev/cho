@@ -51,10 +51,9 @@ const CartPage = () => {
         let totalCost = 0;
         items.forEach((item) => {
             // Use discounted delivery price if available, otherwise use original price
-            const deliveryPrice =
-                item?.location?.deliveryPrice >= 0
-                    ? item?.location?.deliveryPrice
-                    : item?.location?.price;
+            const deliveryPrice = item?.location?.hasDeliveryDiscount
+                ? item?.location?.deliveryPrice
+                : item?.location?.price;
             totalCost += deliveryPrice;
         });
         return totalCost;
@@ -127,9 +126,9 @@ const CartPage = () => {
                         </div>
                     ) : (
                         <div>
-                            {cartItems.map((item) => (
+                            {cartItems.map((item, index) => (
                                 <div
-                                    key={item.id}
+                                    key={index}
                                     className="flex items-center justify-between bg-white rounded-lg shadow-md p-4 mb-4"
                                 >
                                     <div className="flex items-center">
