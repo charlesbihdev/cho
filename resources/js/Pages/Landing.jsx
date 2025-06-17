@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { X } from "lucide-react";
 
-import { Head, Link, usePoll } from "@inertiajs/react";
+import { Head, usePoll } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";
 import LocationSelector from "@/Components/Landing/LocationSelector";
 import DeliveryInfoBanner from "@/Components/DeliveryInfoBanner";
@@ -9,12 +9,7 @@ import Header from "@/Components/Header";
 import useCartStore from "@/Store/cartStore";
 // Enhanced sample data
 
-const FoodOrderingPage = ({
-    foodData,
-    locations,
-    categories,
-    deliveryDiscountData,
-}) => {
+const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
     // console.log(foodData);
     // console.log(categories);
     // console.log(selectedVendor);

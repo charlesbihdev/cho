@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Plus, Minus, X } from "lucide-react";
 import { Head, useForm } from "@inertiajs/react";
 import ToastProvider from "@/Layouts/ToastProvider";

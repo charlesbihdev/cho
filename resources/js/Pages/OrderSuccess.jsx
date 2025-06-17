@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Check, ChevronLeft } from "lucide-react";
 import { Head } from "@inertiajs/react";
+import useCartStore from "@/Store/cartStore";
 
 const OrderSuccess = () => {
-    const [cartItems, setCartItems] = useState([]);
+    // const [cartItems, setCartItems] = useState([]);
+
+    // const cartItems = useCartStore((state) => state.cartItems);
+    // const setCartItems = useCartStore((state) => state.setCartItems);
+    const clearCart = useCartStore((state) => state.clearCart);
 
     useEffect(() => {
         // Load cart items from local storage on component mount
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCartItems(storedCart);
-        localStorage.removeItem("cart");
+        // const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        // setCartItems(storedCart);
+        clearCart();
     }, []);
 
     return (
