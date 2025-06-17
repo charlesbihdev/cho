@@ -1,5 +1,5 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, router, useForm } from "@inertiajs/react";
 import AddVendorModal from "./Vendors/AddVendorModal";
 import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
 import { useState } from "react";
@@ -42,6 +42,12 @@ export default function Vendors({ vendors }) {
         console.log(`Deleting vendor with ID: ${vendorToDelete}`);
     };
 
+    const handleToggle = (e, id) => {
+        e.preventDefault();
+        router.post(route("vendors.toggle-active", id));
+        onClose();
+    };
+
     return (
         <AdminLayout>
             <Head title="Vendors" />
@@ -68,6 +74,9 @@ export default function Vendors({ vendors }) {
                                             Name
                                         </th>
                                         <th className="py-3 px-4 border-b border-gray-400">
+                                            Status
+                                        </th>
+                                        <th className="py-3 px-4 border-b border-gray-400">
                                             Action
                                         </th>
                                     </tr>
@@ -84,6 +93,44 @@ export default function Vendors({ vendors }) {
                                             </td>
                                             <td className="py-4 px-4 border-b border-gray-400">
                                                 {vendor.name}
+                                            </td>
+                                            <td
+                                                className={`py-4 px-4 border-b border-gray-400 font-bold`}
+                                            >
+                                                <div className="mt-6 pt-4 border-t">
+                                                    <label className="flex justify-center items-center cursor-pointer">
+                                                        <input
+                                                            onChange={(e) =>
+                                                                handleToggle(
+                                                                    e,
+                                                                    vendor.id
+                                                                )
+                                                            }
+                                                            checked={
+                                                                vendor.active
+                                                            }
+                                                            type="checkbox"
+                                                            className="hidden"
+                                                            aria-label="Order processed toggle"
+                                                        />
+                                                        <div className="relative">
+                                                            <div
+                                                                className={`block w-14 h-8 rounded-full transition duration-200 ease-in-out ${
+                                                                    vendor.active
+                                                                        ? "bg-green-500"
+                                                                        : "bg-gray-400"
+                                                                }`}
+                                                            ></div>
+                                                            <div
+                                                                className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full shadow-md transition duration-200 ease-in-out ${
+                                                                    vendor.active
+                                                                        ? "translate-x-6 bg-green-400"
+                                                                        : ""
+                                                                }`}
+                                                            ></div>
+                                                        </div>
+                                                    </label>
+                                                </div>
                                             </td>
                                             <td className="py-4 px-4 border-b border-gray-400">
                                                 <button

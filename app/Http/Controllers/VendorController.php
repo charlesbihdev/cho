@@ -23,11 +23,26 @@ class VendorController extends Controller
         ]);
     }
 
+    public function toggleActive(Request $request, $id)
+    {
+        $vendor = Vendor::find($id);
+        $isActive = $vendor->active;
+
+        $vendor->active = !$isActive;
+        $vendor->save();
+
+        return back()->with([
+            'success' => 'Vendor status changed'
+        ]);
+    }
+
     public function destroy($id)
     {
         $vendors = Vendor::find($id);
-        if(!$vendors){
-            return response()->json(['message' => 'Vendor not found'], 404);
+        if (!$vendors) {
+            return back()->with([
+                'success' => 'Vendor not found'
+            ]);
         }
         $vendors->delete();
     }

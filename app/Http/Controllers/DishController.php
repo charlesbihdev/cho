@@ -34,6 +34,7 @@ class DishController extends Controller
                                 'id' => $variant->id,
                                 'name' => $variant->name,
                                 'price' => $variant->price,
+                                'active' => $variant->active
                             ];
                         }),
                     ];
@@ -80,7 +81,23 @@ class DishController extends Controller
                 'variant_id' => $variant->id,
                 'vendor_id' => $request->vendor_id,
             ]);
+
+
+            return back()->with('success', 'Dish saved successfully');
         }
+    }
+
+    public function toggleActive(Request $request, $id)
+    {
+        $variant = Variant::find($id);
+        $isActive = $variant->active;
+
+        $variant->active = !$isActive;
+        $variant->save();
+
+        return back()->with([
+            'success' => 'Variant status changed'
+        ]);
     }
 
     public function destroy(Request $request, $id)
@@ -88,5 +105,7 @@ class DishController extends Controller
         $variant = Variant::find($id);
 
         $variant->delete();
+
+        return back()->with('success', 'Dish deleted successfully');
     }
 }

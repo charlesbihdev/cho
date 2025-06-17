@@ -4,22 +4,23 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Inertia\Inertia;
-use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Variant;
 use App\Models\Location;
-use App\Models\OrderItem;
-use App\Notifications\OrderPlacedNotification;
 use Illuminate\Http\Request;
+use App\Services\CustomPaystack;
+use App\Services\PaymentService;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
-
 
 class PaymentController extends Controller
-
-
 {
+    protected $paymentService;
+
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
 
     public function redirectToGateway(Request $request)
     {
@@ -34,11 +35,18 @@ class PaymentController extends Controller
 
         $orderData = $request->input('order_data');
 
+        // Get delivery discount settings
+        $deliveryDiscountData = [
+            'delivery_discount' => (int) setting('delivery_discount'),
+            'delivery_discount_active' => setting('delivery_discount_active') == '1' ? true : false,
+        ];
+
+        // dd($deliveryDiscountData);
+
         try {
             $totalAmount = 0;
             $deliveryFees = [];
             $locationIds = [];
-
 
             foreach ($orderData as $order) {
                 $variantId = $order['variant_id'];
@@ -74,8 +82,19 @@ class PaymentController extends Controller
             // Sum up the delivery fees
             $totalDeliveryFee = array_sum($deliveryFees);
 
+            // Calculate the total original delivery fee for discount calculation
+            if ($deliveryDiscountData['delivery_discount_active'] && $deliveryDiscountData['delivery_discount'] > 0) {
+                // Apply discount 
+                $totalDeliveryFee -= ($totalDeliveryFee * ($deliveryDiscountData['delivery_discount'] / 100));
+            }
+
             // Calculate the final total amount
             $payableAmount = number_format($totalAmount + $totalDeliveryFee, 1);
+
+            //paystack fee
+            $serviceFee = 0.019 * $payableAmount;
+
+            $payableAmount = ceil($payableAmount + $serviceFee);
 
             // dd($payableAmount);
 
@@ -132,9 +151,10 @@ class PaymentController extends Controller
         try {
             $paymentDetails = paystack()->getPaymentData();
             $reference = $paymentDetails['data']['reference'];
-            $transactionId = $paymentDetails['data']['id'];
             $payment = Payment::where('payment_reference', $reference)->first();
             $metadata = $paymentDetails['data']['metadata'];
+            // Log::info('payment details', $paymentDetails);
+
             // dd($metadata);
             if (!$payment) {
                 // throw new Exception("Payment record not found.");
@@ -143,102 +163,65 @@ class PaymentController extends Controller
                 ]);
             }
 
-            if ($paymentDetails['status'] && $paymentDetails['data']['status'] === 'success') {
+            $result = $this->paymentService->processPayment(false, $paymentDetails, $metadata, $payment);
 
-                if (!$metadata) {
-                    // throw new Exception("Missing metadata in payment details.");
-                    return back()->with([
-                        'error' => 'Missing metadata in payment details.',
-                    ]);
-                }
-
-                if ($payment && $metadata && $payment->status !== 'successful') {
-                    $payment->transaction_id = $transactionId;
-                    $orderData = $metadata['order_data'];
-
-                    foreach ($orderData as $item) {
-                        $locationId = $item['location_id'];
-                        $note = $item['food_note'];
-                        $vendorId = $item['vendor_id'];
-                        $variantId = $item['variant_id'];
-
-                        // Create a unique key for grouping
-                        $key = "{$locationId}_{$vendorId}";
-
-                        if (!isset($groupedOrders[$key])) {
-                            $groupedOrders[$key] = [
-                                'location_id' => $locationId,
-                                'vendor_id' => $vendorId,
-                                'items' => [],
-                                'total_price' => 0,
-                                'note' => $note ?? null,
-                            ];
-                        }
-
-                        $variant = Variant::findOrFail($variantId);
-                        $item['price'] = $variant->price;
-
-                        // Add item to the grouped order
-                        $item['note'] = $note;
-                        $groupedOrders[$key]['items'][] = $item;
-                        $groupedOrders[$key]['total_price'] += $item['price'] * $item['quantity'];
-                    }
-
-                    // Create orders and order items
-                    foreach ($groupedOrders as $orderGroup) {
-                        // Create the order
-                        $order = Order::create([
-                            'order_id' => Order::generateUniqueOrderId(),
-                            'location_id' => $orderGroup['location_id'],
-                            'vendor_id' => $orderGroup['vendor_id'],
-                            'status' => 'pending',
-                            'total_price' => $orderGroup['total_price'],
-                            'name' => $metadata['name'] ?? null,
-                            'email' => $metadata['email'] ?? null,
-                            'phone' => $metadata['phone'] ?? null,
-                        ]);
-
-
-
-                        // Create the order items
-                        foreach ($orderGroup['items'] as $item) {
-                            OrderItem::create([
-                                'quantity' => $item['quantity'],
-                                'price' => $item['price'] * $item['quantity'],
-                                'variant_id' => $item['variant_id'],
-                                'note' => $item['note'] ?? null,
-                                'order_id' => $order->id,
-                            ]);
-                        }
-
-                        Notification::send($order, new OrderPlacedNotification($order->order_id));
-                    }
-
-
-                    $payment->status = 'successful';
-                    $payment->save();
-
-
-                    return redirect()->route('ordersucess')
-                        ->with([
-                            'success' => 'Payment successful. You can go live now',
-                        ]);
-                }
-            } else {
-                $payment->status = 'failed';
-                $payment->transaction_id = $transactionId;
-                $payment->save();
-                return back()->with([
-                    'error' => 'Payment failed',
-                ]);
+            if ($result['status'] === 'success') {
+                return redirect()->route('ordersucess')->with(['success' => $result['message']]);
+            } elseif ($result['status'] === 'already_processed') {
+                return back()->with(['success' => $result['message']]);
+            } elseif ($result['status'] === 'failed') {
+                return redirect()->route('paystack.manual.verify', ['trxref' => $reference])
+                    ->with(['error' => $result['message']]);
             }
+
+            return back()->with(['error' => $result['message']]);
         } catch (Exception $e) {
             // Log the error message for debugging purposes
             // dd($e->getMessage());
             // Return back with an error message
             return back()->with([
-                'error' => 'An error occurred during payment processing: ' . $e->getMessage(),
+                'error' => 'An error occurred during payment processing: ',
             ]);
+        }
+    }
+
+    public function showManualVerificationPage($trxref)
+    {
+        return Inertia::render('ManualVerifyPayment', [
+            'trxref' => $trxref,
+        ]);
+    }
+
+
+    public function handleWebhook(Request $request, CustomPaystack $paystack)
+    {
+        $paymentDetails = $request->all();
+
+        Log::info('details', $paymentDetails);
+
+        $reference = $paymentDetails['data']['reference'];
+        $payment = Payment::where('payment_reference', $reference)->first();
+        $metadata = $paymentDetails['data']['metadata'];
+
+        // Log::info('Reference', ['ref' => $reference]);
+        // Log::info('payment', ['met' => $payment]);
+        // Log::info('MEtadata', ['met' => $metadata]);
+
+        $verifyTrx = paystack()->isTransactionVerificationValid($reference);
+
+        if ($verifyTrx) {
+
+            $result = $this->paymentService->processPayment(true, $paymentDetails, $metadata, $payment);
+        }
+
+
+        $result = $this->paymentService->processPayment(true, $paymentDetails, $metadata, $payment);
+
+
+        if ($result) {
+            return response()->json(['status' => 'success'], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Payment verification failed.'], 400);
         }
     }
 }

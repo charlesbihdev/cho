@@ -32,17 +32,19 @@ class LocationController extends Controller
             'destination' => $request->destination,
             'amount' => $request->price
         ]);
+
+        return back()->with('success', 'Location saved successfully');
     }
 
     public function destroy(Request $request, $id)
-        {
-            $location = Location::find($id);
+    {
+        $location = Location::find($id);
 
-            if (!$location) {
-                return response()->json(['message' => 'Location not found'], 404);
-            }
-    
-            $location->delete();          
+        if (!$location) {
+            return back()->with('errror', 'Location not found');
         }
 
+        $location->delete();
+        return back()->with('success', 'Location deleted successfully');
+    }
 }

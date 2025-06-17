@@ -1,6 +1,8 @@
 import { Clock, Phone } from "lucide-react";
 
 const DeliveryInfoBanner = () => {
+    const currentYear = new Date().getFullYear();
+
     return (
         <div className="w-full bg-[#493711] text-white p-4 shadow-lg">
             <div className="max-w-4xl mx-auto">
@@ -28,6 +30,18 @@ const DeliveryInfoBanner = () => {
                     Note: Deliveries requested outside operating hours will be
                     scheduled for the next available delivery window.
                 </p>
+
+                <div className="mt-4 text-xs text-amber-200 text-center sm:text-right">
+                    © {currentYear} CHO. Developed by{" "}
+                    <a
+                        href="https://linktr.ee/charlesbihdev"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-white"
+                    >
+                        charlesbihdev
+                    </a>
+                </div>
             </div>
         </div>
     );

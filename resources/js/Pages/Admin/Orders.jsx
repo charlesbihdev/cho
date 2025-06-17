@@ -1,68 +1,145 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head } from "@inertiajs/react";
+import { Head, usePoll } from "@inertiajs/react";
 import { useState, useCallback, useEffect } from "react";
 
 import OrderItemsModal from "./Orders/OrderItemsModal";
 
 import { router } from "@inertiajs/react";
 import { debounce } from "lodash";
-import { Search } from "lucide-react";
+// import { Search } from "lucide-react";
+import Pagination from "@/Components/Pagination";
 
-export default function Orders({ orders }) {
+export default function Orders({ orderItems }) {
+    const orders = orderItems.data;
+
+    // console.log(orderItems);
+
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");
+
+    const [filters, setFilters] = useState({
+        search: "",
+        from: "",
+        to: "",
+    });
+
+    usePoll(7000);
 
     const handleClick = (order) => {
         setSelectedOrder(order);
         setIsOpen(true);
     };
+
     const debouncedSearch = useCallback(
         debounce((value) => {
-            router.get(
-                route("orders.index"),
-                { search: value },
-                {
-                    preserveScroll: true,
-                    preserveState: true,
-                }
-            );
+            if (value.trim() !== "") {
+                setFilters((prev) => ({ ...prev, search: value }));
+                searchOrders(value);
+            } else {
+                // If empty, reset the search
+                setFilters((prev) => ({ ...prev, search: "" }));
+                router.get(route("orders.index"));
+            }
         }, 300),
         []
     );
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
-        setSearchQuery(value);
+        setFilters((prev) => ({ ...prev, search: value }));
         debouncedSearch(value);
     };
 
-    // console.log(orders);
+    // Auto-trigger search when both dates are selected
+    useEffect(() => {
+        if (filters.from && filters.to) {
+            searchOrders();
+        }
+    }, [filters.from, filters.to]);
+
+    const searchOrders = (value) => {
+        router.get(
+            route("orders.index"),
+            {
+                search: value || filters.search,
+                from: filters.from,
+                to: filters.to,
+            },
+            {
+                preserveScroll: true,
+                preserveState: true,
+            }
+        );
+    };
+
+    const handleDateChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const clearFilters = () => {
+        setFilters({ search: "", from: "", to: "" });
+        router.get(route("orders.index"));
+    };
 
     return (
         <AdminLayout>
             <Head title="Orders" />
 
-            <div className="py-12">
+            <div className="py-12 text-base">
                 <div className="mx-auto sm:px-2 w-full">
                     <div className="w-full overflow-hidden bg-white shadow-lg sm:rounded-lg">
                         {/* Search Section */}
-                        {/* Search Box */}
-                        <div className="p-4 border-b">
-                            <div className="relative max-w-md mx-auto">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 p-4 border-b">
+                            <div className="flex flex-col w-full sm:w-auto">
+                                <label className="mb-1 text-sm font-medium text-gray-700">
+                                    Search
+                                </label>
                                 <input
                                     type="text"
-                                    placeholder="Search orders by order_id, status, email, phone..."
-                                    className="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value={searchQuery}
+                                    placeholder="Type name or keyword"
+                                    value={filters.search}
                                     onChange={handleSearchChange}
-                                />
-                                <Search
-                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                    size={18}
+                                    className="border px-3 py-2 rounded-md w-full sm:w-64"
                                 />
                             </div>
+
+                            <div className="flex flex-col w-full sm:w-auto">
+                                <label className="mb-1 text-sm font-medium text-gray-700">
+                                    From Date
+                                </label>
+                                <input
+                                    type="date"
+                                    name="from"
+                                    value={filters.from}
+                                    onChange={handleDateChange}
+                                    className="border px-3 py-2 rounded-md w-full sm:w-48"
+                                />
+                            </div>
+
+                            <div className="flex flex-col w-full sm:w-auto">
+                                <label className="mb-1 text-sm font-medium text-gray-700">
+                                    To Date
+                                </label>
+                                <input
+                                    type="date"
+                                    name="to"
+                                    value={filters.to}
+                                    onChange={handleDateChange}
+                                    className="border px-3 py-2 rounded-md w-full sm:w-48"
+                                />
+                            </div>
+
+                            <div className="flex items-end">
+                                <button
+                                    onClick={clearFilters}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full sm:w-auto"
+                                >
+                                    Clear Filters
+                                </button>
+                            </div>
                         </div>
+
                         <div className="overflow-x-auto border-l border-r border-t border-b">
                             <table className="w-full text-center table-auto border-collapse">
                                 <thead className="bg-gray-100 text-gray-700 uppercase">
@@ -71,8 +148,12 @@ export default function Orders({ orders }) {
                                             #
                                         </th>
                                         <th className="py-3 px-4 border-b border-gray-400">
+                                            Timestamp
+                                        </th>
+                                        <th className="py-3 px-4 border-b border-gray-400">
                                             Username | Email
                                         </th>
+
                                         <th className="py-3 px-4 border-b border-gray-400">
                                             Phone
                                         </th>
@@ -103,13 +184,23 @@ export default function Orders({ orders }) {
                                                 {index + 1}
                                             </td>
                                             <td className="py-4 px-4 border-b border-gray-400">
-                                                {order.name +
-                                                    " | " +
-                                                    order.email}
+                                                {new Date(
+                                                    order.updated_at
+                                                ).toLocaleString("en-GB", {
+                                                    dateStyle: "short",
+                                                    timeStyle: "short",
+                                                    hour12: true,
+                                                })}
                                             </td>
+                                            <td className="py-4 px-4 border-b border-gray-400">
+                                                {order.name} <br />{" "}
+                                                {order.email}
+                                            </td>
+
                                             <td className="py-4 px-4 border-b border-gray-400">
                                                 {order.phone}
                                             </td>
+
                                             <td className="py-4 px-4 border-b border-gray-400">
                                                 {order.order_id}
                                             </td>
@@ -152,6 +243,8 @@ export default function Orders({ orders }) {
                         </div>
                     </div>
                 </div>
+
+                <Pagination links={orderItems.links} />
             </div>
 
             {selectedOrder && (

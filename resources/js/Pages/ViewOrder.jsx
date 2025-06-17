@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 const ViewOrder = ({ order }) => {
-    console.log(order);
+    // console.log(order);
     const getStatusColor = (status) => {
         switch (status) {
             case "completed":
@@ -58,6 +58,7 @@ const ViewOrder = ({ order }) => {
                                     <h1 className="text-3xl font-bold">
                                         Order #{order.order_id}
                                     </h1>
+
                                     <p className="mt-2 text-gray-300">
                                         Placed on{" "}
                                         {new Date(
@@ -78,10 +79,9 @@ const ViewOrder = ({ order }) => {
                                             order.status
                                         )}`}
                                     >
-                                        {order?.status
-                                            ?.charAt(0)
-                                            .toUpperCase() +
-                                            order?.status?.slice(1)}
+                                        {order?.status == "pending"
+                                            ? "In progress"
+                                            : "Delivered"}
                                     </span>
                                 </div>
                             </div>
