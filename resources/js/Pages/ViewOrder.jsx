@@ -79,10 +79,9 @@ const ViewOrder = ({ order }) => {
                                             order.status
                                         )}`}
                                     >
-                                        {order?.status
-                                            ?.charAt(0)
-                                            .toUpperCase() +
-                                            order?.status?.slice(1)}
+                                        {order?.status == "pending"
+                                            ? "In progress"
+                                            : "Delivered"}
                                     </span>
                                 </div>
                             </div>

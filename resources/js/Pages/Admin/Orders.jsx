@@ -6,7 +6,7 @@ import OrderItemsModal from "./Orders/OrderItemsModal";
 
 import { router } from "@inertiajs/react";
 import { debounce } from "lodash";
-import { Search } from "lucide-react";
+// import { Search } from "lucide-react";
 import Pagination from "@/Components/Pagination";
 
 export default function Orders({ orderItems }) {
