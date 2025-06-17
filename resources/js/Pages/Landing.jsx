@@ -6,12 +6,20 @@ import ToastProvider from "@/Layouts/ToastProvider";
 import LocationSelector from "@/Components/Landing/LocationSelector";
 import DeliveryInfoBanner from "@/Components/DeliveryInfoBanner";
 import Header from "@/Components/Header";
+import useCartStore from "@/Store/cartStore";
 // Enhanced sample data
 
-const FoodOrderingPage = ({ foodData, locations, categories }) => {
+const FoodOrderingPage = ({
+    foodData,
+    locations,
+    categories,
+    deliveryDiscountData,
+}) => {
     // console.log(foodData);
     // console.log(categories);
     // console.log(selectedVendor);
+
+    // console.log(deliveryDiscountData);
 
     usePoll(8000);
 
@@ -24,13 +32,9 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [showFoodDetail, setShowFoodDetail] = useState(false);
-    const [cartCount, setCartCount] = useState(0);
 
-    useEffect(() => {
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCartCount(storedCart.length);
-    }, []);
-    // console.log(selectedLocation);
+    // const cartItems = useCartStore((state) => state.cartItems);
+    const setCartItems = useCartStore((state) => state.setCartItems);
 
     const filteredFoods = useMemo(() => {
         return foodData.filter((food) => {
@@ -66,6 +70,15 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
             return;
         }
 
+        // Calculate delivery pricing with discount
+        const originalDeliveryPrice = selectedLocation.price;
+        const hasDeliveryDiscount =
+            deliveryDiscountData?.active && deliveryDiscountData?.value;
+        const discountedDeliveryPrice = hasDeliveryDiscount
+            ? originalDeliveryPrice -
+              (deliveryDiscountData.value / 100) * originalDeliveryPrice
+            : originalDeliveryPrice;
+
         const cartItem = {
             id: selectedVariant.id,
             name: selectedFood.name,
@@ -73,7 +86,19 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
             variant: selectedVariant.name,
             vendor: selectedVendor.name,
             vendor_id: selectedVendor.id,
-            location: selectedLocation,
+            location: {
+                ...selectedLocation,
+                // Store both original and final delivery prices
+                originalDeliveryPrice: originalDeliveryPrice,
+                deliveryPrice: discountedDeliveryPrice,
+                deliveryDiscount: hasDeliveryDiscount
+                    ? {
+                          percentage: deliveryDiscountData.value,
+                          savings:
+                              originalDeliveryPrice - discountedDeliveryPrice,
+                      }
+                    : null,
+            },
             foodNote: foodNote,
             quantity: quantity,
             price: calculateTotalPrice(),
@@ -85,24 +110,27 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
         // Check if the item already exists in the cart
         const existingCartItemIndex = existingCart.findIndex(
             (item) =>
-                item.id === cartItem.id && item.variant === cartItem.variant
+                item.id === cartItem.id &&
+                item.variant === cartItem.variant &&
+                item.vendor_id === cartItem.vendor_id &&
+                item.location.destination === cartItem.location.destination
         );
 
         if (existingCartItemIndex > -1) {
             // Update quantity if it already exists
             existingCart[existingCartItemIndex].quantity += quantity;
-            existingCart[existingCartItemIndex].totalPrice +=
-                cartItem.totalPrice;
+            // Recalculate total price based on new quantity
+            existingCart[existingCartItemIndex].price =
+                calculateTotalPrice() *
+                existingCart[existingCartItemIndex].quantity;
         } else {
             // Add new item to the cart
             existingCart.push(cartItem);
         }
 
         // Store updated cart in local storage
-        localStorage.setItem("cart", JSON.stringify(existingCart));
-
-        // Update cart count
-        setCartCount(existingCart.length);
+        // localStorage.setItem("cart", JSON.stringify(existingCart));
+        setCartItems(existingCart);
 
         // Reset form
         setShowFoodDetail(false);
@@ -354,6 +382,9 @@ const FoodOrderingPage = ({ foodData, locations, categories }) => {
                                     )}
                                     {selectedVariant && (
                                         <LocationSelector
+                                            deliveryDiscountData={
+                                                deliveryDiscountData
+                                            }
                                             selectedVendor={selectedVendor}
                                             selectedLocation={selectedLocation}
                                             setSelectedLocation={

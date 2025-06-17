@@ -1,19 +1,23 @@
 import { Link } from "@inertiajs/react";
 import { ShoppingCart, Search } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
+import useCartStore from "@/Store/cartStore";
 
 const Header = ({
     searchQuery = "",
     setSearchQuery,
     showSearchBar = false,
 }) => {
-    const [cartItems, setCartItems] = useState([]);
+    // const [cartItems, setCartItems] = useState([]);
 
-    useEffect(() => {
-        // Load cart items from local storage on component mount
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCartItems(storedCart);
-    }, []);
+    const cartItems = useCartStore((state) => state.cartItems);
+
+    // useEffect(() => {
+    //     // Load cart items from local storage on component mount
+    //     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    //     setCartItems(storedCart);
+    // }, []);
 
     return (
         <>

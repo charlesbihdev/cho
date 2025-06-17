@@ -16,9 +16,11 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-Route::get('/cart', function () {
-    return Inertia::render('Cart');
-})->name('cart');
+// Route::get('/cart', function () {
+//     return Inertia::render('Cart');
+// })->name('cart');
+
+Route::get('/cart', [LandingController::class, 'cart'])->name('cart');
 
 Route::get('/order-success', function () {
     return Inertia::render('OrderSuccess');

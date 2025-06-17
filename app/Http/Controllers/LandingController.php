@@ -12,6 +12,13 @@ class LandingController extends Controller
 {
     public function index()
     {
+        // Fetch discount settings
+
+        $settings = [
+            'delivery_discount' => setting('delivery_discount'),
+            'delivery_discount_active' => setting('delivery_discount_active') == '1' ? true : false,
+        ];
+
         // Get all foods with their variants and associated vendors
         $foods = Food::with(['category', 'vendors.variants', 'vendors.locations'])->latest()->get();
 
@@ -71,6 +78,28 @@ class LandingController extends Controller
             'foodData' => $foodData['foods'],
             'locations' => $locations,
             'categories' => Category::get()->pluck('name'),
+            'deliveryDiscountData' => [
+                'value' => (int) $settings['delivery_discount'],
+                'active' => $settings['delivery_discount_active'],
+            ],
+
+        ]);
+    }
+
+
+    public function cart()
+    {
+        $settings = [
+            'delivery_discount' => setting('delivery_discount'),
+            'delivery_discount_active' => setting('delivery_discount_active') == '1' ? true : false,
+        ];
+
+        return Inertia::render('Cart', [
+            'deliveryDiscountData' => [
+                'value' => (int) $settings['delivery_discount'],
+                'active' => $settings['delivery_discount_active'],
+            ],
+
         ]);
     }
 }

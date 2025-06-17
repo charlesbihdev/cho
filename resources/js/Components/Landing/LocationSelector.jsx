@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 
 const LocationSelector = ({
+    deliveryDiscountData,
     selectedVendor,
     selectedLocation,
     setSelectedLocation,
@@ -9,6 +10,8 @@ const LocationSelector = ({
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
     const locationsPerPage = 4;
+
+    console.log(deliveryDiscountData);
 
     // Filter locations based on search query
     const filteredLocations = useMemo(() => {
@@ -57,23 +60,69 @@ const LocationSelector = ({
 
             {/* Locations Grid */}
             <div className="grid grid-cols-2 gap-2 mb-4">
-                {currentLocations.map((location) => (
-                    <button
-                        key={location.id}
-                        className={`p-3 rounded-lg text-left transition-colors ${
-                            selectedLocation?.destination ===
-                            location?.destination
-                                ? "bg-[#E4BF57] text-[#493711]"
-                                : "bg-gray-50 hover:bg-gray-100"
-                        }`}
-                        onClick={() => setSelectedLocation(location)}
-                    >
-                        <div className="font-bold">{location?.destination}</div>
-                        <div className="text-sm">
-                            +₵{location.price} delivery
-                        </div>
-                    </button>
-                ))}
+                {currentLocations.map((location) => {
+                    // Calculate discounted price if discount is active
+                    const originalPrice = location.price;
+                    const hasDiscount =
+                        deliveryDiscountData?.active &&
+                        deliveryDiscountData?.value;
+                    const discountedPrice = hasDiscount
+                        ? originalPrice -
+                          (deliveryDiscountData.value / 100) * originalPrice
+                        : originalPrice;
+
+                    return (
+                        <button
+                            key={location.id}
+                            className={`p-3 rounded-lg text-left transition-colors ${
+                                selectedLocation?.destination ===
+                                location?.destination
+                                    ? "bg-[#E4BF57] text-[#493711]"
+                                    : "bg-gray-50 hover:bg-gray-100"
+                            }`}
+                            onClick={() => setSelectedLocation(location)}
+                        >
+                            <div className="font-bold mb-1">
+                                {location?.destination}
+                            </div>
+
+                            <div className="text-sm">
+                                {hasDiscount ? (
+                                    <div className="space-y-1">
+                                        {/* Discounted price - prominent */}
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-semibold text-green-600">
+                                                +₵{discountedPrice.toFixed(2)}{" "}
+                                                delivery
+                                            </span>
+                                            <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">
+                                                {deliveryDiscountData.value}%
+                                                OFF
+                                            </span>
+                                        </div>
+                                        {/* Original price - crossed out */}
+                                        <div className="text-xs text-gray-500">
+                                            <span className="line-through">
+                                                Was ₵{originalPrice.toFixed(2)}
+                                            </span>
+                                            <span className="ml-1 text-green-600 font-medium">
+                                                Save ₵
+                                                {(
+                                                    originalPrice -
+                                                    discountedPrice
+                                                ).toFixed(2)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <span>
+                                        +₵{originalPrice.toFixed(2)} delivery
+                                    </span>
+                                )}
+                            </div>
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Pagination */}

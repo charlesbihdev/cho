@@ -35,11 +35,18 @@ class PaymentController extends Controller
 
         $orderData = $request->input('order_data');
 
+        // Get delivery discount settings
+        $deliveryDiscountData = [
+            'delivery_discount' => (int) setting('delivery_discount'),
+            'delivery_discount_active' => setting('delivery_discount_active') == '1' ? true : false,
+        ];
+
+        // dd($deliveryDiscountData);
+
         try {
             $totalAmount = 0;
             $deliveryFees = [];
             $locationIds = [];
-
 
             foreach ($orderData as $order) {
                 $variantId = $order['variant_id'];
@@ -75,11 +82,17 @@ class PaymentController extends Controller
             // Sum up the delivery fees
             $totalDeliveryFee = array_sum($deliveryFees);
 
+            // Calculate the total original delivery fee for discount calculation
+            if ($deliveryDiscountData['delivery_discount_active'] && $deliveryDiscountData['delivery_discount'] > 0) {
+                // Apply discount 
+                $totalDeliveryFee -= ($totalDeliveryFee * ($deliveryDiscountData['delivery_discount'] / 100));
+            }
+
             // Calculate the final total amount
             $payableAmount = number_format($totalAmount + $totalDeliveryFee, 1);
 
             //paystack fee
-            $serviceFee = 0.19 * $payableAmount;
+            $serviceFee = 0.019 * $payableAmount;
 
             $payableAmount = ceil($payableAmount + $serviceFee);
 
