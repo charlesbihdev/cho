@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Variant;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OrderPlacedNotification;
 // use Illuminate\Support\Facades\Notification;
 // use App\Notifications\OrderPlacedNotification;
 
@@ -120,7 +122,7 @@ class PaymentService
                 ]);
             }
 
-            // Notification::send($order, new OrderPlacedNotification($order->order_id));
+            Notification::send($order, new OrderPlacedNotification($order->order_id));
         }
     }
 }
