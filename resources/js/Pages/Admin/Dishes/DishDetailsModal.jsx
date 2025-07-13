@@ -3,7 +3,7 @@ import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
 import { useState } from "react";
 import { router, useForm } from "@inertiajs/react";
 
-const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
+const DishDetailsModal = ({ food, show, onClose, onUpdate }) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [variantToDelete, setVariantToDelete] = useState(null);
 
@@ -15,12 +15,35 @@ const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
     };
 
     const handleToggle = (e, id) => {
-        e.preventDefault();
-        router.post(route("dishes.toggle-active", id));
-        onClose();
-    };
+        // Find the variant to get its current active status
+        const variant = food.vendors
+            .flatMap((vendor) => vendor.variants)
+            .find((v) => v.id === id);
+        const newActiveStatus = !variant.active;
 
-    const { delete: destroy, processing } = useForm();
+        // Optimistically update the UI
+        onUpdate("toggle", { variantId: id, newActiveStatus });
+
+        router.post(
+            route("dishes.toggle-active", id),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Server confirmed the toggle; UI is already updated
+                },
+                onError: (errors) => {
+                    console.error("Toggle failed:", errors);
+                    // Revert the optimistic update
+                    onUpdate("toggle", {
+                        variantId: id,
+                        newActiveStatus: variant.active,
+                    });
+                },
+            }
+        );
+    };
 
     // Function to confirm deletion
     const confirmDelete = () => {
@@ -28,16 +51,23 @@ const DishDetailsModal = ({ food, show, onClose, onConfirm }) => {
             console.error("No variant selected for deletion!");
             return;
         }
+        setIsDeleteModalOpen(false);
 
-        console.log(`Deleting variant with ID: ${variantToDelete}`);
+        // Optimistically update the UI by removing the variant
+        onUpdate("delete", { variantId: variantToDelete });
 
-        destroy(route("dishes.destroy", variantToDelete), {
+        router.delete(route("dishes.destroy", variantToDelete), {
+            preserveScroll: true,
+            preserveState: true,
             onSuccess: () => {
-                setIsDeleteModalOpen(false);
                 setVariantToDelete(null);
             },
-            preserveScroll: true,
-            preserveState: false,
+            onError: (errors) => {
+                console.error("Delete failed:", errors);
+                // Revert the optimistic update by refetching or restoring the variant
+                // For simplicity, we assume the parent will handle this
+                // You may need to refetch the food data or restore the variant
+            },
         });
     };
 

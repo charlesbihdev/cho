@@ -9,6 +9,8 @@ export default function Dish({ dishes, vendors, foods }) {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [selectedFood, setSelectedFood] = useState(null);
 
+    console.log("disheess", dishes[8].vendors[0]?.variants);
+
     const handleViewDetails = (food) => {
         setSelectedFood(food);
         setShowDetailsModal(true);
@@ -21,6 +23,59 @@ export default function Dish({ dishes, vendors, foods }) {
 
     const handleButtonClick = () => {
         setIsOpen(true);
+    };
+
+    // Callback to update selectedFood after a variant toggle
+    const handleFoodToggle = (variantId, newActiveStatus) => {
+        setSelectedFood((prevFood) => {
+            // Deep copy of food to avoid mutating state directly
+            const updatedFood = {
+                ...prevFood,
+                vendors: prevFood.vendors.map((vendor) => ({
+                    ...vendor,
+                    variants: vendor.variants.map((variant) =>
+                        variant.id === variantId
+                            ? { ...variant, active: newActiveStatus }
+                            : variant
+                    ),
+                })),
+            };
+            return updatedFood;
+        });
+    };
+
+    // Unified callback to handle toggle and delete actions
+    const handleFoodUpdate = (action, payload) => {
+        setSelectedFood((prevFood) => {
+            if (!prevFood) return prevFood;
+
+            if (action === "toggle") {
+                const { variantId, newActiveStatus } = payload;
+                return {
+                    ...prevFood,
+                    vendors: prevFood.vendors.map((vendor) => ({
+                        ...vendor,
+                        variants: vendor.variants.map((variant) =>
+                            variant.id === variantId
+                                ? { ...variant, active: newActiveStatus }
+                                : variant
+                        ),
+                    })),
+                };
+            } else if (action === "delete") {
+                const { variantId } = payload;
+                return {
+                    ...prevFood,
+                    vendors: prevFood.vendors.map((vendor) => ({
+                        ...vendor,
+                        variants: vendor.variants.filter(
+                            (variant) => variant.id !== variantId
+                        ),
+                    })),
+                };
+            }
+            return prevFood;
+        });
     };
 
     return (
@@ -112,6 +167,7 @@ export default function Dish({ dishes, vendors, foods }) {
                                 show={showDetailsModal}
                                 food={selectedFood}
                                 onClose={closeModal}
+                                onUpdate={handleFoodUpdate}
                             />
                         )}
                     </div>

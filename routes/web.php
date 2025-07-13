@@ -80,9 +80,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/payment/callback', [PaymentController::class, 'handleGatewayCallback'])->name('paystack.callback');
 
 Route::post('/payment/webhook', [PaymentController::class, 'handleWebhook'])
-    // ->middleware(RestrictIPMiddleware::class)
+    ->middleware(RestrictIPMiddleware::class)
     ->withoutMiddleware([VerifyCsrfToken::class])
     ->name('paystack.webhook');
+
+
+Route::get('/pending-verification', [PaymentController::class, 'verificationPending'])->name('payment.pending.verification');
 
 
 Route::get('/verify-payment/{trxref}', [PaymentController::class, 'showManualVerificationPage'])->name('paystack.manual.verify');

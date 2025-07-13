@@ -121,7 +121,7 @@ class PaymentController extends Controller
                 "currency" => "GHS",
                 "email" => $request->input('email'),
                 "reference" => $reference,
-                "callback_url" => route('paystack.callback'), // Define your callback route
+                "callback_url" => route('payment.pending.verification'),
                 "metadata" => [
                     "name" => $request->input('name'),
                     "phone" => $request->input('phone'),
@@ -151,6 +151,7 @@ class PaymentController extends Controller
         try {
             $paymentDetails = paystack()->getPaymentData();
             $reference = $paymentDetails['data']['reference'];
+            $transactionId = $paymentDetails['data']['id'];
             $payment = Payment::where('payment_reference', $reference)->first();
             $metadata = $paymentDetails['data']['metadata'];
             // Log::info('payment details', $paymentDetails);
@@ -163,7 +164,7 @@ class PaymentController extends Controller
                 ]);
             }
 
-            $result = $this->paymentService->processPayment(false, $paymentDetails, $metadata, $payment);
+            $result = $this->paymentService->processPayment($paymentDetails, $payment, $metadata, $transactionId);
 
             if ($result['status'] === 'success') {
                 return redirect()->route('ordersucess')->with(['success' => $result['message']]);
@@ -193,35 +194,53 @@ class PaymentController extends Controller
     }
 
 
-    public function handleWebhook(Request $request, CustomPaystack $paystack)
+    public function handleWebhook(Request $request)
     {
-        $paymentDetails = $request->all();
+        // First check is the headeris present. Else, terminate the code.
+        if (!$request->hasHeader("x-paystack-signature")) exit("No header present");
 
-        Log::info('details', $paymentDetails);
+        // Get our paystack screte key from our .env file
+        $secret = env("PAYSTACK_SECRET_KEY");
 
-        $reference = $paymentDetails['data']['reference'];
-        $payment = Payment::where('payment_reference', $reference)->first();
-        $metadata = $paymentDetails['data']['metadata'];
+        // Validate the signature
+        if ($request->header("x-paystack-signature") !== hash_hmac("sha512", $request->getContent(), $secret)) exit("Invalid signatute");
 
-        // Log::info('Reference', ['ref' => $reference]);
-        // Log::info('payment', ['met' => $payment]);
-        // Log::info('MEtadata', ['met' => $metadata]);
+        $event = $request->event; // event type. e.g charge.success
+        $data = $request->data;
 
-        $verifyTrx = paystack()->isTransactionVerificationValid($reference);
+        if ($event === "charge.success") {
 
-        if ($verifyTrx) {
+            Log::info('details', $data);
 
-            $result = $this->paymentService->processPayment(true, $paymentDetails, $metadata, $payment);
+            $reference = $data["reference"];
+            $payment = Payment::where('payment_reference', $reference)->first();
+            $metadata = $data['metadata'];
+            $transactionId = $data['id'];
+
+            $paymentService = new PaymentService();
+
+            $result = $paymentService->processPayment($data, $payment, $metadata, $transactionId);
+
+            if ($result) {
+                return response()->json(['status' => 'success'], 200);
+            }
         }
+    }
 
 
-        $result = $this->paymentService->processPayment(true, $paymentDetails, $metadata, $payment);
+    public function verificationPending(Request $request)
+    {
+        if ($request->has('reference') || $request->has('trxref')) {
 
+            $payment = Payment::where('payment_reference', $request->get('reference'))
+                ->first(['amount']);
 
-        if ($result) {
-            return response()->json(['status' => 'success'], 200);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Payment verification failed.'], 400);
+            $amount = $payment?->amount;
+
+            return Inertia::render('Feedback/PaymentVerificationPending', [
+                'amount' => $amount,
+            ]);
         }
+        return redirect()->route('landing');
     }
 }

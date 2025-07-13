@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Notifications\Notification;
 
-class SmsChannel
+class ArkaselSmsChannel
 {
     protected $apiUrl;
     protected $senderId;
@@ -14,9 +14,9 @@ class SmsChannel
 
     public function __construct()
     {
-        $this->apiUrl = env('SMS_API_URL', "https://webapp.usmsgh.com/api/http/sms/send");
-        $this->senderId = env('SMS_SENDER_ID', 'CHO APP');
-        $this->apiToken = env('SMS_API_TOKEN');
+        $this->apiUrl = env('ARKASEL_SMS_API_URL', "https://sms.arkesel.com/sms/api");
+        $this->senderId = env('ARKASEL_SMS_SENDER_ID', 'CHO APP');
+        $this->apiToken = env('ARKASEL_SMS_API_TOKEN');
     }
 
     public function send($notifiable, Notification $notification)
@@ -38,11 +38,14 @@ class SmsChannel
 
         // Send the SMS using the API
         $response = Http::get($this->apiUrl, [
-            'recipient' => $formattedPhone,
-            'sender_id' => $this->senderId,
-            'message' => $smsMessage,
-            'api_token' => $this->apiToken,
+            'action' => "send-sms",
+            'to' => $formattedPhone,
+            'from' => $this->senderId,
+            'sms' => $smsMessage,
+            'api_key' => $this->apiToken,
         ]);
+
+        // https://sms.arkesel.com/sms/api?action=send-sms&api_key=YOURKEY&to=PhoneNumber&from=SenderID&sms=YourMessage
 
         // Optionally handle response or log errors
         if ($response->successful()) {
