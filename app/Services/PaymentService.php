@@ -38,10 +38,12 @@ class PaymentService
                 $payment->transaction_id = $transactionId;
 
                 // Process and create orders
-                $this->createOrders($metadata, $payment);
-
                 $payment->status = 'successful';
                 $payment->save();
+
+
+                $this->createOrders($metadata, $payment);
+
 
                 return ['status' => 'success', 'message' => 'Payment successful'];
             } else {
