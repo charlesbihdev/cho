@@ -24,7 +24,15 @@ class RestrictIPMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! in_array($request->ip(), $this->allowedIps)) {
+        $ip = $request->header('x-forwarded-for') ?? $request->ip();
+
+        // if multiple IPs in header, take first one
+        if (str_contains($ip, ',')) {
+            $ip = explode(',', $ip)[0];
+            $ip = trim($ip);
+        }
+
+        if (! in_array($ip, $this->allowedIps)) {
             abort(403, 'Access denied.');
         }
 

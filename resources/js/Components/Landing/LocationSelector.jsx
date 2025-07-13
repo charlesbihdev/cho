@@ -11,7 +11,7 @@ const LocationSelector = ({
     const [currentPage, setCurrentPage] = useState(0);
     const locationsPerPage = 4;
 
-    console.log(deliveryDiscountData);
+    // console.log(deliveryDiscountData);
 
     // Filter locations based on search query
     const filteredLocations = useMemo(() => {

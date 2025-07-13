@@ -6,9 +6,10 @@ use App\Models\Food;
 use Inertia\Inertia;
 use App\Models\Vendor;
 use App\Models\Variant;
+use Termwind\Components\Dd;
 use Illuminate\Http\Request;
 use App\Models\FoodVendorVariant;
-use Termwind\Components\Dd;
+use Illuminate\Support\Facades\Log;
 
 class DishController extends Controller
 {
@@ -66,24 +67,29 @@ class DishController extends Controller
             'variants.*.price' => 'required|numeric|min:0',
         ]);
 
-        // Loop through each variant and store it
+        // dd($request->all());
+        Log::info('data', $request->all());
+
+
         foreach ($request->variants as $variantData) {
-            // Create the variant
-            $variant = Variant::create([
-                'name' => $variantData['name'],
-                'price' => $variantData['price'],
-                'food_id' => $request->food_id,
-                'vendor_id' => $request->vendor_id, // Assuming each variant is linked to the vendor
-            ]);
 
-            // Create the relationship in the food_vendor_variant table
-            FoodVendorVariant::create([
-                'variant_id' => $variant->id,
-                'vendor_id' => $request->vendor_id,
-            ]);
+            try {
+                Log::info('varrr', $variantData);
 
+                $variant = Variant::create([
+                    'name' => $variantData['name'],
+                    'price' => $variantData['price'],
+                    'food_id' => $request->food_id,
+                    'vendor_id' => $request->vendor_id,
+                ]);
 
-            return back()->with('success', 'Dish saved successfully');
+                FoodVendorVariant::create([
+                    'variant_id' => $variant->id,
+                    'vendor_id' => $request->vendor_id,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Loop error: ' . $e->getMessage());
+            }
         }
     }
 

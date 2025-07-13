@@ -19,7 +19,8 @@ const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
     usePoll(8000);
 
     const [selectedFood, setSelectedFood] = useState(null);
-    const [selectedVariant, setSelectedVariant] = useState(null);
+    // const [selectedVariant, setSelectedVariant] = useState(null);
+    const [selectedVariants, setSelectedVariants] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [foodNote, setFoodNote] = useState("");
@@ -44,23 +45,27 @@ const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
     }, [searchQuery, selectedCategory, foodData]);
 
     const calculateTotalPrice = () => {
-        if (!selectedVariant || !selectedVendor || !selectedLocation) return 0;
-        const basePrice = selectedVariant.price;
-        // const deliveryPrice = selectedLocation.price;
-        return basePrice;
+        if (!selectedVariants.length || !selectedVendor || !selectedLocation)
+            return 0;
+
+        const total = selectedVariants.reduce((sum, variant) => {
+            return sum + variant.price * quantity;
+        }, 0);
+
+        return total;
     };
 
     const handleFoodClick = (food) => {
         setSelectedFood(food);
         setShowFoodDetail(true);
-        setSelectedVariant(null);
+        setSelectedVariants([]);
         setSelectedVendor(null);
         setSelectedLocation(null);
         setFoodNote("");
     };
 
     const addToCart = () => {
-        if (!selectedVariant || !selectedVendor || !selectedLocation) {
+        if (!selectedVariants.length || !selectedVendor || !selectedLocation) {
             alert("Please select all options");
             return;
         }
@@ -68,68 +73,70 @@ const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
         // Calculate delivery pricing with discount
         const originalDeliveryPrice = selectedLocation.price;
         const hasDeliveryDiscount =
-            deliveryDiscountData?.active && deliveryDiscountData?.value;
+            deliveryDiscountData?.active &&
+            deliveryDiscountData?.value &&
+            deliveryDiscountData?.value > 0;
         const discountedDeliveryPrice = hasDeliveryDiscount
             ? originalDeliveryPrice -
               (deliveryDiscountData.value / 100) * originalDeliveryPrice
             : originalDeliveryPrice;
 
-        const cartItem = {
-            id: selectedVariant.id,
-            name: selectedFood.name,
-            image: selectedFood.thumbnail,
-            variant: selectedVariant.name,
-            vendor: selectedVendor.name,
-            vendor_id: selectedVendor.id,
-            location: {
-                ...selectedLocation,
-                // Store both original and final delivery prices
-                originalDeliveryPrice: originalDeliveryPrice,
-                deliveryPrice: discountedDeliveryPrice,
-                deliveryDiscount: hasDeliveryDiscount
-                    ? {
-                          percentage: deliveryDiscountData.value,
-                          savings:
-                              originalDeliveryPrice - discountedDeliveryPrice,
-                      }
-                    : null,
-            },
-            foodNote: foodNote,
-            quantity: quantity,
-            price: calculateTotalPrice(),
-        };
-
         // Retrieve existing cart from local storage
         const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        // Check if the item already exists in the cart
-        const existingCartItemIndex = existingCart.findIndex(
-            (item) =>
-                item.id === cartItem.id &&
-                item.variant === cartItem.variant &&
-                item.vendor_id === cartItem.vendor_id &&
-                item.location.destination === cartItem.location.destination
-        );
+        selectedVariants.forEach((variant) => {
+            const cartItem = {
+                id: variant.id,
+                name: selectedFood.name,
+                image: selectedFood.thumbnail,
+                variant: variant.name,
+                vendor: selectedVendor.name,
+                vendor_id: selectedVendor.id,
+                location: {
+                    ...selectedLocation,
+                    hasDeliveryDiscount: hasDeliveryDiscount,
+                    originalDeliveryPrice: originalDeliveryPrice,
+                    deliveryPrice: discountedDeliveryPrice,
+                    deliveryDiscount: hasDeliveryDiscount
+                        ? {
+                              percentage: deliveryDiscountData.value,
+                              savings:
+                                  originalDeliveryPrice -
+                                  discountedDeliveryPrice,
+                          }
+                        : null,
+                },
+                foodNote: foodNote,
+                quantity: quantity,
+                price: variant.price,
+            };
 
-        if (existingCartItemIndex > -1) {
-            // Update quantity if it already exists
-            existingCart[existingCartItemIndex].quantity += quantity;
-            // Recalculate total price based on new quantity
-            existingCart[existingCartItemIndex].price =
-                calculateTotalPrice() *
-                existingCart[existingCartItemIndex].quantity;
-        } else {
-            // Add new item to the cart
-            existingCart.push(cartItem);
-        }
+            const existingCartItemIndex = existingCart.findIndex(
+                (item) =>
+                    item.id === cartItem.id &&
+                    item.variant === cartItem.variant &&
+                    item.vendor_id === cartItem.vendor_id &&
+                    item.location.destination === cartItem.location.destination
+            );
 
-        // Store updated cart in local storage
-        // localStorage.setItem("cart", JSON.stringify(existingCart));
-        setCartItems(existingCart);
+            if (existingCartItemIndex > -1) {
+                // Update quantity if it already exists
+                existingCart[existingCartItemIndex].quantity += quantity;
+                // Recalculate total price based on new quantity
+                existingCart[existingCartItemIndex].price =
+                    variant.price *
+                    existingCart[existingCartItemIndex].quantity;
+            } else {
+                // Add new item to the cart
+                existingCart.push(cartItem);
+            }
+            // console.log("exisiting 22" + existingCart);
 
+            setCartItems(existingCart);
+        });
         // Reset form
         setShowFoodDetail(false);
-        setSelectedVariant(null);
+        setSelectedVariants([]);
         setSelectedVendor(null);
         setSelectedLocation(null);
         setFoodNote("");
@@ -316,14 +323,22 @@ const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
                                             </div>
                                         </>
                                     )}
+                                    {/* Variant Selection */}
                                     {selectedVendor && (
                                         <div>
                                             <h3 className="font-bold text-[#493711] uppercase mb-2">
-                                                Choose Variant
+                                                Choose Variants
                                             </h3>
                                             <div className="grid grid-cols-2 gap-2 mb-4">
                                                 {selectedVendor.variants.map(
                                                     (variant, index) => {
+                                                        const isSelected =
+                                                            selectedVariants.some(
+                                                                (v) =>
+                                                                    v.id ===
+                                                                    variant.id
+                                                            );
+
                                                         return (
                                                             <button
                                                                 key={
@@ -331,21 +346,49 @@ const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
                                                                     index
                                                                 }
                                                                 className={`p-3 rounded-lg text-left transition-colors w-full
-                    ${
-                        !variant.isActive
-                            ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                            : selectedVariant == variant
-                            ? "bg-[#E4BF57] text-[#493711]"
-                            : "bg-gray-50 hover:bg-gray-100"
-                    }`}
+                            ${
+                                !variant.isActive
+                                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                    : isSelected
+                                    ? "bg-[#E4BF57] text-[#493711]"
+                                    : "bg-gray-50 hover:bg-gray-100"
+                            }`}
                                                                 onClick={() => {
                                                                     if (
-                                                                        variant.isActive
-                                                                    ) {
-                                                                        setSelectedVariant(
-                                                                            variant
-                                                                        );
-                                                                    }
+                                                                        !variant.isActive
+                                                                    )
+                                                                        return;
+
+                                                                    setSelectedVariants(
+                                                                        (
+                                                                            prev
+                                                                        ) => {
+                                                                            const exists =
+                                                                                prev.find(
+                                                                                    (
+                                                                                        v
+                                                                                    ) =>
+                                                                                        v.id ===
+                                                                                        variant.id
+                                                                                );
+                                                                            if (
+                                                                                exists
+                                                                            ) {
+                                                                                return prev.filter(
+                                                                                    (
+                                                                                        v
+                                                                                    ) =>
+                                                                                        v.id !==
+                                                                                        variant.id
+                                                                                ); // unselect
+                                                                            } else {
+                                                                                return [
+                                                                                    ...prev,
+                                                                                    variant,
+                                                                                ]; // select
+                                                                            }
+                                                                        }
+                                                                    );
                                                                 }}
                                                                 disabled={
                                                                     !variant.isActive
@@ -362,7 +405,6 @@ const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
                                                                         variant.price
                                                                     }
                                                                 </div>
-
                                                                 {!variant.isActive && (
                                                                     <div className="text-xs text-red-500 mt-1">
                                                                         Unavailable
@@ -375,7 +417,8 @@ const FoodOrderingPage = ({ foodData, categories, deliveryDiscountData }) => {
                                             </div>
                                         </div>
                                     )}
-                                    {selectedVariant && (
+
+                                    {selectedVariants.length > 0 && (
                                         <LocationSelector
                                             deliveryDiscountData={
                                                 deliveryDiscountData

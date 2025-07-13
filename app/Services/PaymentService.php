@@ -20,14 +20,16 @@ class PaymentService
      * @param \App\Models\Payment $payment Payment model instance
      * @return array Result with status and message
      */
-    public function processPayment($isWebhook = false, $paymentDetails, $metadata, $payment)
-    {
+    public function processPayment(
+        array $paymentDetails,
+        $payment,
+        array $metadata,
+        string $transactionId
+    ) {
         // Extract transaction ID from payment details
-        $transactionId = $paymentDetails['data']['id'] ?? null;
 
-        $paymentStatus = !$isWebhook ? $paymentDetails['status'] : $isWebhook;
 
-        if ($paymentStatus && $paymentDetails['data']['status'] === 'success') {
+        if ($paymentDetails['status'] === 'success') {
             if (!$metadata) {
                 return ['status' => 'error', 'message' => 'Missing metadata in payment details.'];
             }
