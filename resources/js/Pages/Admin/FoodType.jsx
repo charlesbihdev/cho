@@ -32,7 +32,7 @@ export default function FoodType({ foods, categories }) {
             preserveScroll: true,
         });
 
-        console.log(`Deleting food with ID: ${foodToDelete}`);
+        // console.log(`Deleting food with ID: ${foodToDelete}`);
     };
 
     return (

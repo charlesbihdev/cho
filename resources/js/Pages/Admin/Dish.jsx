@@ -9,7 +9,7 @@ export default function Dish({ dishes, vendors, foods }) {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [selectedFood, setSelectedFood] = useState(null);
 
-    console.log("disheess", dishes[8].vendors[0]?.variants);
+    // console.log("disheess", dishes[8].vendors[0]?.variants);
 
     const handleViewDetails = (food) => {
         setSelectedFood(food);
