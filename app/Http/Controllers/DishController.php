@@ -68,13 +68,13 @@ class DishController extends Controller
         ]);
 
         // dd($request->all());
-        Log::info('data', $request->all());
+        // Log::info('data', $request->all());
 
 
         foreach ($request->variants as $variantData) {
 
             try {
-                Log::info('varrr', $variantData);
+                // Log::info('varrr', $variantData);
 
                 $variant = Variant::create([
                     'name' => $variantData['name'],
