@@ -121,7 +121,7 @@ class PaymentController extends Controller
                 "currency" => "GHS",
                 "email" => $request->input('email'),
                 "reference" => $reference,
-                "callback_url" => route('payment.pending.verification'),
+                "callback_url" => route('paystack.callback'),
                 "metadata" => [
                     "name" => $request->input('name'),
                     "phone" => $request->input('phone'),
@@ -150,6 +150,7 @@ class PaymentController extends Controller
     {
         try {
             $paymentDetails = paystack()->getPaymentData();
+
             $reference = $paymentDetails['data']['reference'];
             $transactionId = $paymentDetails['data']['id'];
             $payment = Payment::where('payment_reference', $reference)->first();
@@ -166,6 +167,8 @@ class PaymentController extends Controller
 
             $result = $this->paymentService->processPayment($paymentDetails, $payment, $metadata, $transactionId);
 
+            // Log::info('Payment processing result', $result);
+
             if ($result['status'] === 'success') {
                 return redirect()->route('ordersucess')->with(['success' => $result['message']]);
             } elseif ($result['status'] === 'already_processed') {
@@ -178,7 +181,7 @@ class PaymentController extends Controller
             return back()->with(['error' => $result['message']]);
         } catch (Exception $e) {
             // Log the error message for debugging purposes
-            // dd($e->getMessage());
+            dd($e->getMessage());
             // Return back with an error message
             return back()->with([
                 'error' => 'An error occurred during payment processing: ',

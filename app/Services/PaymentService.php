@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\Variant;
 use App\Models\OrderItem;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderPlacedNotification;
 // use Illuminate\Support\Facades\Notification;
@@ -28,8 +29,10 @@ class PaymentService
     ) {
         // Extract transaction ID from payment details
 
+        // Log::info('pay details status', ['dd' => $paymentDetails['data']['status']]);
 
-        if ($paymentDetails['status'] === 'success') {
+
+        if ($paymentDetails['data']['status'] === 'success') {
             if (!$metadata) {
                 return ['status' => 'error', 'message' => 'Missing metadata in payment details.'];
             }
