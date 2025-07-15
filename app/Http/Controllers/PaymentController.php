@@ -210,7 +210,7 @@ class PaymentController extends Controller
 
         if ($event === "charge.success") {
 
-            Log::info('details', $data);
+            // Log::info('details', $data);
 
             $reference = $data["reference"];
             $payment = Payment::where('payment_reference', $reference)->first();
